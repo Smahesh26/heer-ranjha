@@ -1,0 +1,1142 @@
+/* about.module.css , Heer Ranjha About Us Page */
+
+/* =============================================
+   1. PAGE HERO BANNER
+   ============================================= */
+
+.hero {
+  position: relative;
+  background: var(--warm-white);
+  padding-top: calc(var(--nav-height) + 4rem);
+  padding-bottom: 5rem;
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+  overflow: hidden;
+}
+
+.heroGrain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px;
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
+}
+
+.breadcrumbLink {
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(26, 21, 18, 0.45);
+  transition: color var(--duration-sm) ease;
+}
+
+.breadcrumbLink:hover { color: var(--gold-muted); }
+
+.breadcrumbSep {
+  color: rgba(26, 21, 18, 0.25);
+  font-size: 0.65rem;
+}
+
+.breadcrumbCurrent {
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+}
+
+.heroEyebrow {
+  margin-bottom: 1.2rem;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 8vw, 8.5rem);
+  color: var(--charcoal);
+  line-height: 0.95;
+  margin-bottom: 1.8rem;
+  max-width: 900px;
+}
+
+.heroTitleItalic {
+  color: var(--gold-muted);
+  font-style: italic;
+  display: block;
+}
+
+.heroSub {
+  font-size: 0.85rem;
+  color: rgba(26, 21, 18, 0.55);
+  max-width: 520px;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+}
+
+/* Side rule decoration */
+.heroSideRule {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 2;
+}
+
+.heroSideRuleLine {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--gold-muted), transparent);
+  opacity: 0.4;
+}
+
+.heroSideRuleText {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(26, 21, 18, 0.3);
+  writing-mode: vertical-rl;
+}
+
+/* =============================================
+   2. BRAND INTRO (two column)
+   ============================================= */
+
+.brandIntro {
+  background: var(--ivory);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.brandIntroInner {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--space-xl);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(4rem, 8vw, 9rem);
+  align-items: start;
+}
+
+/* Left */
+.introLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  position: sticky;
+  top: calc(var(--nav-height) + 2rem);
+}
+
+.introMarker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.introMarkerLabel {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(26, 21, 18, 0.4);
+}
+
+.introMarkerWord {
+  font-size: clamp(5rem, 12vw, 10rem);
+  line-height: 0.85;
+  color: var(--charcoal);
+  display: block;
+}
+
+.introMarkerSub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--gold-muted);
+  letter-spacing: 0.04em;
+}
+
+.introTagline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(26, 21, 18, 0.08);
+}
+
+.introTaglineText {
+  font-size: 0.8rem;
+  line-height: 1.85;
+  color: rgba(26, 21, 18, 0.6);
+  letter-spacing: 0.03em;
+}
+
+/* Right */
+.introRight {
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.introBodyLarge {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
+  line-height: 1.4;
+  color: var(--charcoal);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.introBody {
+  font-size: 0.82rem;
+  line-height: 1.95;
+  color: rgba(26, 21, 18, 0.6);
+  letter-spacing: 0.03em;
+  margin-bottom: 1rem;
+}
+
+/* =============================================
+   3. STORY SPLIT SECTION
+   ============================================= */
+
+.story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: clamp(540px, 70vh, 820px);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.storyImage {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.storyImageInner {
+  position: absolute;
+  inset: 0;
+}
+
+.storyImageBlob1 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 75% 65% at 55% 40%,
+    rgba(180, 150, 100, 0.6) 0%,
+    rgba(120, 90, 60, 0.7) 100%);
+}
+
+.storyImageBlob2 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 30% 65%,
+    rgba(100, 130, 120, 0.4) 0%,
+    transparent 70%);
+}
+
+.storyImageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 240, 230, 0.08) 0%,
+    rgba(8, 6, 4, 0.2) 100%
+  );
+}
+
+.storyImageLabel {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 2;
+}
+
+.storyImageLabelText {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(245, 240, 230, 0.8);
+}
+
+/* Corner ornaments */
+.corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgba(245, 240, 230, 0.35);
+  border-style: solid;
+  z-index: 3;
+}
+
+.cornerTL { top: 1.5rem; left: 1.5rem; border-width: 1px 0 0 1px; }
+.cornerBR { bottom: 1.5rem; right: 1.5rem; border-width: 0 1px 1px 0; }
+
+/* Story text */
+.storyText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(3rem, 6vw, 6rem) clamp(2.5rem, 5vw, 5rem);
+  background: var(--warm-white);
+}
+
+.storyTitle {
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  color: var(--charcoal);
+  line-height: 1.1;
+  margin-bottom: 1.8rem;
+}
+
+.storyTitle em {
+  color: var(--gold-muted);
+  font-style: italic;
+  display: block;
+}
+
+.storyBody {
+  font-size: 0.8rem;
+  line-height: 1.95;
+  color: rgba(26, 21, 18, 0.6);
+  letter-spacing: 0.03em;
+  margin-bottom: 1.2rem;
+  max-width: 480px;
+}
+
+.storyDetails {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-block: 2rem;
+  border-top: 1px solid rgba(26, 21, 18, 0.08);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.08);
+  margin-block: 1.5rem;
+}
+
+.storyDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.storyDetailNum {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--charcoal);
+  line-height: 1;
+}
+
+.storyDetailLabel {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(26, 21, 18, 0.45);
+}
+
+.storyDetailDivider {
+  width: 1px;
+  height: 40px;
+  background: rgba(26, 21, 18, 0.1);
+}
+
+/* =============================================
+   4. MISSION QUOTE
+   ============================================= */
+
+.mission {
+  background: var(--cream);
+  border-top: 1px solid rgba(26, 21, 18, 0.07);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+  padding-block: var(--space-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.missionInner {
+  max-width: 860px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.missionRule {
+  width: 40px;
+  height: 1px;
+  background: var(--gold-muted);
+  margin-inline: auto;
+  margin-bottom: 2.5rem;
+}
+
+.missionQuote {
+  font-size: clamp(1.5rem, 3.2vw, 2.8rem);
+  color: var(--charcoal);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  margin-bottom: 2rem;
+}
+
+.missionCite {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+  font-style: normal;
+}
+
+.missionOrnament {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.08;
+}
+
+.missionOrnamentRing {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid var(--charcoal);
+}
+
+.missionOrnamentInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1px solid var(--charcoal);
+}
+
+/* =============================================
+   5. STATS ROW
+   ============================================= */
+
+.stats {
+  background: var(--warm-white);
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.statsHeader {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statsTitle {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--charcoal);
+}
+
+.statsTitle em {
+  color: var(--gold-muted);
+  font-style: italic;
+}
+
+.statsGrid {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.statCard {
+  padding: 3rem 2.5rem;
+  border-right: 1px solid rgba(26, 21, 18, 0.07);
+  transition: background var(--duration-sm) ease;
+}
+
+.statCard:last-child { border-right: none; }
+.statCard:hover { background: rgba(26, 21, 18, 0.02); }
+
+.statNum {
+  display: flex;
+  align-items: baseline;
+  gap: 0.1rem;
+  margin-bottom: 1rem;
+}
+
+.statValue {
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  color: var(--charcoal);
+  line-height: 1;
+}
+
+.statSuffix {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  color: var(--gold-muted);
+  line-height: 1;
+}
+
+.statRule {
+  width: 28px;
+  height: 1px;
+  background: rgba(160, 120, 64, 0.4);
+  margin-bottom: 1rem;
+}
+
+.statLabel {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  margin-bottom: 0.6rem;
+}
+
+.statDesc {
+  font-size: 0.72rem;
+  color: rgba(26, 21, 18, 0.45);
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+}
+
+/* =============================================
+   6. ATELIER TEAM
+   ============================================= */
+
+.team {
+  background: var(--ivory);
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.teamHeader {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.teamTitle {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--charcoal);
+}
+
+.teamTitle em {
+  color: var(--gold-muted);
+  font-style: italic;
+}
+
+.teamSub {
+  font-size: 0.8rem;
+  color: rgba(26, 21, 18, 0.5);
+  max-width: 480px;
+  line-height: 1.85;
+  letter-spacing: 0.03em;
+}
+
+.teamGrid {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.teamCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.teamPortrait {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  margin-bottom: 1.4rem;
+}
+
+.teamPortraitBg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.teamCard:hover .teamPortraitBg { transform: scale(1.04); }
+
+.teamPortraitOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(26, 21, 18, 0.25) 100%);
+}
+
+.teamInitials {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.teamInitialsText {
+  font-size: 3.5rem;
+  color: rgba(245, 240, 230, 0.35);
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.teamInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.teamName {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin-bottom: 0.3rem;
+}
+
+.teamRole {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+  margin-bottom: 0.8rem;
+}
+
+.teamBioRule {
+  width: 24px;
+  height: 1px;
+  background: rgba(26, 21, 18, 0.15);
+  margin-bottom: 0.8rem;
+}
+
+.teamBio {
+  font-size: 0.73rem;
+  line-height: 1.85;
+  color: rgba(26, 21, 18, 0.5);
+  letter-spacing: 0.02em;
+}
+
+/* =============================================
+   7. VALUES GRID
+   ============================================= */
+
+.values {
+  background: var(--warm-white);
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.valuesHeader {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.valuesTitle {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--charcoal);
+}
+
+.valuesTitle em {
+  color: var(--gold-muted);
+  font-style: italic;
+}
+
+.valuesGrid {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.valueCard {
+  padding: 3rem 2.5rem;
+  border-right: 1px solid rgba(26, 21, 18, 0.07);
+  transition: background var(--duration-sm) ease;
+}
+
+.valueCard:last-child { border-right: none; }
+.valueCard:hover { background: rgba(26, 21, 18, 0.02); }
+
+.valueTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.valueNum {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: rgba(26, 21, 18, 0.35);
+}
+
+.valueIcon {
+  font-size: 1.2rem;
+  color: var(--gold-muted);
+  opacity: 0.6;
+}
+
+.valueRule {
+  width: 32px;
+  height: 1px;
+  background: rgba(160, 120, 64, 0.4);
+  margin-bottom: 1.4rem;
+}
+
+.valueTitle {
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+}
+
+.valueBody {
+  font-size: 0.76rem;
+  line-height: 1.9;
+  color: rgba(26, 21, 18, 0.55);
+  letter-spacing: 0.03em;
+}
+
+/* =============================================
+   8. TESTIMONIALS
+   ============================================= */
+
+.testimonials {
+  background: var(--cream);
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.testimonialsHeader {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.testimonialsTitle {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--charcoal);
+}
+
+.testimonialsTitle em {
+  color: var(--gold-muted);
+  font-style: italic;
+}
+
+.testimonialsGrid {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.testimonialCard {
+  background: var(--warm-white);
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(26, 21, 18, 0.07);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: box-shadow var(--duration-md) ease, transform var(--duration-md) ease;
+}
+
+.testimonialCard:hover {
+  box-shadow: 0 8px 40px rgba(26, 21, 18, 0.07);
+  transform: translateY(-3px);
+}
+
+.testimonialMark {
+  font-size: 5rem;
+  color: var(--gold-muted);
+  opacity: 0.15;
+  line-height: 0.7;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.testimonialQuote {
+  font-size: 0.8rem;
+  line-height: 1.9;
+  color: rgba(26, 21, 18, 0.65);
+  letter-spacing: 0.02em;
+  flex: 1;
+  margin-bottom: 2rem;
+}
+
+.testimonialFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.testimonialAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.testimonialName {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--charcoal);
+  letter-spacing: 0.04em;
+}
+
+.testimonialSep {
+  color: rgba(26, 21, 18, 0.25);
+  font-size: 0.8rem;
+}
+
+.testimonialLocation {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: rgba(26, 21, 18, 0.45);
+  letter-spacing: 0.04em;
+}
+
+.testimonialCollection {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+}
+
+/* =============================================
+   9. GALLERY STRIP
+   ============================================= */
+
+.gallery {
+  background: var(--ivory);
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.galleryHeader {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.galleryTitle {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  color: var(--charcoal);
+}
+
+.galleryTitle em {
+  color: var(--gold-muted);
+  font-style: italic;
+}
+
+.galleryGrid {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+}
+
+.galleryCell {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.galleryCellBg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.galleryCell:hover .galleryCellBg { transform: scale(1.06); }
+
+.galleryCellOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(26, 21, 18, 0.4) 100%);
+  opacity: 0;
+  transition: opacity var(--duration-md) ease;
+}
+
+.galleryCell:hover .galleryCellOverlay { opacity: 1; }
+
+.galleryCellLabel {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--duration-md) ease, transform var(--duration-md) ease;
+}
+
+.galleryCell:hover .galleryCellLabel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =============================================
+   10. ABOUT CTA BANNER
+   ============================================= */
+
+.cta {
+  position: relative;
+  background: var(--charcoal);
+  padding-block: var(--space-xl);
+  overflow: hidden;
+}
+
+.ctaBlobA {
+  position: absolute;
+  top: -10%;
+  right: 5%;
+  width: 50%;
+  height: 120%;
+  background: radial-gradient(ellipse 70% 70% at 60% 50%,
+    rgba(180, 140, 80, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ctaBlobB {
+  position: absolute;
+  bottom: -10%;
+  left: 5%;
+  width: 45%;
+  height: 80%;
+  background: radial-gradient(ellipse 60% 70% at 40% 60%,
+    rgba(120, 160, 150, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ctaOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(8, 6, 4, 0.4) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.ctaInner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.ctaTitle {
+  font-size: clamp(3rem, 7vw, 7rem);
+  color: var(--ivory);
+  line-height: 0.95;
+  margin-block: 1.5rem;
+}
+
+.ctaTitle em {
+  color: var(--gold);
+  font-style: italic;
+  display: block;
+}
+
+.ctaBody {
+  font-size: 0.82rem;
+  color: rgba(245, 240, 230, 0.6);
+  max-width: 480px;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+  margin-bottom: 2.5rem;
+}
+
+.ctaLocations {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-block: 2rem;
+  border-top: 1px solid rgba(245, 240, 230, 0.1);
+  border-bottom: 1px solid rgba(245, 240, 230, 0.1);
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.ctaLocation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ctaLocationAddr {
+  font-size: 0.8rem;
+  color: rgba(245, 240, 230, 0.5);
+  letter-spacing: 0.06em;
+}
+
+.ctaLocationSep {
+  width: 1px;
+  height: 36px;
+  background: rgba(245, 240, 230, 0.15);
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ctaBtnOutline {
+  border-color: rgba(245, 240, 230, 0.3);
+  color: rgba(245, 240, 230, 0.6);
+}
+
+.ctaBtnOutline::before { background: rgba(245, 240, 230, 0.1); }
+.ctaBtnOutline:hover { color: var(--ivory); }
+
+/* =============================================
+   RESPONSIVE OVERRIDES
+   ============================================= */
+
+@media (max-width: 1100px) {
+  .teamGrid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .galleryGrid { grid-template-columns: repeat(3, 1fr); }
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+  .statCard:nth-child(2) { border-right: none; }
+  .statCard:nth-child(1),
+  .statCard:nth-child(2) { border-bottom: 1px solid rgba(26, 21, 18, 0.07); }
+}
+
+@media (max-width: 960px) {
+  .brandIntroInner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .introLeft { position: static; }
+
+  .story {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  .storyImage {
+    height: 55vw;
+    min-height: 280px;
+    max-height: 450px;
+  }
+
+  .storyImageInner { position: absolute; inset: 0; }
+
+  .valuesGrid { grid-template-columns: 1fr; }
+  .valueCard { border-right: none; border-bottom: 1px solid rgba(26, 21, 18, 0.07); }
+  .valueCard:last-child { border-bottom: none; }
+
+  .testimonialsGrid { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+@media (max-width: 768px) {
+  .heroTitle { font-size: clamp(2.5rem, 12vw, 5rem); }
+  .heroSideRule { display: none; }
+
+  .teamGrid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  .galleryGrid { grid-template-columns: repeat(2, 1fr); }
+
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+
+  .ctaTitle { font-size: clamp(2.5rem, 10vw, 5rem); }
+
+  .ctaLocations { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+  .ctaLocationSep { width: 40px; height: 1px; }
+
+  .ctaButtons { flex-direction: column; }
+  .ctaButtons .btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .heroTitle { font-size: clamp(2.2rem, 14vw, 4rem); }
+
+  .teamGrid { grid-template-columns: 1fr; max-width: 340px; margin-inline: auto; }
+
+  .galleryGrid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+
+  .statsGrid { grid-template-columns: 1fr; }
+  .statCard { border-right: none; border-bottom: 1px solid rgba(26, 21, 18, 0.07); }
+  .statCard:last-child { border-bottom: none; }
+
+  .storyDetails { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+  .storyDetailDivider { width: 32px; height: 1px; }
+
+  .galleryHeader { flex-direction: column; gap: 0.5rem; }
+}

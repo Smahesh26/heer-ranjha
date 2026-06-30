@@ -1,0 +1,216 @@
+/* Navbar.module.css , Light Theme */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--nav-height);
+  transition: background var(--duration-md) var(--ease-out),
+              backdrop-filter var(--duration-md) var(--ease-out),
+              border-color var(--duration-md) var(--ease-out);
+  border-bottom: 1px solid transparent;
+}
+
+.navbar.scrolled {
+  background: rgba(250, 247, 242, 0.96);
+  backdrop-filter: blur(20px);
+  border-color: rgba(26, 21, 18, 0.08);
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Nav links group */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+  flex: 1;
+}
+
+.navLeft { justify-content: flex-start; }
+.navRight { justify-content: flex-end; }
+
+.navLink {
+  font-family: var(--font-body);
+  font-size: 0.63rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  opacity: 0.6;
+  transition: opacity var(--duration-sm) ease, color var(--duration-sm) ease;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  opacity: 1;
+  color: var(--gold-muted);
+}
+
+/* Logo */
+.logoWrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 1.5rem;
+}
+
+.logoImg {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+  /* Make cream logo visible on light background */
+  filter: brightness(0) saturate(100%);
+  opacity: 0.82;
+  transition: opacity var(--duration-sm) ease, transform var(--duration-sm) ease;
+}
+
+.logoWrap:hover .logoImg {
+  opacity: 1;
+  transform: scale(1.04);
+  filter: brightness(0) saturate(100%) sepia(0.3) hue-rotate(10deg);
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--charcoal);
+  opacity: 0.6;
+  transition: opacity var(--duration-sm) ease, color var(--duration-sm) ease;
+}
+
+.iconBtn:hover {
+  opacity: 1;
+  color: var(--gold-muted);
+}
+
+/* Hamburger, hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  width: 28px;
+  cursor: pointer;
+  z-index: 110;
+}
+
+.hamburger span {
+  display: block;
+  height: 1px;
+  background: var(--charcoal);
+  transition: transform var(--duration-md) var(--ease-out),
+              opacity var(--duration-sm) ease,
+              width var(--duration-md) var(--ease-out);
+}
+
+.hamburger span:nth-child(1) { width: 100%; }
+.hamburger span:nth-child(2) { width: 70%; }
+.hamburger span:nth-child(3) { width: 100%; }
+
+.hamburgerOpen span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+  width: 100%;
+}
+.hamburgerOpen span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburgerOpen span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+  width: 100%;
+}
+
+/* Mobile full-screen menu */
+.mobileMenu {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--warm-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: var(--gutter);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-md) var(--ease-out);
+}
+
+.mobileMenu.mobileMenuOpen {
+  pointer-events: all;
+  opacity: 1;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobileLink {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  padding-block: 1.4rem;
+  border-bottom: 1px solid rgba(26, 21, 18, 0.08);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity var(--duration-md) var(--ease-out),
+              transform var(--duration-md) var(--ease-out),
+              color var(--duration-sm) ease;
+  color: var(--charcoal);
+}
+
+.mobileMenuOpen .mobileLink {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobileLink:hover { color: var(--gold-muted); }
+
+.mobileLinkText {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 8vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.mobileFooter {
+  position: absolute;
+  bottom: 2.5rem;
+  left: var(--gutter);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .navLinks { display: none; }
+  .hamburger { display: flex; }
+
+  .inner {
+    justify-content: space-between;
+  }
+
+  .logoWrap {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 480px) {
+  .logoImg { height: 64px; }
+}

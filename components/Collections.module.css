@@ -1,0 +1,182 @@
+/* Collections.module.css , Light Theme */
+
+.section {
+  padding-top: calc(var(--space-xl) + 1.5rem);
+  padding-bottom: var(--space-xl);
+  scroll-margin-top: calc(var(--nav-height) + 1.25rem);
+  background: var(--ivory);
+}
+
+.sectionHeader {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-bottom: var(--space-lg);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.sectionSub {
+  font-size: 0.85rem;
+  color: rgba(26, 21, 18, 0.5);
+  max-width: 500px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Individual blocks ---- */
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: clamp(480px, 60vh, 720px);
+  border-top: 1px solid rgba(26, 21, 18, 0.07);
+}
+
+.block.reverse {
+  direction: rtl;
+}
+
+.block.reverse > * {
+  direction: ltr;
+}
+
+/* ---- Visual panel ---- */
+.visual {
+  position: relative;
+  overflow: hidden;
+}
+
+.imageWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Abstract swatch canvas */
+.swatchCanvas {
+  position: absolute;
+  inset: 0;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+.swatch {
+  position: absolute;
+  border-radius: 2px;
+  filter: blur(40px);
+  animation: swatchFloat 8s ease-in-out infinite alternate;
+}
+
+@keyframes swatchFloat {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(8px, -12px) scale(1.05); }
+}
+
+.swatchOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 240, 230, 0.55) 0%,
+    rgba(245, 240, 230, 0.25) 50%,
+    rgba(245, 240, 230, 0.6) 100%
+  );
+}
+
+.swatchLabel {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+}
+
+/* Ornamental frame corners */
+.corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(26, 21, 18, 0.2);
+  border-style: solid;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cornerTL { top: 1.5rem; left: 1.5rem; border-width: 1px 0 0 1px; }
+.cornerTR { top: 1.5rem; right: 1.5rem; border-width: 1px 1px 0 0; }
+.cornerBL { bottom: 1.5rem; left: 1.5rem; border-width: 0 0 1px 1px; }
+.cornerBR { bottom: 1.5rem; right: 1.5rem; border-width: 0 1px 1px 0; }
+
+/* ---- Text panel ---- */
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 5vw, 5rem);
+  background: var(--warm-white);
+}
+
+.colName {
+  font-size: clamp(3rem, 5.5vw, 5.5rem);
+  color: var(--charcoal);
+  margin-bottom: 0.3rem;
+  line-height: 1;
+}
+
+.translation {
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  color: var(--gold-muted);
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.desc {
+  font-size: 0.82rem;
+  line-height: 1.9;
+  color: rgba(26, 21, 18, 0.6);
+  max-width: 420px;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.03em;
+}
+
+.highlight {
+  margin-bottom: 2.2rem;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 960px) {
+  .block {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  .block.reverse { direction: ltr; }
+
+  .visual {
+    height: 52vw;
+    min-height: 260px;
+    max-height: 400px;
+  }
+
+  .imageWrap { position: relative; height: 100%; }
+  .swatchCanvas { position: absolute; inset: 0; }
+
+  .text {
+    padding: 2.5rem var(--gutter);
+  }
+}
+
+@media (max-width: 480px) {
+  .visual { height: 65vw; min-height: 220px; }
+
+  .colName { font-size: clamp(2.4rem, 11vw, 4rem); }
+
+  .desc { font-size: 0.79rem; }
+}

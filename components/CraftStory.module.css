@@ -1,0 +1,156 @@
+/* CraftStory.module.css , Light Theme */
+
+.section {
+  background: var(--cream);
+  border-top: 1px solid rgba(26, 21, 18, 0.08);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.08);
+}
+
+/* ---- Statement ---- */
+.statement {
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid rgba(26, 21, 18, 0.07);
+  background: linear-gradient(
+    to bottom,
+    rgba(160, 120, 64, 0.04) 0%,
+    transparent 100%
+  );
+}
+
+.statementInner {
+  max-width: 900px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quote {
+  font-size: clamp(1.6rem, 3.5vw, 3rem);
+  color: var(--charcoal);
+  line-height: 1.35;
+  font-style: italic;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.01em;
+}
+
+.quoteAttr {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+  opacity: 0.8;
+}
+
+/* ---- Four pillars ---- */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--space-lg);
+  gap: 0;
+}
+
+.pillar {
+  padding: 2.5rem 2rem;
+  border-right: 1px solid rgba(26, 21, 18, 0.08);
+  transition: background var(--duration-sm) ease;
+}
+
+.pillar:last-child { border-right: none; }
+
+.pillar:hover {
+  background: rgba(26, 21, 18, 0.03);
+}
+
+.pillarNum {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--gold-muted);
+  opacity: 0.7;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.pillarRule {
+  width: 28px;
+  height: 1px;
+  background: rgba(160, 120, 64, 0.4);
+  margin-bottom: 1.2rem;
+}
+
+.pillarTitle {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  color: var(--charcoal);
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.pillarDesc {
+  font-size: 0.75rem;
+  line-height: 1.85;
+  color: rgba(26, 21, 18, 0.5);
+  letter-spacing: 0.03em;
+}
+
+/* ---- CTA Strip ---- */
+.ctaStrip {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--space-lg);
+  border-top: 1px solid rgba(26, 21, 18, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.ctaText {
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  color: var(--charcoal);
+  line-height: 1;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 960px) {
+  .pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pillar:nth-child(2) { border-right: none; }
+  .pillar:nth-child(1),
+  .pillar:nth-child(2) {
+    border-bottom: 1px solid rgba(26, 21, 18, 0.08);
+  }
+}
+
+@media (max-width: 640px) {
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .pillar {
+    border-right: none;
+    border-bottom: 1px solid rgba(26, 21, 18, 0.08);
+    padding: 2rem var(--gutter);
+  }
+
+  .pillar:last-child { border-bottom: none; }
+
+  .ctaStrip {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
