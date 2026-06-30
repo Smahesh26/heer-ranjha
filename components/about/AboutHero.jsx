@@ -32,25 +32,25 @@ export default function AboutHero() {
 
         {/* Eyebrow */}
         <p className={`eyebrow ${styles.heroEyebrow} reveal reveal-delay-1`}>
-          Est. Delhi &amp; Bareilly
+          About Heer Ranjha
         </p>
 
         {/* Headline */}
         <h1 className={`display ${styles.heroTitle} reveal reveal-delay-2`}>
-          Where a Love Story<br />
-          <em className={styles.heroTitleItalic}>Became a Wardrobe</em>
+          Contemporary Indian Couture,<br />
+          <em className={styles.heroTitleItalic}>Made Personal</em>
         </h1>
 
         {/* Sub copy */}
         <p className={`${styles.heroSub} reveal reveal-delay-3`}>
-          Named for two souls whose devotion outlasted time, Heer Ranjha is a boutique built on the same principle: that what is made with love endures.
+          Heer Ranjha is a luxury Indian fashion house rooted in craftsmanship, identity, and storytelling. We create refined menswear and womenswear shaped by heritage artistry, modern sensibility, and a bespoke approach to every client.
         </p>
       </div>
 
       {/* Decorative side rule */}
       <div className={styles.heroSideRule} aria-hidden="true">
         <div className={styles.heroSideRuleLine} />
-        <span className={styles.heroSideRuleText}>About Us</span>
+        <span className={styles.heroSideRuleText}>Luxury, Personal</span>
       </div>
     </section>
   );

@@ -6,20 +6,20 @@ const VALUES = [
   {
     num: "01",
     icon: "✦",
-    title: "Craft Before Commerce",
-    body: "We make what we believe in, not what we think will sell fastest. Every collection is designed with an internal standard: would an artisan be proud of this? If yes, it ships. If not, it goes back.",
+    title: "Personal First",
+    body: "Every design begins with the person wearing it. The goal is not just to create a garment, but to create something that feels like it belongs to them.",
   },
   {
     num: "02",
     icon: "◈",
-    title: "Heritage, Honestly",
-    body: "We draw from India's textile traditions without costume-ising them. Our embroidery references Mughal motifs, folk geometry, and chikankari, but through a vocabulary that belongs to today. Reverence without replica.",
+    title: "Craft with Context",
+    body: "We honour Indian craftsmanship without turning it into costume. Heritage informs the work, but contemporary taste shapes the final expression.",
   },
   {
     num: "03",
     icon: "❋",
-    title: "Clothes for Real Occasions",
-    body: "A wedding in Lucknow. A reception in Delhi. A festival lunch in Bareilly. These are our occasions. We make clothes that live in those moments, that earn a second wear, and a third, that become part of a family story.",
+    title: "Made for Moments",
+    body: "Weddings, celebrations, gifting, and occasions that matter are the moments we design for. The pieces are made to be remembered and worn again.",
   },
 ];
 
@@ -40,10 +40,10 @@ export default function ValuesGrid() {
   return (
     <section ref={ref} className={styles.values}>
       <div className={styles.valuesHeader}>
-        <p className={`eyebrow reveal`}>What We Stand For</p>
+        <p className={`eyebrow reveal`}>Our Philosophy</p>
         <div className="gold-rule reveal reveal-delay-1" style={{ marginInline: "auto" }} />
         <h2 className={`display ${styles.valuesTitle} reveal reveal-delay-2`}>
-          Three Things We <em>Never Compromise</em>
+          Three principles we <em>design by</em>
         </h2>
       </div>
 

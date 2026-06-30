@@ -25,25 +25,25 @@ export default function AboutCTA() {
 
       <div className={styles.ctaInner}>
         <p className={`eyebrow reveal`} style={{ color: "rgba(245,240,230,0.6)" }}>
-          Visit Us
+          Continue Exploring
         </p>
         <h2 className={`display ${styles.ctaTitle} reveal reveal-delay-1`}>
-          Come See Us<br />
-          <em>in Person</em>
+          Discover the collection<br />
+          <em>and the craft behind it</em>
         </h2>
         <p className={`${styles.ctaBody} reveal reveal-delay-2`}>
-          Clothes deserve to be touched, draped, and considered. Our boutiques in Delhi and Bareilly are open for appointments and walk-ins. We would love to show you what we have been making.
+          Explore the shop or reach out to discuss something personal. Heer Ranjha is built to create clothing that feels meaningful from the first conversation to the final fitting.
         </p>
 
         <div className={`${styles.ctaLocations} reveal reveal-delay-3`}>
           <div className={styles.ctaLocation}>
-            <p className={`eyebrow`} style={{ color: "var(--gold)" }}>Delhi Boutique</p>
-            <p className={styles.ctaLocationAddr}>New Delhi, India</p>
+            <p className={`eyebrow`} style={{ color: "var(--gold)" }}>Brand Director</p>
+            <p className={styles.ctaLocationAddr}>Ayush Sethi</p>
           </div>
           <div className={styles.ctaLocationSep} aria-hidden="true" />
           <div className={styles.ctaLocation}>
-            <p className={`eyebrow`} style={{ color: "var(--gold)" }}>Bareilly Boutique</p>
-            <p className={styles.ctaLocationAddr}>Bareilly, Uttar Pradesh</p>
+            <p className={`eyebrow`} style={{ color: "var(--gold)" }}>Head Designer</p>
+            <p className={styles.ctaLocationAddr}>Ragini Sethi</p>
           </div>
         </div>
 

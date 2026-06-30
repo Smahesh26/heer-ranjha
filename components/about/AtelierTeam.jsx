@@ -4,30 +4,32 @@ import styles from "./about.module.css";
 
 const TEAM = [
   {
-    name: "Priya Sharma",
-    role: "Creative Director",
-    bio: "Trained at NIFT Delhi, Priya brings fifteen years of Indian couture experience to every collection. She is the bridge between the artisan and the wearer.",
+    name: "Ayush Sethi",
+    role: "Curator & Brand Director",
+    bio: "Ayush shapes the brand narrative, client experience, and overall direction, ensuring Heer Ranjha remains intimate, modern, and rooted in craft.",
     color: "#C4A882",
     accent: "#8A7254",
+    image: "/image1.jpeg",
   },
   {
-    name: "Ustad Ramzan Ali",
-    role: "Master Embroider",
-    bio: "A third-generation hand embroidery artisan from Bareilly, Ramzan specialises in zardozi and chikankari. His work defines the signature of each Heer Ranjha piece.",
+    name: "Ragini Sethi",
+    role: "Head Designer",
+    bio: "Ragini leads the design language of the house, translating heritage references into silhouettes and finishes that feel current, polished, and personal.",
     color: "#8AA0A8",
     accent: "#4A6070",
+    image: "/image2.jpeg",
   },
   {
-    name: "Deepa Nair",
-    role: "Head of Design, Women's Wear",
-    bio: "Deepa shapes our women's collections, bringing a sensitivity to silhouette and drape that has made our Dupion and Chanderi pieces especially loved.",
+    name: "The Atelier Team",
+    role: "Pattern, Embroidery & Finishing",
+    bio: "A closely coordinated group of specialists who bring each piece to life with precision, patience, and a strong respect for the final wearer.",
     color: "#B89090",
     accent: "#785858",
   },
   {
-    name: "Kabir Mehta",
-    role: "Head of Design, Men's Wear",
-    bio: "Kabir's understanding of the Indian man's relationship with formal occasion wear gives our Sherwanis, Bandhgalas, and Nehru Jackets their quiet authority.",
+    name: "Heritage Craftspeople",
+    role: "Hand Embroidery & Finishing",
+    bio: "The work is ultimately defined by skilled hands that respect detail, balance, and the quiet discipline behind luxury clothing.",
     color: "#8A9880",
     accent: "#506048",
   },
@@ -50,13 +52,13 @@ export default function AtelierTeam() {
   return (
     <section ref={ref} className={styles.team}>
       <div className={styles.teamHeader}>
-        <p className={`eyebrow reveal`}>The People</p>
+        <p className={`eyebrow reveal`}>The People Behind the Brand</p>
         <div className="gold-rule reveal reveal-delay-1" style={{ marginInline: "auto" }} />
         <h2 className={`display ${styles.teamTitle} reveal reveal-delay-2`}>
-          Faces Behind the <em>Fabric</em>
+          Leadership with <em>personal vision</em>
         </h2>
         <p className={`${styles.teamSub} reveal reveal-delay-3`}>
-          Heer Ranjha is the sum of its people. Designers who dream. Artisans who execute. A team that believes clothing is a serious matter.
+          Heer Ranjha is led by people who treat clothing as a form of personal expression. The brand stays focused because the vision stays clear.
         </p>
       </div>
 
@@ -69,12 +71,16 @@ export default function AtelierTeam() {
           >
             {/* Portrait placeholder */}
             <div className={styles.teamPortrait}>
-              <div
-                className={styles.teamPortraitBg}
-                style={{
-                  background: `radial-gradient(ellipse 70% 80% at 45% 35%, ${member.color}, ${member.accent})`,
-                }}
-              />
+              {member.image ? (
+                <img className={styles.teamPortraitPhoto} src={member.image} alt={member.name} />
+              ) : (
+                <div
+                  className={styles.teamPortraitBg}
+                  style={{
+                    background: `radial-gradient(ellipse 70% 80% at 45% 35%, ${member.color}, ${member.accent})`,
+                  }}
+                />
+              )}
               <div className={styles.teamPortraitOverlay} />
               {/* Initials */}
               <div className={styles.teamInitials}>

@@ -23,30 +23,30 @@ export default function BrandIntro() {
         {/* Left column: large marker */}
         <div className={styles.introLeft}>
           <div className={`${styles.introMarker} reveal`}>
-            <span className={styles.introMarkerLabel}>Our story begins with</span>
-            <span className={`display ${styles.introMarkerWord}`}>Ishq</span>
-            <span className={styles.introMarkerSub}>Love, in every thread</span>
+            <span className={styles.introMarkerLabel}>Our Philosophy</span>
+            <span className={`display ${styles.introMarkerWord}`}>Craft</span>
+            <span className={styles.introMarkerSub}>Made with intention</span>
           </div>
           <div className={`${styles.introTagline} reveal reveal-delay-2`}>
-            <p className="eyebrow">The Name</p>
+            <p className="eyebrow">What Guides Us</p>
             <p className={styles.introTaglineText}>
-              Heer and Ranjha, Punjab’s most enduring lovers. Their story is not just folklore. It is the sound of longing rendered in verse, passed from grandmother to grandchild, sung at thresholds and celebrations alike. We carry that name into every stitch.
+              Heer Ranjha is built on the belief that clothing should feel intimate, considered, and quietly luxurious. We design with the wearer in mind, not the trend cycle.
             </p>
           </div>
         </div>
 
         {/* Right column: body text */}
         <div className={styles.introRight}>
-          <p className={`eyebrow reveal`}>About the Boutique</p>
+          <p className={`eyebrow reveal`}>About Heer Ranjha</p>
           <div className="gold-rule reveal reveal-delay-1" />
           <p className={`${styles.introBodyLarge} reveal reveal-delay-2`}>
-            Heer Ranjha is a luxury Indian fashion boutique, with atelier addresses in Delhi and Bareilly. We make clothes for people who believe that what they wear is an extension of who they are.
+            Heer Ranjha is a luxury Indian fashion house shaped by heritage craft, modern elegance, and a deeply personal design process.
           </p>
           <p className={`${styles.introBody} reveal reveal-delay-3`}>
-            Each piece in our wardrobe is hand-embroidered by artisans who have spent lifetimes mastering techniques rooted in the subcontinent’s court traditions. We work in Matka, Dupion, Chanderi, Raw Silk, and Organza, fabrics chosen for their ability to hold embroidery beautifully and move with the body.
+            Every garment is imagined to carry a story, whether it is created for a wedding, a celebration, a meaningful gift, or an occasion that deserves to feel memorable.
           </p>
           <p className={`${styles.introBody} reveal reveal-delay-4`}>
-            Our collections span the full vocabulary of Indian dress: Kurtas and Nehru Jackets for men; Lehengas, Sarees, Suit Sets, and Co-ord Sets for women. Each collection is named for a feeling. Nayi Leher. Asaya. Roomani. Ganga Jamuni. The clothes carry those names honestly.
+            The house is led by Ayush Sethi, Curator &amp; Brand Director, and Ragini Sethi, Head Designer. Their shared vision keeps the brand grounded in craftsmanship while moving it toward a sharper contemporary language.
           </p>
         </div>
 

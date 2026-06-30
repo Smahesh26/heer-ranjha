@@ -20,14 +20,14 @@ export default function MissionQuote() {
     <section ref={ref} className={styles.mission}>
       <div className={styles.missionInner}>
         <p className={`eyebrow reveal`} style={{ color: "var(--gold-muted)", marginBottom: "2rem" }}>
-          Our Belief
+          The Heer Ranjha Experience
         </p>
         <div className={`${styles.missionRule} reveal reveal-delay-1`} />
         <blockquote className={`display ${styles.missionQuote} reveal reveal-delay-2`}>
-          &ldquo;Clothes are not just cloth. They are the armour we choose, the story we tell before we speak, the memory we leave in a photograph for a hundred years.&rdquo;
+          &ldquo;Luxury should feel personal. It should remember the wearer, honour the occasion, and carry the quiet confidence of something made with intention.&rdquo;
         </blockquote>
         <cite className={`${styles.missionCite} reveal reveal-delay-3`}>
-          Heer Ranjha Atelier, Delhi
+          Heer Ranjha
         </cite>
 
         {/* Decorative ornament */}

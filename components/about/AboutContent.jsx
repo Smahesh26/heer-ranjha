@@ -2,7 +2,6 @@ import AboutHero from "./AboutHero";
 import BrandIntro from "./BrandIntro";
 import StorySection from "./StorySection";
 import MissionQuote from "./MissionQuote";
-import StatsRow from "./StatsRow";
 import AtelierTeam from "./AtelierTeam";
 import ValuesGrid from "./ValuesGrid";
 import Testimonials from "./Testimonials";
@@ -14,9 +13,8 @@ export default function AboutContent() {
     <>
       <AboutHero />
       <BrandIntro />
-      <StorySection />
       <MissionQuote />
-      <StatsRow />
+      <StorySection />
       <AtelierTeam />
       <ValuesGrid />
       <Testimonials />

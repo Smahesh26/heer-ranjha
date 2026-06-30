@@ -3,12 +3,12 @@ import { useEffect, useRef } from "react";
 import styles from "./about.module.css";
 
 const GALLERY = [
-  { label: "Nayi Leher", color: "#D4A090", accent: "#8A5040" },
-  { label: "Asaya",      color: "#8AA8C4", accent: "#2A608A" },
-  { label: "Roomani",    color: "#C090A0", accent: "#785060" },
-  { label: "Atelier",    color: "#A0B890", accent: "#506040" },
-  { label: "Ganga Jamuni", color: "#9090C0", accent: "#404080" },
-  { label: "Craft",      color: "#C0A870", accent: "#806030" },
+  { label: "Mood", color: "#D4A090", accent: "#8A5040" },
+  { label: "Texture", color: "#8AA8C4", accent: "#2A608A" },
+  { label: "Silhouette", color: "#C090A0", accent: "#785060" },
+  { label: "Detail", color: "#A0B890", accent: "#506040" },
+  { label: "Finish", color: "#9090C0", accent: "#404080" },
+  { label: "Signature", color: "#C0A870", accent: "#806030" },
 ];
 
 export default function GalleryStrip() {
@@ -28,9 +28,9 @@ export default function GalleryStrip() {
   return (
     <section ref={ref} className={styles.gallery}>
       <div className={styles.galleryHeader}>
-        <p className={`eyebrow reveal`}>From the Atelier</p>
+        <p className={`eyebrow reveal`}>From the Archive</p>
         <h2 className={`display ${styles.galleryTitle} reveal reveal-delay-1`}>
-          A glimpse into <em>our world</em>
+          Visual notes from <em>the brand story</em>
         </h2>
       </div>
 
