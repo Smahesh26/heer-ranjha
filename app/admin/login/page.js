@@ -127,6 +127,8 @@ export default function AdminLoginPage() {
   const [refreshingUsers, setRefreshingUsers] = useState(false);
   const [userSearch, setUserSearch] = useState("");
   const [activeSection, setActiveSection] = useState("banners");
+  const [editingBannerId, setEditingBannerId] = useState(null);
+  const [deletingBannerId, setDeletingBannerId] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null);
   const [deletingProductId, setDeletingProductId] = useState(null);
 
@@ -363,6 +365,8 @@ export default function AdminLoginPage() {
     await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     setUser(null);
     setBannerList([]);
+    setEditingBannerId(null);
+    setDeletingBannerId(null);
     setLoginEmail("");
     setLoginPassword("");
     setLoginSuccess("");
@@ -374,6 +378,13 @@ export default function AdminLoginPage() {
     setOrderList([]);
     setFileInputKey((key) => key + 1);
     setProductFileInputKey((key) => key + 1);
+  }
+
+  function clearBannerForm() {
+    setEditingBannerId(null);
+    setUploadStatus("");
+    setForm(EMPTY_FORM);
+    setFileInputKey((key) => key + 1);
   }
 
   async function handleBannerUpload(event) {
@@ -391,22 +402,63 @@ export default function AdminLoginPage() {
     }
 
     try {
-      const response = await fetch("/api/banners", {
-        method: "POST",
+      const isEditing = Boolean(editingBannerId);
+      const response = await fetch(isEditing ? `/api/banners/${editingBannerId}` : "/api/banners", {
+        method: isEditing ? "PATCH" : "POST",
         body: formData,
       });
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || "Banner upload failed");
+        throw new Error(data?.error || "Banner save failed");
       }
 
-      setUploadStatus("Banner uploaded successfully.");
-      setForm(EMPTY_FORM);
-      setFileInputKey((key) => key + 1);
+      setUploadStatus(isEditing ? "Banner updated successfully." : "Banner uploaded successfully.");
+      clearBannerForm();
       await loadBanners();
     } catch (error) {
       setUploadStatus(error.message);
+    }
+  }
+
+  function handleEditBanner(banner) {
+    setActiveSection("banners");
+    setEditingBannerId(banner.id);
+    setUploadStatus("Edit mode enabled. Update fields and click Save Changes.");
+    setForm({
+      title: banner.title || "",
+      subtitle: banner.subtitle || "",
+      link: banner.link || "",
+      position: String(banner.position ?? 0),
+      active: Boolean(banner.active),
+      media: null,
+    });
+    setFileInputKey((key) => key + 1);
+  }
+
+  async function handleDeleteBanner(banner) {
+    const shouldDelete = window.confirm(`Delete banner \"${banner.title}\"? This cannot be undone.`);
+    if (!shouldDelete) return;
+
+    setDeletingBannerId(banner.id);
+    setUploadStatus("");
+
+    try {
+      const response = await fetch(`/api/banners/${banner.id}`, { method: "DELETE" });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.error || "Delete failed");
+      }
+
+      if (editingBannerId === banner.id) {
+        clearBannerForm();
+      }
+      setUploadStatus("Banner deleted successfully.");
+      await loadBanners();
+    } catch (error) {
+      setUploadStatus(error.message);
+    } finally {
+      setDeletingBannerId(null);
     }
   }
 
@@ -780,6 +832,20 @@ export default function AdminLoginPage() {
                           <span>{formatDate(banner.createdAt)}</span>
                           {banner.link ? <a href={banner.link} className={styles.bannerLink} target="_blank" rel="noreferrer">View link</a> : <span>No link</span>}
                         </div>
+
+                        <div className={styles.productActions}>
+                          <button type="button" className={styles.ghostBtn} onClick={() => handleEditBanner(banner)}>
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.dangerBtn}
+                            onClick={() => handleDeleteBanner(banner)}
+                            disabled={deletingBannerId === banner.id}
+                          >
+                            {deletingBannerId === banner.id ? "Deleting..." : "Delete"}
+                          </button>
+                        </div>
                       </div>
                     </article>
                   ))}
@@ -796,7 +862,7 @@ export default function AdminLoginPage() {
             <aside className={styles.formPanel}>
               <div className={styles.sectionHeadCompact}>
                 <p className="eyebrow">Form</p>
-                <h3 className={`display ${styles.sectionTitle}`}>Upload Banner</h3>
+                <h3 className={`display ${styles.sectionTitle}`}>{editingBannerId ? "Edit Banner" : "Upload Banner"}</h3>
               </div>
 
               <form className={styles.form} onSubmit={handleBannerUpload}>
@@ -831,15 +897,21 @@ export default function AdminLoginPage() {
                 </div>
 
                 <label className={`${styles.fieldGroup} ${styles.uploadField}`}>
-                  <span className={styles.fieldLabel}>Image or MP4</span>
+                  <span className={styles.fieldLabel}>{editingBannerId ? "Replace Image or MP4 (optional)" : "Image or MP4"}</span>
                   <input key={fileInputKey} className={styles.fileInput} type="file" accept="image/*,video/mp4,video/webm" onChange={(event) => setForm((current) => ({ ...current, media: event.target.files?.[0] || null }))} />
                   <span className={styles.uploadHint}>{getMediaAcceptHint(form.media)}</span>
                 </label>
 
                 <button className={`btn ${styles.submitBtn}`} type="submit">
-                  <span>Upload Banner</span>
+                  <span>{editingBannerId ? "Save Changes" : "Upload Banner"}</span>
                   <span className="btn-arrow">→</span>
                 </button>
+
+                {editingBannerId ? (
+                  <button type="button" className={styles.ghostBtn} onClick={clearBannerForm}>
+                    Cancel Edit
+                  </button>
+                ) : null}
 
                 {uploadStatus ? <p className={styles.successText}>{uploadStatus}</p> : null}
               </form>
