@@ -75,7 +75,10 @@ SMTP_HOST="smtp.gmail.com"
 SMTP_USER="your-sender-email@example.com"
 SMTP_PASS="your-app-password"
 EMAIL_FROM="Heer Ranjha <your-sender-email@example.com>"
+CLOUDINARY_URL="cloudinary://API_KEY:API_SECRET@CLOUD_NAME"
 ```
+
+For banner image/video uploads in production, Cloudinary is strongly recommended. Without it, local `/public/uploads` files can be lost on service restart.
 
 ### Build and Start Used by Render
 
@@ -116,6 +119,7 @@ SMTP_SECURE="false"
 SMTP_USER="your-sender-email@example.com"
 SMTP_PASS="your-app-password"
 EMAIL_FROM="Heer Ranjha <your-sender-email@example.com>"
+CLOUDINARY_URL="cloudinary://API_KEY:API_SECRET@CLOUD_NAME"
 ```
 
 If SMTP is not configured, login OTP will be printed in server logs only in development mode.

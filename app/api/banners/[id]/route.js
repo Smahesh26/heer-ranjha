@@ -2,40 +2,10 @@ import { prisma } from "@/lib/prisma";
 import { json, badRequest, notFound } from "@/lib/http";
 import { bannerSchema } from "@/lib/validators";
 import { cookies } from "next/headers";
-import { mkdir, writeFile, unlink } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { uploadBannerMedia, deleteBannerMedia } from "@/lib/banner-media";
 
 export const dynamic = "force-dynamic";
-
-function getExtension(fileName) {
-  const ext = path.extname(fileName || "").toLowerCase();
-  return ext || ".bin";
-}
-
-async function saveUpload(file) {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "banners");
-  await mkdir(uploadDir, { recursive: true });
-  const fileName = `${Date.now()}-${crypto.randomUUID()}${getExtension(file.name)}`;
-  const filePath = path.join(uploadDir, fileName);
-  await writeFile(filePath, buffer);
-  return `/uploads/banners/${fileName}`;
-}
-
-async function deleteLocalUpload(imagePath) {
-  if (typeof imagePath !== "string" || !imagePath.startsWith("/uploads/")) return;
-
-  const relativePath = imagePath.replace(/^\/+/, "");
-  const absolutePath = path.join(process.cwd(), "public", relativePath);
-
-  try {
-    await unlink(absolutePath);
-  } catch {
-    // Ignore missing files in ephemeral environments.
-  }
-}
 
 async function requireAdmin() {
   const token = cookies().get(getAuthCookieName())?.value;
@@ -86,7 +56,7 @@ export async function PATCH(request, { params }) {
     const mediaFile = formData.get("media");
 
     if (mediaFile instanceof File) {
-      uploadedMedia = await saveUpload(mediaFile);
+      uploadedMedia = await uploadBannerMedia(mediaFile);
     }
 
     payload = {
@@ -114,7 +84,7 @@ export async function PATCH(request, { params }) {
   });
 
   if (uploadedMedia && existing.image && existing.image !== uploadedMedia) {
-    await deleteLocalUpload(existing.image);
+    await deleteBannerMedia(existing.image, existing.mediaType);
   }
 
   return json({ banner });
@@ -132,7 +102,7 @@ export async function DELETE(_, { params }) {
   }
 
   await prisma.banner.delete({ where: { id: params.id } });
-  await deleteLocalUpload(existing.image);
+  await deleteBannerMedia(existing.image, existing.mediaType);
 
   return json({ ok: true });
 }

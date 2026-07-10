@@ -2,28 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { json, badRequest } from "@/lib/http";
 import { bannerSchema } from "@/lib/validators";
 import { cookies } from "next/headers";
-import { mkdir, writeFile, access } from "fs/promises";
+import { access } from "fs/promises";
 import { constants } from "fs";
 import path from "path";
-import crypto from "crypto";
 import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { uploadBannerMedia } from "@/lib/banner-media";
 
 export const dynamic = "force-dynamic";
-
-function getExtension(fileName) {
-  const ext = path.extname(fileName || "").toLowerCase();
-  return ext || ".bin";
-}
-
-async function saveUpload(file) {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "banners");
-  await mkdir(uploadDir, { recursive: true });
-  const fileName = `${Date.now()}-${crypto.randomUUID()}${getExtension(file.name)}`;
-  const filePath = path.join(uploadDir, fileName);
-  await writeFile(filePath, buffer);
-  return `/uploads/banners/${fileName}`;
-}
 
 async function requireAdmin() {
   const token = cookies().get(getAuthCookieName())?.value;
@@ -75,7 +60,7 @@ export async function POST(request) {
   if (contentType.includes("multipart/form-data")) {
     const formData = await request.formData();
     const mediaFile = formData.get("media");
-    const uploadedMedia = mediaFile instanceof File ? await saveUpload(mediaFile) : formData.get("image")?.toString() || "";
+    const uploadedMedia = mediaFile instanceof File ? await uploadBannerMedia(mediaFile) : formData.get("image")?.toString() || "";
     payload = {
       title: formData.get("title")?.toString() || "",
       subtitle: formData.get("subtitle")?.toString() || undefined,
