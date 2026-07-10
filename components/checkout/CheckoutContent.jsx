@@ -365,6 +365,24 @@ export default function CheckoutContent() {
                 <span>{placing ? "Processing..." : "Place Order"}</span>
                 <span className="btn-arrow">→</span>
               </button>
+
+              <div className={styles.returnPolicy}>
+                <p className="eyebrow">3 DAYS effortless return</p>
+                <p className={styles.returnPolicyIntro}>
+                  If your garment is damaged, defective, or incorrect, you can raise a return request within 3 DAYS after delivery.
+                </p>
+
+                <h3 className={styles.returnPolicyTitle}>Know how to effortlessly return</h3>
+                <ol className={styles.returnPolicyList}>
+                  <li>Email us at returns.newinsub@gmail.com within 3 days of receiving your order.</li>
+                  <li>Our support team will arrange a reverse pickup and share next steps.</li>
+                  <li>Pack the product in its original packaging and hand it over to the pickup agent.</li>
+                </ol>
+
+                <p className={styles.returnPolicyFinePrint}>
+                  Products must be unused, in original condition, with all tags intact. Sale and customized items are not eligible for return. INR 200 reverse pickup fee and COD charges (if applicable) will be deducted. Approved returns are issued as store credit only.
+                </p>
+              </div>
             </aside>
           </section>
         ) : null}
