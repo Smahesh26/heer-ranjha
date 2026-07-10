@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CUSTOMER")
+  phone        String?
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orders       Order[]
+  cartItems    CartItem[]
+  wishlistItems WishlistItem[]
+  paymentTransactions PaymentTransaction[]
+  addresses    Address[]
+  loginOtps    LoginOtp[]
+}
+
+model LoginOtp {
+  id         String   @id @default(cuid())
+  userId     String
+  email      String
+  codeHash   String
+  attempts   Int      @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([email, createdAt])
+  @@index([expiresAt])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  category    String
+  subCategory String
+  collection  String
+  fabric      String
+  price       Int
+  mrp         Int?
+  stock       Int      @default(0)
+  lowStockThreshold Int @default(5)
+  images      String
+  sizeOptions String?
+  sizeCharges String?
+  clothCare   String?
+  termsAndConditions String?
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  items       OrderItem[]
+  cartItems   CartItem[]
+  wishlistItems WishlistItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  size      String   @default("")
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId, size])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id           String       @id @default(cuid())
+  orderNumber  String       @unique
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+  status       String       @default("PENDING")
+  subtotal     Int
+  discount     Int          @default(0)
+  shippingFee  Int          @default(0)
+  tax          Int          @default(0)
+  total        Int
+  paymentId    String?
+  paymentMode  String?
+  couponCode   String?
+  shippingName String
+  shippingEmail String
+  shippingPhone String?
+  shippingAddress String
+  paymentStatus String       @default("unpaid")
+  razorpayOrderId String?
+  razorpayPaymentId String?
+  trackingNumber String?
+  courierName   String?
+  deliveredAt   DateTime?
+  cancelledAt   DateTime?
+  inventoryReleasedAt DateTime?
+  inventoryReleaseReason String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  items        OrderItem[]
+  paymentTransactions PaymentTransaction[]
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  label      String   @default("Shipping")
+  fullName   String
+  phone      String?
+  line1      String
+  line2      String?
+  city       String
+  state      String?
+  postalCode String?
+  country    String   @default("India")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model PaymentTransaction {
+  id                String   @id @default(cuid())
+  orderId           String?
+  userId            String?
+  provider          String   @default("RAZORPAY")
+  providerOrderId   String?  @unique
+  providerPaymentId String?  @unique
+  providerSignature String?
+  amount            Int      @default(0)
+  currency          String   @default("INR")
+  status            String   @default("CREATED")
+  paymentMethod     String?
+  rawResponse       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  order             Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  user              User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([providerOrderId])
+  @@index([providerPaymentId])
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+  quantity   Int
+  price      Int
+  title      String
+  image      String?
+}
+
+model Coupon {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  title         String
+  description   String?
+  type          String   @default("PERCENT")
+  value         Int
+  minOrderValue Int      @default(0)
+  maxDiscount   Int?
+  active        Boolean  @default(true)
+  startsAt      DateTime?
+  endsAt        DateTime?
+  usageLimit    Int?
+  usedCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String?
+  image     String?
+  mediaType String   @default("image")
+  link      String?
+  active    Boolean  @default(true)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

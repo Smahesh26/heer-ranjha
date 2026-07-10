@@ -5,12 +5,14 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 1200;
   height: var(--nav-height);
+  background: linear-gradient(to bottom, rgba(250, 247, 242, 0.88), rgba(250, 247, 242, 0.62));
+  backdrop-filter: blur(12px);
   transition: background var(--duration-md) var(--ease-out),
               backdrop-filter var(--duration-md) var(--ease-out),
               border-color var(--duration-md) var(--ease-out);
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid rgba(26, 21, 18, 0.08);
 }
 
 .navbar.scrolled {
@@ -63,11 +65,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: 1.5rem;
+  padding-inline: 0.45rem;
 }
 
 .logoImg {
-  height: 120px;
+  height: 78px;
   width: auto;
   object-fit: contain;
   /* Make cream logo visible on light background */
@@ -83,6 +85,7 @@
 }
 
 .iconBtn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,6 +99,24 @@
 .iconBtn:hover {
   opacity: 1;
   color: var(--gold-muted);
+}
+
+.countBadge {
+  position: absolute;
+  top: 1px;
+  right: -2px;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  background: var(--charcoal);
+  color: var(--warm-white);
+  font-size: 0.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
 }
 
 /* Hamburger, hidden on desktop */
@@ -212,5 +233,5 @@
 }
 
 @media (max-width: 480px) {
-  .logoImg { height: 64px; }
+  .logoImg { height: 46px; }
 }

@@ -1,34 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPrice } from "@/components/shop/shopData";
+import {
+  getGuestCart,
+  removeGuestCartItem,
+  syncGuestDataToUser,
+  updateGuestCartQuantity,
+} from "@/lib/client-cart-wishlist";
 import styles from "./cart.module.css";
 
-const INITIAL_ITEMS = [
-  {
-    id: "HKM-304",
-    name: "Pink Matka Kurta Set",
-    detail: "Cotton Pant · Hand Embroidery",
-    collection: "Nayi Leher",
-    size: "L",
-    price: 8500,
-    qty: 1,
-    colorA: "#D4A090",
-    colorB: "#8A5040",
-  },
-  {
-    id: "HSD-348",
-    name: "Mint Green Sherwani Set",
-    detail: "Dupion Fabric · Hand Embroidery",
-    collection: "Nayi Leher",
-    size: "M",
-    price: 22000,
-    qty: 1,
-    colorA: "#80C0A8",
-    colorB: "#308060",
-  },
-];
+function fallbackCardStyle(id) {
+  const code = String(id || "X")
+    .split("")
+    .reduce((sum, c) => sum + c.charCodeAt(0), 0);
+  const a = 40 + (code % 120);
+  const b = 20 + (code % 80);
+  return {
+    background: `radial-gradient(ellipse 75% 75% at 55% 40%, hsl(${a} 45% 68%), hsl(${b} 45% 42%))`,
+  };
+}
 
-function PageHeader() {
+function PageHeader({ itemCount, totalQty }) {
+  const itemLabel = itemCount === 1 ? "item" : "items";
+  const qtyLabel = totalQty === 1 ? "piece" : "pieces";
+
   return (
     <div className={styles.pageHeader}>
       <div className={styles.pageHeaderInner}>
@@ -37,33 +32,113 @@ function PageHeader() {
           <span className={styles.breadcrumbSep}>/</span>
           <span className={styles.breadcrumbCurrent}>Cart</span>
         </nav>
-        <h1 className={`display ${styles.pageTitle}`}>Your Cart</h1>
+
+        <div className={styles.titleRow}>
+          <h1 className={`display ${styles.pageTitle}`}>Your Cart</h1>
+          <span className={styles.countBadge}>{itemCount}</span>
+        </div>
+
+        <p className={styles.pageMeta}>{itemCount} {itemLabel} in cart · {totalQty} {qtyLabel}</p>
       </div>
     </div>
   );
 }
 
 export default function CartContent() {
-  const [items, setItems] = useState(INITIAL_ITEMS);
+  const [items, setItems] = useState([]);
+  const [authReady, setAuthReady] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState("");
 
-  const updateQty = (id, delta) => {
+  useEffect(() => {
+    let active = true;
+
+    async function loadCart() {
+      try {
+        const meRes = await fetch("/api/auth/me", { cache: "no-store" });
+        const loggedIn = meRes.ok;
+        if (!active) return;
+
+        setIsLoggedIn(loggedIn);
+
+        if (loggedIn) {
+          await syncGuestDataToUser();
+          const cartRes = await fetch("/api/cart", { cache: "no-store" });
+          const cartData = await cartRes.json().catch(() => ({ items: [] }));
+          if (active) {
+            setItems((cartData.items || []).map((item) => ({ ...item, qty: item.quantity })));
+          }
+        } else {
+          const guestItems = getGuestCart().map((item) => ({
+            ...item,
+            id: `${item.productId}::${item.size || ""}`,
+            qty: item.quantity,
+            unitPrice: Number(item.price || 0),
+          }));
+          if (active) {
+            setItems(guestItems);
+          }
+        }
+      } finally {
+        if (active) {
+          setAuthReady(true);
+        }
+      }
+    }
+
+    void loadCart();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const updateQty = async (item, delta) => {
+    const nextQty = Math.max(1, Number(item.qty || 1) + delta);
+
+    if (isLoggedIn) {
+      await fetch(`/api/cart/${item.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity: nextQty }),
+      }).catch(() => {});
+      setItems((prev) =>
+        prev.map((entry) => (entry.id === item.id ? { ...entry, qty: nextQty, quantity: nextQty } : entry))
+      );
+      return;
+    }
+
+    updateGuestCartQuantity(item.productId, item.size, nextQty);
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
+      prev.map((entry) =>
+        entry.productId === item.productId && String(entry.size || "") === String(item.size || "")
+          ? { ...entry, qty: nextQty, quantity: nextQty }
+          : entry
       )
     );
   };
 
-  const removeItem = (id) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  const removeItem = async (item) => {
+    if (isLoggedIn) {
+      await fetch(`/api/cart/${item.id}`, { method: "DELETE" }).catch(() => {});
+      setItems((prev) => prev.filter((entry) => entry.id !== item.id));
+      return;
+    }
+
+    removeGuestCartItem(item.productId, item.size);
+    setItems((prev) =>
+      prev.filter(
+        (entry) => !(entry.productId === item.productId && String(entry.size || "") === String(item.size || ""))
+      )
+    );
   };
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const subtotal = items.reduce((sum, item) => sum + Number(item.unitPrice || item.price || 0) * Number(item.qty || 1), 0);
   const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
   const total = subtotal - discount;
+  const itemCount = items.length;
+  const totalQty = items.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
   const applyCoupon = () => {
     if (coupon.trim().toUpperCase() === "HEER10") {
@@ -77,10 +152,16 @@ export default function CartContent() {
 
   return (
     <>
-      <PageHeader />
+      <PageHeader itemCount={itemCount} totalQty={totalQty} />
 
       <div className={styles.cartLayout}>
-        {items.length === 0 ? (
+        {!authReady ? (
+          <div className={styles.emptyCart}>
+            <h2 className={`display ${styles.emptyTitle}`}>Loading your cart...</h2>
+          </div>
+        ) : null}
+
+        {authReady && items.length === 0 ? (
           <div className={styles.emptyCart}>
             <div className={styles.emptyIcon} aria-hidden="true">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -96,8 +177,10 @@ export default function CartContent() {
               <span className="btn-arrow">&#8594;</span>
             </a>
           </div>
-        ) : (
+        ) : authReady ? (
           <div className={styles.cartMain}>
+            <div className={styles.listSummary}>{itemCount} {itemCount === 1 ? "item" : "items"} selected</div>
+
             {/* Cart table */}
             <div className={styles.tableWrap}>
               <table className={styles.cartTable}>
@@ -112,11 +195,11 @@ export default function CartContent() {
                 </thead>
                 <tbody>
                   {items.map((item) => (
-                    <tr key={item.id} className={styles.cartRow}>
+                    <tr key={item.id || `${item.productId}-${item.size || ""}`} className={styles.cartRow}>
                       <td className={styles.tdRemove}>
                         <button
                           className={styles.removeBtn}
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item)}
                           aria-label={`Remove ${item.name}`}
                         >
                           &times;
@@ -125,29 +208,28 @@ export default function CartContent() {
                       <td className={styles.tdProduct}>
                         <div className={styles.productCell}>
                           <div className={styles.productThumb}>
-                            <div
-                              className={styles.productThumbBg}
-                              style={{
-                                background: `radial-gradient(ellipse 75% 75% at 55% 40%, ${item.colorA}, ${item.colorB})`,
-                              }}
-                            />
+                            {item.image ? (
+                              <img className={styles.productThumbBg} src={item.image} alt={item.name} />
+                            ) : (
+                              <div className={styles.productThumbBg} style={fallbackCardStyle(item.productId || item.id)} />
+                            )}
                           </div>
                           <div className={styles.productDetails}>
-                            <a href={`/product/${item.id.toLowerCase()}`} className={`display ${styles.productName}`}>
+                            <a href={`/product/${(item.slug || item.productId || item.id || "").toLowerCase()}`} className={`display ${styles.productName}`}>
                               {item.name}
                             </a>
                             <span className={styles.productMeta}>{item.collection}</span>
                             <span className={styles.productMeta}>{item.detail}</span>
-                            <span className={styles.productSize}>Size: {item.size}</span>
+                            {item.size ? <span className={styles.productSize}>Size: {item.size}</span> : null}
                           </div>
                         </div>
                       </td>
-                      <td className={styles.tdPrice}>{formatPrice(item.price)}</td>
+                      <td className={styles.tdPrice}>{formatPrice(Number(item.unitPrice || item.price || 0))}</td>
                       <td className={styles.tdQty}>
                         <div className={styles.qtyStepper}>
                           <button
                             className={styles.qtyBtn}
-                            onClick={() => updateQty(item.id, -1)}
+                            onClick={() => updateQty(item, -1)}
                             disabled={item.qty <= 1}
                             aria-label="Decrease"
                           >
@@ -156,7 +238,7 @@ export default function CartContent() {
                           <span className={styles.qtyVal}>{item.qty}</span>
                           <button
                             className={styles.qtyBtn}
-                            onClick={() => updateQty(item.id, 1)}
+                            onClick={() => updateQty(item, 1)}
                             aria-label="Increase"
                           >
                             &#43;
@@ -164,7 +246,7 @@ export default function CartContent() {
                         </div>
                       </td>
                       <td className={styles.tdSubtotal}>
-                        {formatPrice(item.price * item.qty)}
+                        {formatPrice(Number(item.unitPrice || item.price || 0) * Number(item.qty || 1))}
                       </td>
                     </tr>
                   ))}
@@ -232,7 +314,7 @@ export default function CartContent() {
               </div>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </>
   );

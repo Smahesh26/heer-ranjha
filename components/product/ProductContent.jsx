@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPrice } from "@/components/shop/shopData";
+import { addGuestCartItem, addGuestWishlistItem } from "@/lib/client-cart-wishlist";
 import styles from "./product.module.css";
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const DEFAULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 const REVIEWS = [
   {
@@ -51,23 +52,73 @@ function StarRating({ rating, max = 5, size = 14 }) {
 }
 
 function GalleryView({ product, activeIdx, onSelect }) {
-  const views = [
-    { cx: product.cx, cy: product.cy },
-    { cx: product.cx - 10, cy: product.cy + 8 },
-    { cx: product.cx + 12, cy: product.cy - 6 },
-    { cx: 50, cy: 50 },
-    { cx: product.cx + 5, cy: product.cy + 10 },
-  ];
+  const uploadedImages = Array.isArray(product.images) ? product.images : [];
+  const views = uploadedImages.length
+    ? uploadedImages.map((src) => ({ image: src }))
+    : [
+        { cx: product.cx, cy: product.cy },
+        { cx: product.cx - 10, cy: product.cy + 8 },
+        { cx: product.cx + 12, cy: product.cy - 6 },
+        { cx: 50, cy: 50 },
+        { cx: product.cx + 5, cy: product.cy + 10 },
+      ];
+
+  const activeView = views[activeIdx] || views[0];
+
+  useEffect(() => {
+    if (activeIdx > views.length - 1) {
+      onSelect(0);
+    }
+  }, [activeIdx, onSelect, views.length]);
+
+  const canSlide = views.length > 1;
+
+  function goPrev() {
+    if (!canSlide) return;
+    onSelect(activeIdx === 0 ? views.length - 1 : activeIdx - 1);
+  }
+
+  function goNext() {
+    if (!canSlide) return;
+    onSelect(activeIdx === views.length - 1 ? 0 : activeIdx + 1);
+  }
 
   return (
     <div className={styles.gallery}>
       <div className={styles.galleryMain}>
-        <div
-          className={styles.galleryMainBg}
-          style={{
-            background: `radial-gradient(ellipse 75% 75% at ${views[activeIdx].cx}% ${views[activeIdx].cy}%, ${product.colorA}, ${product.colorB})`,
-          }}
-        />
+        <div className={styles.galleryViewport}>
+          <div
+            className={styles.galleryTrack}
+            style={{ transform: `translateX(-${activeIdx * 100}%)` }}
+          >
+            {views.map((view, index) => (
+              <div key={index} className={styles.gallerySlide}>
+                {view?.image ? (
+                  <img className={styles.galleryMainImage} src={view.image} alt={`${product.name} ${index + 1}`} />
+                ) : (
+                  <div
+                    className={styles.galleryMainBg}
+                    style={{
+                      background: `radial-gradient(ellipse 75% 75% at ${view?.cx || 50}% ${view?.cy || 50}%, ${product.colorA || "#d4c2a3"}, ${product.colorB || "#7a5635"})`,
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {canSlide ? (
+          <>
+            <button className={`${styles.navBtn} ${styles.navPrev}`} onClick={goPrev} aria-label="Previous image">
+              ←
+            </button>
+            <button className={`${styles.navBtn} ${styles.navNext}`} onClick={goNext} aria-label="Next image">
+              →
+            </button>
+          </>
+        ) : null}
+
         {product.badge && (
           <span className={`${styles.badge} ${product.badge === "New" ? styles.badgeNew : styles.badgeSold}`}>
             {product.badge}
@@ -83,12 +134,16 @@ function GalleryView({ product, activeIdx, onSelect }) {
             aria-label={`View ${i + 1}`}
             aria-pressed={i === activeIdx}
           >
-            <div
-              className={styles.thumbBg}
-              style={{
-                background: `radial-gradient(ellipse 75% 75% at ${v.cx}% ${v.cy}%, ${product.colorA}, ${product.colorB})`,
-              }}
-            />
+            {v.image ? (
+              <img className={styles.thumbImage} src={v.image} alt={`${product.name} view ${i + 1}`} />
+            ) : (
+              <div
+                className={styles.thumbBg}
+                style={{
+                  background: `radial-gradient(ellipse 75% 75% at ${v.cx || 50}% ${v.cy || 50}%, ${product.colorA || "#d4c2a3"}, ${product.colorB || "#7a5635"})`,
+                }}
+              />
+            )}
           </button>
         ))}
       </div>
@@ -98,10 +153,15 @@ function GalleryView({ product, activeIdx, onSelect }) {
 
 function TabSection({ product }) {
   const [tab, setTab] = useState("description");
+  const detailText = product.detail || product.description || "Hand Embroidery";
+  const embroideryLabel = detailText.includes(" · ")
+    ? detailText.split(" · ")[1]?.trim() || "Hand Embroidery"
+    : "Hand Embroidery";
 
   const TABS = [
     { key: "description", label: "Description" },
     { key: "info", label: "Additional Info" },
+    { key: "care", label: "Care & Terms" },
     { key: "reviews", label: `Reviews (${REVIEWS.length})` },
   ];
 
@@ -135,7 +195,7 @@ function TabSection({ product }) {
             </p>
             <ul className={styles.descList}>
               <li>Fabric: {product.fabric}</li>
-              <li>Embroidery: {product.detail.split(" · ")[1] || "Hand Embroidery"}</li>
+              <li>Embroidery: {embroideryLabel}</li>
               <li>Set includes: Kurta and cotton pant</li>
               <li>Wash care: Gentle hand wash in cold water, dry in shade</li>
               <li>Country of origin: India</li>
@@ -169,6 +229,20 @@ function TabSection({ product }) {
             </div>
             <p className={styles.infoNote}>
               All measurements are in inches. If you are between sizes, we recommend sizing up. For a fitted silhouette, choose your standard size. Contact our boutique for a bespoke fitting appointment.
+            </p>
+          </div>
+        )}
+
+        {tab === "care" && (
+          <div className={styles.infoContent}>
+            <h3 className={`display ${styles.infoTitle}`}>Cloth Care</h3>
+            <p className={styles.infoNote}>
+              {product.clothCare || "Dry clean preferred. If hand washing, use cold water and mild detergent. Dry in shade and steam iron on low heat from reverse side."}
+            </p>
+
+            <h3 className={`display ${styles.infoTitle}`}>Terms & Conditions</h3>
+            <p className={styles.infoNote}>
+              {product.termsAndConditions || "Slight variation in color and embroidery is natural for handcrafted garments. Altered/custom pieces are not eligible for return. Exchange requests must be raised within 48 hours of delivery."}
             </p>
           </div>
         )}
@@ -218,12 +292,16 @@ function RelatedProducts({ products }) {
       </div>
       <div className={styles.relatedGrid}>
         {products.map((p) => (
-          <a key={p.id} href={`/product/${p.id.toLowerCase()}`} className={styles.relatedCard}>
+          <a key={p.id} href={`/product/${(p.slug || p.id).toLowerCase()}`} className={styles.relatedCard}>
             <div className={styles.relatedImageWrap}>
-              <div
-                className={styles.relatedBg}
-                style={{ background: `radial-gradient(ellipse 75% 75% at ${p.cx}% ${p.cy}%, ${p.colorA}, ${p.colorB})` }}
-              />
+              {Array.isArray(p.images) && p.images[0] ? (
+                <img className={styles.relatedImage} src={p.images[0]} alt={p.name} loading="lazy" />
+              ) : (
+                <div
+                  className={styles.relatedBg}
+                  style={{ background: `radial-gradient(ellipse 75% 75% at ${p.cx || 50}% ${p.cy || 50}%, ${p.colorA || "#d4c2a3"}, ${p.colorB || "#7a5635"})` }}
+                />
+              )}
               <div className={styles.relatedOverlay} />
             </div>
             <p className={styles.relatedCollection}>{p.collection}</p>
@@ -243,13 +321,88 @@ export default function ProductContent({ product, related }) {
   const [wished, setWished] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
+  const availableSizes = Array.isArray(product.sizes) && product.sizes.length ? product.sizes : DEFAULT_SIZES;
+  const sizeCharges = product.sizeCharges && typeof product.sizeCharges === "object" ? product.sizeCharges : {};
+  const selectedSizeCharge = selectedSize ? Number(sizeCharges[selectedSize] || 0) : 0;
+  const unitPrice = Number(product.price || 0) + selectedSizeCharge;
+  const totalPrice = unitPrice * qty;
+  const shortDescription = product.detail || product.description;
+
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert("Please select a size.");
       return;
     }
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2500);
+
+    const payload = {
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      detail: shortDescription,
+      collection: product.collection,
+      price: unitPrice,
+      image: Array.isArray(product.images) ? product.images[0] || null : null,
+      size: selectedSize,
+      quantity: qty,
+      inStock: Number(product.stock || 0) > 0,
+    };
+
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then(async (res) => {
+        if (res.ok) {
+          await fetch("/api/cart", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              productId: product.id,
+              size: selectedSize,
+              quantity: qty,
+            }),
+          }).catch(() => {});
+        } else {
+          addGuestCartItem(payload);
+        }
+      })
+      .catch(() => {
+        addGuestCartItem(payload);
+      })
+      .finally(() => {
+        setAddedToCart(true);
+        setTimeout(() => setAddedToCart(false), 2500);
+      });
+  };
+
+  const handleWishlistToggle = () => {
+    const nextState = !wished;
+    setWished(nextState);
+    if (!nextState) return;
+
+    const payload = {
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      detail: shortDescription,
+      collection: product.collection,
+      price: unitPrice,
+      image: Array.isArray(product.images) ? product.images[0] || null : null,
+      inStock: Number(product.stock || 0) > 0,
+    };
+
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then(async (res) => {
+        if (res.ok) {
+          await fetch("/api/wishlist", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId: product.id }),
+          }).catch(() => {});
+        } else {
+          addGuestWishlistItem(payload);
+        }
+      })
+      .catch(() => {
+        addGuestWishlistItem(payload);
+      });
   };
 
   return (
@@ -278,9 +431,10 @@ export default function ProductContent({ product, related }) {
             <StarRating rating={4.7} />
             <span className={styles.ratingCount}>(3 reviews)</span>
           </div>
-          <p className={styles.productPrice}>{formatPrice(product.price)}</p>
+          <p className={styles.productPrice}>{formatPrice(unitPrice)}</p>
+          {selectedSizeCharge > 0 ? <p className={styles.priceHint}>Base {formatPrice(product.price)} + Size {selectedSize} charge {formatPrice(selectedSizeCharge)}</p> : null}
           <p className={styles.productShortDesc}>
-            {product.detail}. A piece from the {product.collection} collection, hand-crafted in {product.fabric.toLowerCase()} by artisans at our Bareilly atelier.
+            {shortDescription}. A piece from the {product.collection} collection, hand-crafted in {product.fabric.toLowerCase()} by artisans at our Bareilly atelier.
           </p>
 
           <div className={styles.divider} />
@@ -292,7 +446,7 @@ export default function ProductContent({ product, related }) {
               {selectedSize && <span className={styles.sizeSelected}>{selectedSize}</span>}
             </div>
             <div className={styles.sizeBtns}>
-              {SIZES.map((sz) => (
+              {availableSizes.map((sz) => (
                 <button
                   key={sz}
                   className={`${styles.sizeBtn} ${selectedSize === sz ? styles.sizeBtnActive : ""}`}
@@ -303,6 +457,9 @@ export default function ProductContent({ product, related }) {
                 </button>
               ))}
             </div>
+            {selectedSize && selectedSizeCharge > 0 ? (
+              <p className={styles.sizeChargeText}>Extra charge for {selectedSize}: {formatPrice(selectedSizeCharge)}</p>
+            ) : null}
             <a href="#info" className={styles.sizeGuideLink} onClick={(e) => { e.preventDefault(); }}>
               Size guide
             </a>
@@ -329,6 +486,7 @@ export default function ProductContent({ product, related }) {
                 &#43;
               </button>
             </div>
+            <span className={styles.qtyTotal}>Total: {formatPrice(totalPrice)}</span>
           </div>
 
           {/* Actions */}
@@ -341,7 +499,7 @@ export default function ProductContent({ product, related }) {
             </button>
             <button
               className={`${styles.wishlistBtn} ${wished ? styles.wishlistBtnActive : ""}`}
-              onClick={() => setWished((w) => !w)}
+              onClick={handleWishlistToggle}
               aria-pressed={wished}
               aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
             >

@@ -2,28 +2,33 @@
 import { useState } from "react";
 import styles from "./orderTracking.module.css";
 
-const DEMO_ORDER = {
-  id: "HR-2025-0312",
-  date: "14 April 2025",
-  status: "Shipped",
-  statusStep: 2,
-  email: "priya@example.com",
-  items: [
-    { name: "Red Chanderi Lehenga", detail: "Asaya Collection · Size M", price: "₹35,000" },
-    { name: "Ivory Organza Lehenga", detail: "Asaya Collection · Size S", price: "₹38,000" },
-  ],
-  total: "₹73,000",
-  address: "Delhi, India",
-  courier: "Blue Dart",
-  trackingNo: "BD9284710345",
-};
-
 const STATUS_STEPS = [
   { label: "Order Placed", icon: "✓" },
   { label: "Processing", icon: "◈" },
   { label: "Shipped", icon: "▶" },
   { label: "Delivered", icon: "◉" },
 ];
+
+function getStatusStep(status) {
+  const normalized = String(status || "PENDING").toUpperCase();
+  if (normalized === "DELIVERED") return 3;
+  if (normalized === "SHIPPED") return 2;
+  if (normalized === "PROCESSING" || normalized === "CONFIRMED" || normalized === "PACKED") return 1;
+  return 0;
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+function formatPrice(value) {
+  return `₹${Number(value || 0).toLocaleString("en-IN")}`;
+}
 
 function PageHeader() {
   return (
@@ -50,27 +55,34 @@ export default function OrderTrackingContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleTrack = () => {
+  const handleTrack = async () => {
     setError("");
     if (!orderId.trim() || !email.trim()) {
       setError("Please enter both your Order ID and billing email.");
       return;
     }
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (
-        orderId.trim().toUpperCase() === DEMO_ORDER.id ||
-        orderId.trim() === "demo"
-      ) {
-        setResult(DEMO_ORDER);
-      } else {
-        setError(
-          "No order found with that ID and email combination. Try Order ID: HR-2025-0312"
-        );
-        setResult(null);
+
+    try {
+      const response = await fetch("/api/orders/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: orderId.trim(), email: email.trim().toLowerCase() }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data?.order) {
+        throw new Error(data?.error || "No order found with that ID and email.");
       }
-    }, 1200);
+
+      setResult(data.order);
+    } catch (trackError) {
+      setResult(null);
+      setError(trackError.message || "Unable to fetch order details.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,7 +148,7 @@ export default function OrderTrackingContent() {
             </button>
 
             <p className={styles.formHint}>
-              Try Order ID <strong>HR-2025-0312</strong> with any email to see a demo result.
+              Use your order number from confirmation email, for example <strong>HR-1720458261000</strong>.
             </p>
           </div>
 
@@ -168,10 +180,10 @@ export default function OrderTrackingContent() {
             <div className={styles.resultHeader}>
               <div>
                 <p className="eyebrow">Order Found</p>
-                <h2 className={`display ${styles.resultOrderId}`}>{result.id}</h2>
-                <p className={styles.resultDate}>Placed on {result.date}</p>
+                <h2 className={`display ${styles.resultOrderId}`}>{result.orderNumber || result.id}</h2>
+                <p className={styles.resultDate}>Placed on {formatDate(result.createdAt)}</p>
               </div>
-              <span className={styles.statusChip}>{result.status}</span>
+              <span className={styles.statusChip}>{String(result.status || "PENDING").replaceAll("_", " ")}</span>
             </div>
 
             {/* Progress bar */}
@@ -179,15 +191,15 @@ export default function OrderTrackingContent() {
               {STATUS_STEPS.map((step, i) => (
                 <div
                   key={i}
-                  className={`${styles.progressStep} ${i <= result.statusStep ? styles.progressStepDone : ""}`}
+                  className={`${styles.progressStep} ${i <= getStatusStep(result.status) ? styles.progressStepDone : ""}`}
                 >
                   <div className={styles.progressDot}>
-                    {i <= result.statusStep ? (
+                    {i <= getStatusStep(result.status) ? (
                       <span className={styles.progressDotIcon}>{step.icon}</span>
                     ) : null}
                   </div>
                   {i < STATUS_STEPS.length - 1 && (
-                    <div className={`${styles.progressLine} ${i < result.statusStep ? styles.progressLineDone : ""}`} />
+                    <div className={`${styles.progressLine} ${i < getStatusStep(result.status) ? styles.progressLineDone : ""}`} />
                   )}
                   <span className={styles.progressLabel}>{step.label}</span>
                 </div>
@@ -197,18 +209,18 @@ export default function OrderTrackingContent() {
             {/* Order items */}
             <div className={styles.resultItems}>
               <h3 className={styles.resultSectionTitle}>Items in this Order</h3>
-              {result.items.map((item, i) => (
-                <div key={i} className={styles.resultItem}>
+              {(result.items || []).map((item, i) => (
+                <div key={`${item.id || item.productId || i}`} className={styles.resultItem}>
                   <div>
-                    <p className={`display ${styles.resultItemName}`}>{item.name}</p>
-                    <p className={styles.resultItemDetail}>{item.detail}</p>
+                    <p className={`display ${styles.resultItemName}`}>{item.title || item.name || "Product"}</p>
+                    <p className={styles.resultItemDetail}>Qty {item.quantity || 1}</p>
                   </div>
-                  <p className={styles.resultItemPrice}>{item.price}</p>
+                  <p className={styles.resultItemPrice}>{formatPrice(item.price)}</p>
                 </div>
               ))}
               <div className={styles.resultTotal}>
                 <span className={styles.resultTotalLabel}>Order Total</span>
-                <span className={`display ${styles.resultTotalValue}`}>{result.total}</span>
+                <span className={`display ${styles.resultTotalValue}`}>{formatPrice(result.total)}</span>
               </div>
             </div>
 
@@ -218,15 +230,15 @@ export default function OrderTrackingContent() {
               <div className={styles.resultShippingGrid}>
                 <div className={styles.resultShippingItem}>
                   <span className={styles.resultShippingLabel}>Courier</span>
-                  <span className={styles.resultShippingValue}>{result.courier}</span>
+                  <span className={styles.resultShippingValue}>{result.courierName || "Pending"}</span>
                 </div>
                 <div className={styles.resultShippingItem}>
                   <span className={styles.resultShippingLabel}>Tracking No.</span>
-                  <span className={styles.resultShippingValue}>{result.trackingNo}</span>
+                  <span className={styles.resultShippingValue}>{result.trackingNumber || "Not assigned"}</span>
                 </div>
                 <div className={styles.resultShippingItem}>
                   <span className={styles.resultShippingLabel}>Destination</span>
-                  <span className={styles.resultShippingValue}>{result.address}</span>
+                  <span className={styles.resultShippingValue}>{result.shippingAddress || "-"}</span>
                 </div>
               </div>
             </div>

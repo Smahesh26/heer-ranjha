@@ -7,29 +7,43 @@ import styles from "./shop.module.css";
 function ProductCard({ product }) {
   const [wished, setWished] = useState(false);
 
+  const normalizedSlug = String(product.slug || product.id || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+/, "");
+
+  const previewImage = Array.isArray(product.images) ? product.images[0] : null;
+  const badge = product.stock <= 0 ? "Sold Out" : product.featured ? "New" : null;
+  const detailText = product.detail || product.description || "";
+  const productHref = `/product/${normalizedSlug}`;
+
   const bgStyle = {
-    background: `radial-gradient(ellipse 75% 75% at ${product.cx}% ${product.cy}%, ${product.colorA}, ${product.colorB})`,
+    background: `radial-gradient(ellipse 75% 75% at ${product.cx || 50}% ${product.cy || 50}%, ${product.colorA || "#d4c2a3"}, ${product.colorB || "#7a5635"})`,
   };
 
   return (
     <article className={styles.card}>
       {/* Image area */}
       <div className={styles.cardImageWrap}>
-        <div className={styles.cardBg} style={bgStyle} />
+        {previewImage ? (
+          <img className={styles.cardImage} src={previewImage} alt={product.name} loading="lazy" />
+        ) : (
+          <div className={styles.cardBg} style={bgStyle} />
+        )}
         <div className={styles.cardOverlay} />
 
         {/* Badge */}
-        {product.badge && (
+        {badge && (
           <span
             className={`${styles.badge} ${
-              product.badge === "Sold Out"
+              badge === "Sold Out"
                 ? styles.badgeSold
-                : product.badge === "New"
+                : badge === "New"
                 ? styles.badgeNew
                 : styles.badgeSale
             }`}
           >
-            {product.badge}
+            {badge}
           </span>
         )}
 
@@ -47,7 +61,7 @@ function ProductCard({ product }) {
 
         {/* Hover: view button */}
         <div className={styles.cardHoverActions}>
-          <a href={`/shop/${product.id.toLowerCase()}`} className={styles.viewPieceBtn}>
+          <a href={productHref} className={styles.viewPieceBtn}>
             View Piece
           </a>
         </div>
@@ -57,7 +71,7 @@ function ProductCard({ product }) {
       <div className={styles.cardInfo}>
         <p className={styles.cardCollection}>{product.collection}</p>
         <h3 className={`display ${styles.cardName}`}>{product.name}</h3>
-        <p className={styles.cardDetail}>{product.detail}</p>
+        <p className={styles.cardDetail}>{detailText}</p>
         <p className={styles.cardPrice}>{formatPrice(product.price)}</p>
       </div>
     </article>
@@ -110,6 +124,7 @@ function Pagination({ page, totalPages, onPage }) {
 export default function ShopGrid({
   products,
   total,
+  loading,
   page,
   totalPages,
   perPage,
@@ -126,7 +141,9 @@ export default function ShopGrid({
       {/* Sort bar */}
       <div className={styles.sortBar}>
         <p className={styles.resultCount}>
-          {total === 0
+          {loading
+            ? "Loading pieces..."
+            : total === 0
             ? "No pieces found"
             : `Showing ${start} to ${end} of ${total} piece${total !== 1 ? "s" : ""}`}
         </p>
@@ -148,7 +165,7 @@ export default function ShopGrid({
       </div>
 
       {/* Empty state */}
-      {products.length === 0 ? (
+      {!loading && products.length === 0 ? (
         <div className={styles.emptyState}>
           <p className={`display ${styles.emptyTitle}`}>No pieces found</p>
           <p className={styles.emptySub}>Try adjusting your filters to see more results.</p>

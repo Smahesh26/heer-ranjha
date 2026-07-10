@@ -6,6 +6,7 @@
 /out
 
 # local env files
+.env
 .env*.local
 
 # logs
@@ -16,6 +17,8 @@ yarn-error.log*
 # misc
 .DS_Store
 *.pem
+/public/uploads
+/prisma/*.db
 
 # typescript
 *.tsbuildinfo

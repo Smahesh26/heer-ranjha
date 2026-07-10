@@ -41,7 +41,7 @@
   --gutter:       clamp(1.5rem, 5vw, 5rem);
 
   /* Nav */
-  --nav-height:   134px;
+  --nav-height:   96px;
 }
 
 /* ---- Reset ---- */
@@ -221,7 +221,7 @@ button {
 /* ---- Mobile base resets ---- */
 @media (max-width: 768px) {
   :root {
-    --nav-height: 64px;
+    --nav-height: 54px;
     --space-xl: 4.5rem;
     --space-2xl: 6rem;
   }

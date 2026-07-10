@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import ShopHero from "./ShopHero";
 import ShopSidebar from "./ShopSidebar";
 import ShopGrid from "./ShopGrid";
@@ -19,19 +19,68 @@ const INITIAL_FILTERS = {
   collections: [],
   fabrics: [],
   search: "",
-  minPrice: 5000,
-  maxPrice: 50000,
+  minPrice: 0,
+  maxPrice: 500000,
 };
 
 export default function ShopContent() {
+  const [products, setProducts] = useState(PRODUCTS);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    let active = true;
+
+    async function loadProducts() {
+      setLoading(true);
+      try {
+        const response = await fetch("/api/products?active=true", { cache: "no-store" });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error || "Unable to load products");
+        }
+
+        if (active && Array.isArray(data.products)) {
+          setProducts(data.products);
+        }
+      } catch {
+        if (active) {
+          setProducts(PRODUCTS);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadProducts();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const subCategories = useMemo(() => {
+    const values = [...new Set(products.map((p) => p.subCategory).filter(Boolean))];
+    return values.length ? values : SUB_CATEGORIES;
+  }, [products]);
+
+  const collections = useMemo(() => {
+    const values = [...new Set(products.map((p) => p.collection).filter(Boolean))];
+    return values.length ? values : COLLECTIONS;
+  }, [products]);
+
+  const fabrics = useMemo(() => {
+    const values = [...new Set(products.map((p) => p.fabric).filter(Boolean))];
+    return values.length ? values : FABRICS;
+  }, [products]);
+
   // Derived: filtered + sorted products
   const filteredProducts = useMemo(() => {
-    let list = [...PRODUCTS];
+    let list = [...products];
 
     if (filters.search.trim()) {
       const q = filters.search.toLowerCase();
@@ -45,7 +94,9 @@ export default function ShopContent() {
     }
 
     if (filters.gender !== "All") {
-      list = list.filter((p) => p.category === filters.gender);
+      list = list.filter(
+        (p) => String(p.category || "").toLowerCase() === filters.gender.toLowerCase()
+      );
     }
 
     if (filters.subCategories.length > 0) {
@@ -61,7 +112,7 @@ export default function ShopContent() {
     }
 
     list = list.filter(
-      (p) => p.price >= filters.minPrice && p.price <= filters.maxPrice
+      (p) => Number(p.price || 0) >= filters.minPrice && Number(p.price || 0) <= filters.maxPrice
     );
 
     switch (sort) {
@@ -79,13 +130,19 @@ export default function ShopContent() {
     }
 
     return list;
-  }, [filters, sort]);
+  }, [filters, sort, products]);
 
   const totalPages = Math.ceil(filteredProducts.length / PER_PAGE);
   const pagedProducts = filteredProducts.slice(
     (page - 1) * PER_PAGE,
     page * PER_PAGE
   );
+
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   // Filter updaters
   const setGender = useCallback((val) => {
@@ -212,9 +269,9 @@ export default function ShopContent() {
 
           <ShopSidebar
             filters={filters}
-            subCategories={SUB_CATEGORIES}
-            collections={COLLECTIONS}
-            fabrics={FABRICS}
+            subCategories={subCategories}
+            collections={collections}
+            fabrics={fabrics}
             onGender={setGender}
             onSubCategory={toggleSubCategory}
             onCollection={toggleCollection}
@@ -231,6 +288,7 @@ export default function ShopContent() {
           <ShopGrid
             products={pagedProducts}
             total={filteredProducts.length}
+            loading={loading}
             page={page}
             totalPages={totalPages}
             perPage={PER_PAGE}

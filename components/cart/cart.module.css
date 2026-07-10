@@ -18,6 +18,33 @@
 .breadcrumbCurrent { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-muted); }
 .pageTitle { font-size: clamp(2.5rem,6vw,5rem); color: var(--charcoal); line-height: 1; }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.countBadge {
+  min-width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--charcoal);
+  color: var(--warm-white);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.pageMeta {
+  margin-top: 0.7rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(26,21,18,0.45);
+}
+
 .cartLayout {
   max-width: var(--max-width);
   margin-inline: auto;
@@ -44,6 +71,13 @@
 
 /* Cart main */
 .cartMain { display: flex; flex-direction: column; gap: 2.5rem; }
+
+.listSummary {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26,21,18,0.5);
+}
 
 /* Table */
 .tableWrap { overflow-x: auto; }

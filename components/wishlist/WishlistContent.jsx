@@ -1,42 +1,17 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPrice } from "@/components/shop/shopData";
+import {
+  addGuestCartItem,
+  getGuestWishlist,
+  removeGuestWishlistItem,
+  syncGuestDataToUser,
+} from "@/lib/client-cart-wishlist";
 import styles from "./wishlist.module.css";
 
-const INITIAL_WISHLIST = [
-  {
-    id: "AL-1430",
-    name: "Red Chanderi Lehenga",
-    detail: "Organza Dupatta · Hand Embroidery",
-    collection: "Asaya",
-    price: 35000,
-    inStock: true,
-    colorA: "#C03040",
-    colorB: "#801020",
-  },
-  {
-    id: "HJM-311",
-    name: "Sky Blue Nehru Jacket",
-    detail: "Hand Embroidery · Indian Ethnic",
-    collection: "Nayi Leher",
-    price: 6500,
-    inStock: true,
-    colorA: "#80B8C8",
-    colorB: "#305070",
-  },
-  {
-    id: "AL-1462",
-    name: "Ivory Organza Lehenga",
-    detail: "3PC Set · Hand Embroidery",
-    collection: "Asaya",
-    price: 38000,
-    inStock: false,
-    colorA: "#F0E8D0",
-    colorB: "#C8B898",
-  },
-];
+function PageHeader({ itemCount }) {
+  const itemLabel = itemCount === 1 ? "item" : "items";
 
-function PageHeader() {
   return (
     <div className={styles.pageHeader}>
       <div className={styles.pageHeaderInner}>
@@ -45,35 +20,138 @@ function PageHeader() {
           <span className={styles.breadcrumbSep}>/</span>
           <span className={styles.breadcrumbCurrent}>Wishlist</span>
         </nav>
-        <h1 className={`display ${styles.pageTitle}`}>Your Wishlist</h1>
+
+        <div className={styles.titleRow}>
+          <h1 className={`display ${styles.pageTitle}`}>Your Wishlist</h1>
+          <span className={styles.countBadge}>{itemCount}</span>
+        </div>
+
+        <p className={styles.pageMeta}>{itemCount} {itemLabel} saved</p>
       </div>
     </div>
   );
 }
 
 export default function WishlistContent() {
-  const [items, setItems] = useState(INITIAL_WISHLIST);
+  const [items, setItems] = useState([]);
+  const [authReady, setAuthReady] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedIds, setAddedIds] = useState([]);
+  const itemCount = items.length;
 
-  const removeItem = (id) => setItems((prev) => prev.filter((i) => i.id !== id));
+  useEffect(() => {
+    let active = true;
 
-  const addToCart = (id) => {
-    setAddedIds((prev) => [...prev, id]);
-    setTimeout(() => setAddedIds((prev) => prev.filter((i) => i !== id)), 2000);
+    async function loadWishlist() {
+      try {
+        const meRes = await fetch("/api/auth/me", { cache: "no-store" });
+        const loggedIn = meRes.ok;
+        if (!active) return;
+
+        setIsLoggedIn(loggedIn);
+
+        if (loggedIn) {
+          await syncGuestDataToUser();
+          const res = await fetch("/api/wishlist", { cache: "no-store" });
+          const data = await res.json().catch(() => ({ items: [] }));
+          if (active) setItems(data.items || []);
+        } else {
+          if (active) setItems(getGuestWishlist());
+        }
+      } finally {
+        if (active) setAuthReady(true);
+      }
+    }
+
+    void loadWishlist();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const removeItem = async (item) => {
+    if (isLoggedIn) {
+      await fetch(`/api/wishlist/${item.id}`, { method: "DELETE" }).catch(() => {});
+      setItems((prev) => prev.filter((entry) => entry.id !== item.id));
+      return;
+    }
+
+    removeGuestWishlistItem(item.productId);
+    setItems((prev) => prev.filter((entry) => entry.productId !== item.productId));
   };
 
-  const addAllToCart = () => {
-    const inStockIds = items.filter((i) => i.inStock).map((i) => i.id);
+  const addToCart = async (item) => {
+    if (isLoggedIn) {
+      await fetch("/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: item.productId, quantity: 1, size: "" }),
+      }).catch(() => {});
+    } else {
+      addGuestCartItem({
+        productId: item.productId,
+        slug: item.slug,
+        name: item.name,
+        detail: item.detail,
+        collection: item.collection,
+        price: item.price,
+        image: item.image,
+        size: "",
+        quantity: 1,
+        inStock: item.inStock,
+      });
+    }
+
+    setAddedIds((prev) => [...prev, item.productId]);
+    setTimeout(() => setAddedIds((prev) => prev.filter((i) => i !== item.productId)), 2000);
+  };
+
+  const addAllToCart = async () => {
+    const inStockItems = items.filter((i) => i.inStock);
+    if (isLoggedIn) {
+      await Promise.all(
+        inStockItems.map((item) =>
+          fetch("/api/cart", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId: item.productId, quantity: 1, size: "" }),
+          }).catch(() => {})
+        )
+      );
+    } else {
+      inStockItems.forEach((item) => {
+        addGuestCartItem({
+          productId: item.productId,
+          slug: item.slug,
+          name: item.name,
+          detail: item.detail,
+          collection: item.collection,
+          price: item.price,
+          image: item.image,
+          size: "",
+          quantity: 1,
+          inStock: item.inStock,
+        });
+      });
+    }
+
+    const inStockIds = inStockItems.map((i) => i.productId);
     setAddedIds(inStockIds);
     setTimeout(() => setAddedIds([]), 2000);
   };
 
   return (
     <>
-      <PageHeader />
+      <PageHeader itemCount={itemCount} />
 
       <div className={styles.wishlistLayout}>
-        {items.length === 0 ? (
+        {!authReady ? (
+          <div className={styles.emptyWishlist}>
+            <h2 className={`display ${styles.emptyTitle}`}>Loading your wishlist...</h2>
+          </div>
+        ) : null}
+
+        {authReady && items.length === 0 ? (
           <div className={styles.emptyWishlist}>
             <div className={styles.emptyIcon} aria-hidden="true">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -87,8 +165,10 @@ export default function WishlistContent() {
               <span className="btn-arrow">&#8594;</span>
             </a>
           </div>
-        ) : (
+        ) : authReady ? (
           <>
+            <div className={styles.listSummary}>{itemCount} {itemCount === 1 ? "item" : "items"} in wishlist</div>
+
             <div className={styles.tableWrap}>
               <table className={styles.wishlistTable}>
                 <thead>
@@ -103,32 +183,31 @@ export default function WishlistContent() {
                 </thead>
                 <tbody>
                   {items.map((item) => {
-                    const added = addedIds.includes(item.id);
+                    const added = addedIds.includes(item.productId);
                     return (
-                      <tr key={item.id} className={styles.row}>
+                      <tr key={item.id || item.productId} className={styles.row}>
                         <td className={styles.tdRemove}>
                           <button
                             className={styles.removeBtn}
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item)}
                             aria-label={`Remove ${item.name} from wishlist`}
                           >
                             &times;
                           </button>
                         </td>
                         <td className={styles.tdImage}>
-                          <a href={`/product/${item.id.toLowerCase()}`} className={styles.imageLink}>
+                          <a href={`/product/${(item.slug || item.productId || "").toLowerCase()}`} className={styles.imageLink}>
                             <div className={styles.productThumb}>
-                              <div
-                                className={styles.thumbBg}
-                                style={{
-                                  background: `radial-gradient(ellipse 75% 75% at 55% 40%, ${item.colorA}, ${item.colorB})`,
-                                }}
-                              />
+                              {item.image ? (
+                                <img className={styles.thumbBg} src={item.image} alt={item.name} />
+                              ) : (
+                                <div className={styles.thumbBg} />
+                              )}
                             </div>
                           </a>
                         </td>
                         <td className={styles.tdName}>
-                          <a href={`/product/${item.id.toLowerCase()}`} className={`display ${styles.productName}`}>
+                          <a href={`/product/${(item.slug || item.productId || "").toLowerCase()}`} className={`display ${styles.productName}`}>
                             {item.name}
                           </a>
                           <span className={styles.productDetail}>{item.detail}</span>
@@ -143,7 +222,7 @@ export default function WishlistContent() {
                         <td className={styles.tdAction}>
                           <button
                             className={`${styles.addBtn} ${added ? styles.addBtnAdded : ""} ${!item.inStock ? styles.addBtnDisabled : ""}`}
-                            onClick={() => item.inStock && addToCart(item.id)}
+                            onClick={() => item.inStock && addToCart(item)}
                             disabled={!item.inStock}
                             aria-label={`Add ${item.name} to cart`}
                           >
@@ -171,7 +250,7 @@ export default function WishlistContent() {
               </button>
             </div>
           </>
-        )}
+        ) : null}
       </div>
     </>
   );

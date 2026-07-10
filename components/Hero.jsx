@@ -1,78 +1,114 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Hero.module.css";
 
-const SLIDES = [
-  {
-    label: "New Collection",
-    headline: ["Where", "Craft", "Meets"],
-    accent: "Couture",
-    sub: "Nayi Leher , Now Available",
-    cta: "Explore Collection",
-    ctaHref: "#collections",
-    bg: "slide1",
-  },
-  {
-    label: "Men's Wear",
-    headline: ["Adorned", "in"],
-    accent: "Heritage",
-    sub: "Hand-embroidered Kurtas, Sherwanis and Nehru Jackets",
-    cta: "Shop Men",
-    ctaHref: "#men",
-    bg: "slide2",
-  },
-  {
-    label: "Women's Wear",
-    headline: ["Draped", "in"],
-    accent: "Elegance",
-    sub: "Lehengas, Suit Sets and Co-ord Sets , crafted for every occasion",
-    cta: "Shop Women",
-    ctaHref: "#women",
-    bg: "slide3",
-  },
-];
+const BG_VARIANTS = ["slide1", "slide2", "slide3"];
+
+function isVideoBanner(banner) {
+  if (!banner?.image) return false;
+  if (banner.mediaType === "video") return true;
+  return /\.(mp4|webm|ogg)$/i.test(banner.image);
+}
 
 export default function Hero() {
-  const slideIndexRef = useRef(0);
-  const slidesRef = useRef([]);
-  const dotsRef = useRef([]);
-  const timerRef = useRef(null);
-
-  const goTo = (index) => {
-    const prev = slideIndexRef.current;
-    slidesRef.current[prev]?.classList.remove(styles.active);
-    dotsRef.current[prev]?.classList.remove(styles.dotActive);
-
-    slideIndexRef.current = index;
-    slidesRef.current[index]?.classList.add(styles.active);
-    dotsRef.current[index]?.classList.add(styles.dotActive);
-  };
+  const [slides, setSlides] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeSlide = slides[activeIndex];
+  const isMediaMode = Boolean(activeSlide?.mediaUrl);
 
   useEffect(() => {
-    goTo(0);
-    timerRef.current = setInterval(() => {
-      goTo((slideIndexRef.current + 1) % SLIDES.length);
-    }, 6000);
-    return () => clearInterval(timerRef.current);
+    let isMounted = true;
+
+    async function loadBanners() {
+      try {
+        const response = await fetch("/api/banners", { cache: "no-store" });
+        if (!response.ok) return;
+        const data = await response.json();
+        const activeBanners = (data?.banners || [])
+          .filter((banner) => banner.active)
+          .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+        if (!isMounted) return;
+
+        if (!activeBanners.length) {
+          setSlides([]);
+          return;
+        }
+
+        const mapped = activeBanners.map((banner, index) => ({
+          label: `Banner ${index + 1}`,
+          title: banner.title || "Heer Ranjha",
+          sub: banner.subtitle || "Luxury Indian Couture",
+          cta: "Explore",
+          ctaHref: banner.link || "/shop",
+          bg: BG_VARIANTS[index % BG_VARIANTS.length],
+          mediaUrl: banner.image || "",
+          mediaType: isVideoBanner(banner) ? "video" : "image",
+        }));
+
+        setSlides(mapped);
+        setActiveIndex(0);
+      } catch {
+        // Keep defaults when banner fetch fails.
+      }
+    }
+
+    loadBanners();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const handleDotClick = (i) => {
-    clearInterval(timerRef.current);
-    goTo(i);
-    timerRef.current = setInterval(() => {
-      goTo((slideIndexRef.current + 1) % SLIDES.length);
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % slides.length);
     }, 6000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const handleDotClick = (i) => {
+    setActiveIndex(i);
   };
 
+  if (!slides.length) {
+    if (process.env.NODE_ENV === "production") {
+      return null;
+    }
+
+    return (
+      <section className={styles.emptyHero} aria-label="Banner status">
+        <div className={styles.emptyHeroInner}>
+          <p className="eyebrow">Banner Missing</p>
+          <h1 className={`display ${styles.emptyHeroTitle}`}>No active backend banner found.</h1>
+          <p className={styles.emptyHeroCopy}>Upload an image or MP4 from Admin and keep it marked active to show it on the homepage.</p>
+          <a href="/admin/login" className="btn">
+            <span>Open Banner Admin</span>
+            <span className="btn-arrow">&#8594;</span>
+          </a>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className={styles.hero} aria-label="Hero">
+    <section className={`${styles.hero} ${isMediaMode ? styles.heroMediaMode : ""}`} aria-label="Hero">
       {/* Background slides */}
-      {SLIDES.map((slide, i) => (
+      {slides.map((slide, i) => (
         <div
           key={i}
-          ref={(el) => (slidesRef.current[i] = el)}
-          className={`${styles.slide} ${styles[slide.bg]}`}
+          className={`${styles.slide} ${styles[slide.bg]} ${i === activeIndex ? styles.active : ""}`}
         >
+          {slide.mediaUrl ? (
+            <div className={styles.slideMedia}>
+              {slide.mediaType === "video" ? (
+                <video className={styles.slideVideo} src={slide.mediaUrl} autoPlay muted loop playsInline />
+              ) : (
+                <img className={styles.slideImage} src={slide.mediaUrl} alt={slide.title} />
+              )}
+            </div>
+          ) : null}
           {/* Grain overlay */}
           <div className={styles.grain} />
           {/* Vignette */}
@@ -82,24 +118,15 @@ export default function Hero() {
 
       {/* Content */}
       <div className={styles.content}>
-        {SLIDES.map((slide, i) => (
+        {slides.map((slide, i) => (
           <div
             key={i}
-            ref={(el) => (slidesRef.current[i + SLIDES.length] = el)}
-            className={`${styles.textSlide} ${i === 0 ? styles.active : ""}`}
+            className={`${styles.textSlide} ${i === activeIndex ? styles.active : ""}`}
           >
-            <p className={`eyebrow ${styles.eyebrow}`}>{slide.label}</p>
-            <h1 className={`display ${styles.headline}`}>
-              {slide.headline.map((word, wi) => (
-                <span key={wi} className={styles.word}>
-                  {word}
-                  <br />
-                </span>
-              ))}
-              <em className={styles.accentWord}>{slide.accent}</em>
-            </h1>
+            <p className={`eyebrow ${styles.eyebrow} ${isMediaMode ? styles.eyebrowMedia : ""}`}>{slide.label}</p>
+            <h1 className={`display ${styles.headline}`}>{slide.title}</h1>
             <p className={styles.sub}>{slide.sub}</p>
-            <a href={slide.ctaHref} className={`btn ${styles.heroCta}`}>
+            <a href={slide.ctaHref} className={`btn ${styles.heroCta} ${isMediaMode ? "btn-ivory" : ""}`}>
               <span>{slide.cta}</span>
               <span className="btn-arrow">&#8594;</span>
             </a>
@@ -115,14 +142,14 @@ export default function Hero() {
 
       {/* Slide dots */}
       <div className={styles.dots} role="tablist" aria-label="Hero slides">
-        {SLIDES.map((_, i) => (
+        {slides.map((_, i) => (
           <button
             key={i}
-            ref={(el) => (dotsRef.current[i] = el)}
-            className={styles.dot}
+            className={`${styles.dot} ${i === activeIndex ? styles.dotActive : ""}`}
             onClick={() => handleDotClick(i)}
             aria-label={`Go to slide ${i + 1}`}
             role="tab"
+            aria-selected={i === activeIndex}
           />
         ))}
       </div>
