@@ -43,6 +43,15 @@ export default function Navbar() {
         if (!active) return;
 
         if (meRes.ok) {
+          const meData = await meRes.json().catch(() => null);
+          const role = meData?.user?.role;
+
+          if (role === "ADMIN") {
+            setCartCount(0);
+            setWishlistCount(0);
+            return;
+          }
+
           const [cartRes, wishlistRes] = await Promise.all([
             fetch("/api/cart", { cache: "no-store" }),
             fetch("/api/wishlist", { cache: "no-store" }),

@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { json, badRequest } from "@/lib/http";
 import { bannerSchema } from "@/lib/validators";
 import { cookies } from "next/headers";
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir, writeFile, access } from "fs/promises";
+import { constants } from "fs";
 import path from "path";
 import crypto from "crypto";
 import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
@@ -36,9 +37,30 @@ async function requireAdmin() {
   }
 }
 
+async function normalizeBannerMedia(banners) {
+  return Promise.all(
+    banners.map(async (banner) => {
+      if (typeof banner.image !== "string" || !banner.image.startsWith("/uploads/")) {
+        return banner;
+      }
+
+      const relativePath = banner.image.replace(/^\/+/, "");
+      const absolutePath = path.join(process.cwd(), "public", relativePath);
+
+      try {
+        await access(absolutePath, constants.F_OK);
+        return banner;
+      } catch {
+        return { ...banner, image: "" };
+      }
+    })
+  );
+}
+
 export async function GET() {
   const banners = await prisma.banner.findMany({ orderBy: [{ position: "asc" }, { createdAt: "desc" }] });
-  return json({ banners });
+  const safeBanners = await normalizeBannerMedia(banners);
+  return json({ banners: safeBanners });
 }
 
 export async function POST(request) {
