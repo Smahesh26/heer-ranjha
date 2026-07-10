@@ -52,9 +52,9 @@ Set publish directory: `.next`
 This repo now includes [render.yaml](render.yaml) for Render Blueprint deploys.
 
 Important:
-- This app currently uses SQLite with Prisma.
-- On Render, SQLite must live on a persistent disk or your data will reset on restart/redeploy.
-- The blueprint mounts a disk at `/var/data` and uses `DATABASE_URL="file:/var/data/heer-ranjha.db"`.
+- This app is configured for Prisma with PostgreSQL.
+- Use a hosted Postgres database such as Neon or Supabase.
+- In Render, set `DATABASE_URL` to your hosted Postgres connection string.
 
 ### Render Steps
 
@@ -65,6 +65,7 @@ Important:
 5. Fill these secret env vars in Render before first deploy:
 
 ```bash
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
 JWT_SECRET="replace-with-strong-random-secret"
 RAZORPAY_KEY_ID="your_key"
 RAZORPAY_KEY_SECRET="your_secret"
@@ -101,7 +102,7 @@ Health check:
 Add these keys in `.env.local` (and production secrets manager):
 
 ```bash
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
 JWT_SECRET="replace-with-strong-random-secret"
 
 RAZORPAY_KEY_ID="rzp_test_xxx"
@@ -118,6 +119,31 @@ EMAIL_FROM="Heer Ranjha <your-sender-email@example.com>"
 ```
 
 If SMTP is not configured, login OTP will be printed in server logs only in development mode.
+
+## Postgres Setup
+
+Recommended free providers:
+
+1. Neon
+2. Supabase
+
+### Neon / Supabase Steps
+
+1. Create a free Postgres project.
+2. Copy the connection string.
+3. Put that value into `DATABASE_URL` in Render and your local `.env.local`.
+4. Run Prisma schema push:
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+5. Start the app again.
+
+Note:
+- After switching from SQLite to Postgres, your old local SQLite data will not automatically move.
+- If you need existing data migrated, that is a separate data migration step.
 
 ## Checkout and Payment Webhook
 
