@@ -60,7 +60,14 @@ export async function POST(request) {
   if (contentType.includes("multipart/form-data")) {
     const formData = await request.formData();
     const mediaFile = formData.get("media");
-    const uploadedMedia = mediaFile instanceof File ? await uploadBannerMedia(mediaFile) : formData.get("image")?.toString() || "";
+    let uploadedMedia = formData.get("image")?.toString() || "";
+    if (mediaFile instanceof File) {
+      try {
+        uploadedMedia = await uploadBannerMedia(mediaFile);
+      } catch (error) {
+        return badRequest(error?.message || "Unable to process banner media upload");
+      }
+    }
     payload = {
       title: formData.get("title")?.toString() || "",
       subtitle: formData.get("subtitle")?.toString() || undefined,

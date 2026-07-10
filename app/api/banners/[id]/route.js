@@ -56,7 +56,11 @@ export async function PATCH(request, { params }) {
     const mediaFile = formData.get("media");
 
     if (mediaFile instanceof File) {
-      uploadedMedia = await uploadBannerMedia(mediaFile);
+      try {
+        uploadedMedia = await uploadBannerMedia(mediaFile);
+      } catch (error) {
+        return badRequest(error?.message || "Unable to process banner media upload");
+      }
     }
 
     payload = {
