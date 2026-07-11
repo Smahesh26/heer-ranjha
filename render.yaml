@@ -43,3 +43,5 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      - key: MAX_PRODUCT_UPLOAD_MB
+        value: 15

@@ -2,10 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { json, notFound, badRequest } from "@/lib/http";
 import { productSchema } from "@/lib/validators";
 import { cookies } from "next/headers";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { uploadProductMedia, deleteProductMedia, sanitizeProductImageUrls } from "@/lib/product-media";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +16,10 @@ function safeJsonParse(value, fallback) {
 }
 
 function parseProduct(product) {
+  const parsedImages = safeJsonParse(product.images, []);
   return {
     ...product,
-    images: safeJsonParse(product.images, []),
+    images: sanitizeProductImageUrls(parsedImages),
     sizes: safeJsonParse(product.sizeOptions, []),
     sizeCharges: safeJsonParse(product.sizeCharges, {}),
     isLowStock: Number(product.stock || 0) <= Number(product.lowStockThreshold || 0),
@@ -43,21 +42,6 @@ function normalizeSlug(value) {
     .replace(/^\/+/, "")
     .replace(/\/+$/, "");
   return slugify(cleaned);
-}
-
-function getExtension(fileName) {
-  const ext = path.extname(fileName || "").toLowerCase();
-  return ext || ".bin";
-}
-
-async function saveUpload(file) {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "products");
-  await mkdir(uploadDir, { recursive: true });
-  const fileName = `${Date.now()}-${crypto.randomUUID()}${getExtension(file.name)}`;
-  const filePath = path.join(uploadDir, fileName);
-  await writeFile(filePath, buffer);
-  return `/uploads/products/${fileName}`;
 }
 
 async function requireAdmin() {
@@ -132,7 +116,11 @@ export async function PATCH(request, { params }) {
     const uploadedImages = [];
 
     for (const file of files) {
-      uploadedImages.push(await saveUpload(file));
+      try {
+        uploadedImages.push(await uploadProductMedia(file));
+      } catch (error) {
+        return badRequest(error?.message || "Unable to process product image upload");
+      }
     }
 
     payload = {
@@ -195,12 +183,21 @@ export async function DELETE(_, { params }) {
     return json({ error: "Admin access required" }, { status: 401 });
   }
 
+  const existingProduct = await prisma.product.findUnique({ where: { id: params.id } });
+  if (!existingProduct) {
+    return notFound("Product not found");
+  }
+
+  const existingImages = safeJsonParse(existingProduct.images, []);
+
   try {
     await prisma.$transaction(async (tx) => {
       await tx.cartItem.deleteMany({ where: { productId: params.id } });
       await tx.wishlistItem.deleteMany({ where: { productId: params.id } });
       await tx.product.delete({ where: { id: params.id } });
     });
+
+    await Promise.all(existingImages.map((image) => deleteProductMedia(image)));
 
     return json({ ok: true, deleted: true, archived: false });
   } catch (error) {

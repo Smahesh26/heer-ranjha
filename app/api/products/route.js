@@ -2,10 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { json, badRequest } from "@/lib/http";
 import { productSchema } from "@/lib/validators";
 import { cookies } from "next/headers";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { uploadProductMedia, sanitizeProductImageUrls } from "@/lib/product-media";
 
 export const dynamic = "force-dynamic";
 
@@ -18,18 +16,14 @@ function safeJsonParse(value, fallback) {
 }
 
 function parseProduct(product) {
+  const parsedImages = safeJsonParse(product.images, []);
   return {
     ...product,
-    images: safeJsonParse(product.images, []),
+    images: sanitizeProductImageUrls(parsedImages),
     sizes: safeJsonParse(product.sizeOptions, []),
     sizeCharges: safeJsonParse(product.sizeCharges, {}),
     isLowStock: Number(product.stock || 0) <= Number(product.lowStockThreshold || 0),
   };
-}
-
-function getExtension(fileName) {
-  const ext = path.extname(fileName || "").toLowerCase();
-  return ext || ".bin";
 }
 
 function slugify(value) {
@@ -47,16 +41,6 @@ function normalizeSlug(value, fallback = "") {
     .replace(/^\/+/, "")
     .replace(/\/+$/, "");
   return slugify(cleaned || fallback);
-}
-
-async function saveUpload(file) {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "products");
-  await mkdir(uploadDir, { recursive: true });
-  const fileName = `${Date.now()}-${crypto.randomUUID()}${getExtension(file.name)}`;
-  const filePath = path.join(uploadDir, fileName);
-  await writeFile(filePath, buffer);
-  return `/uploads/products/${fileName}`;
 }
 
 async function requireAdmin() {
@@ -147,7 +131,11 @@ export async function POST(request) {
     const uploadedImages = [];
 
     for (const file of files) {
-      uploadedImages.push(await saveUpload(file));
+      try {
+        uploadedImages.push(await uploadProductMedia(file));
+      } catch (error) {
+        return badRequest(error?.message || "Unable to process product image upload");
+      }
     }
 
     payload = {
