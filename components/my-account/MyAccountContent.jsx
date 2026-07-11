@@ -12,6 +12,8 @@ const NAV_ITEMS = [
   { key: "details", label: "Account Details", icon: "✦" },
 ];
 
+const NAV_KEYS = new Set(NAV_ITEMS.map((item) => item.key));
+
 function formatOrderDate(value) {
   if (!value) return "-";
   return new Intl.DateTimeFormat("en-IN", {
@@ -683,8 +685,9 @@ function LoggedInView({
   onAddressDelete,
   onSaveProfile,
   continueCheckoutHref,
+  initialSection,
 }) {
-  const [activeNav, setActiveNav] = useState("dashboard");
+  const [activeNav, setActiveNav] = useState(NAV_KEYS.has(initialSection) ? initialSection : "dashboard");
 
   const renderContent = () => {
     switch (activeNav) {
@@ -747,6 +750,7 @@ export default function MyAccountContent() {
   const [profileStatus, setProfileStatus] = useState("");
   const [continueCheckoutHref, setContinueCheckoutHref] = useState("");
   const [cameFromCheckout, setCameFromCheckout] = useState(false);
+  const [initialSection, setInitialSection] = useState("dashboard");
 
   async function loadAccountData() {
     const [cartRes, ordersRes, addressesRes] = await Promise.all([
@@ -769,6 +773,8 @@ export default function MyAccountContent() {
     const nextParam = query.get("next") || "";
     setCameFromCheckout(query.get("from") === "checkout");
     setContinueCheckoutHref(nextParam.startsWith("/") ? nextParam : "");
+    const sectionParam = query.get("section") || "dashboard";
+    setInitialSection(NAV_KEYS.has(sectionParam) ? sectionParam : "dashboard");
   }, []);
 
   useEffect(() => {
@@ -932,6 +938,7 @@ export default function MyAccountContent() {
             onSaveProfile={handleSaveProfile}
             onLogout={handleLogout}
             continueCheckoutHref={continueCheckoutHref}
+            initialSection={initialSection}
           />
         ) : (
           <LoggedOutView

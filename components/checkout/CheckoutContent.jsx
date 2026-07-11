@@ -238,7 +238,7 @@ export default function CheckoutContent() {
           await fetch("/api/cart", { method: "DELETE" }).catch(() => {});
           setItems([]);
           setCheckoutSuccess(`Payment successful. Order ${appOrder.orderNumber || appOrder.id} confirmed.`);
-          router.push("/my-account");
+          router.replace("/my-account?section=orders&from=checkout");
         },
       });
 
