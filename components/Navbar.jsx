@@ -106,8 +106,8 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               alt="Heer Ranjha"
-              width={64}
-              height={80}
+              width={256}
+              height={320}
               className={styles.logoImg}
               priority
             />

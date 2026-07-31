@@ -2,10 +2,30 @@ import Image from "next/image";
 import styles from "./Footer.module.css";
 
 const LINKS = {
-  Collections: ["Nayi Leher", "Asaya", "Roomani", "Ganga Jamuni"],
-  "Men's Wear": ["Kurta Sets", "Nehru Jackets", "Sherwanis", "Bandhgalas"],
-  "Women's Wear": ["Sarees", "Lehenga Sets", "Suit Sets", "Co-ord Sets"],
-  Info: ["About Us", "Our Craft", "Lookbook", "Contact"],
+  Collections: [
+    { label: "Nayi Leher", href: "/shop?collection=Nayi+Leher" },
+    { label: "Asaya", href: "/shop?collection=Asaya" },
+    { label: "Roomani", href: "/shop?collection=Roomani" },
+    { label: "Ganga Jamuni", href: "/shop?collection=Ganga+Jamuni" },
+  ],
+  "Men's Wear": [
+    { label: "Kurta Sets", href: "/shop?category=Men&type=Kurta+Sets" },
+    { label: "Nehru Jackets", href: "/shop?category=Men&type=Nehru+Jackets" },
+    { label: "Sherwanis", href: "/shop?category=Men&type=Sherwanis" },
+    { label: "Bandhgalas", href: "/shop?category=Men&type=Bandhgalas" },
+  ],
+  "Women's Wear": [
+    { label: "Sarees", href: "/shop?category=Women&type=Sarees" },
+    { label: "Lehenga Sets", href: "/shop?category=Women&type=Lehenga+Sets" },
+    { label: "Suit Sets", href: "/shop?category=Women&type=Suit+Sets" },
+    { label: "Co-ord Sets", href: "/shop?category=Women&type=Co-ord+Sets" },
+  ],
+  Info: [
+    { label: "About Us", href: "/about-us" },
+    { label: "Our Craft", href: "/about-us#craft" },
+    { label: "Lookbook", href: "/#lookbook" },
+    { label: "Contact", href: "/#stores" },
+  ],
 };
 
 export default function Footer() {
@@ -35,8 +55,8 @@ export default function Footer() {
           <Image
             src="/logo.png"
             alt="Heer Ranjha"
-            width={80}
-            height={100}
+            width={120}
+            height={150}
             className={styles.footerLogo}
           />
           <p className={`display-italic ${styles.tagline}`}>
@@ -54,8 +74,8 @@ export default function Footer() {
               <h4 className={styles.colHead}>{category}</h4>
               <ul className={styles.colList}>
                 {items.map((item) => (
-                  <li key={item}>
-                    <a href="#" className={styles.colLink}>{item}</a>
+                  <li key={item.label}>
+                    <a href={item.href} className={styles.colLink}>{item.label}</a>
                   </li>
                 ))}
               </ul>

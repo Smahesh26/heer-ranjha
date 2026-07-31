@@ -69,18 +69,19 @@
 }
 
 .logoImg {
-  height: 78px;
+  height: 80px;
   width: auto;
   object-fit: contain;
   /* Make cream logo visible on light background */
   filter: brightness(0) saturate(100%);
   opacity: 0.82;
+  transform: scale(2.2);
   transition: opacity var(--duration-sm) ease, transform var(--duration-sm) ease;
 }
 
 .logoWrap:hover .logoImg {
   opacity: 1;
-  transform: scale(1.04);
+  transform: scale(2.3);
   filter: brightness(0) saturate(100%) sepia(0.3) hue-rotate(10deg);
 }
 
@@ -233,5 +234,5 @@
 }
 
 @media (max-width: 480px) {
-  .logoImg { height: 46px; }
+  .logoImg { height: 60px; }
 }
