@@ -10,7 +10,8 @@ const PANELS = [
     sub: "Kurtas, Sherwanis, Nehru Jackets, Bandhgalas , hand-embroidered in Matka, Dupion and Raw Silk.",
     cta: "Shop Men's Wear",
     href: "#men",
-    swatchColors: ["#2A4A6A", "#3A5A4A", "#7A6A3A", "#4A3A6A"],
+    image: "/images/products/ivory-matka-fabric-nehru-jacketraw-silk-kurta-and-pant.jpg",
+    objectPosition: "50% 15%",
   },
   {
     id: "women",
@@ -19,7 +20,8 @@ const PANELS = [
     sub: "Sarees, Lehengas, Co-ord Sets and Suit Sets , woven in Chanderi, Dupion and Organza.",
     cta: "Shop Women's Wear",
     href: "#women",
-    swatchColors: ["#6A2A4A", "#8A5A2A", "#2A5A6A", "#5A3A2A"],
+    image: "/images/products/tissue-saree.jpg",
+    objectPosition: "50% 15%",
   },
 ];
 
@@ -50,20 +52,7 @@ export default function LookbookCTA() {
         <div key={panel.id} id={panel.id} className={styles.panel}>
           {/* Background art */}
           <div className={styles.panelBg}>
-            {panel.swatchColors.map((color, i) => (
-              <div
-                key={i}
-                className={styles.blob}
-                style={{
-                  background: color,
-                  left: `${[5, 45, 15, 55][i]}%`,
-                  top: `${[10, 5, 55, 50][i]}%`,
-                  width: `${[55, 45, 50, 48][i]}%`,
-                  height: `${[50, 45, 48, 50][i]}%`,
-                  animationDelay: `${pi * 2 + i * 0.9}s`,
-                }}
-              />
-            ))}
+            <img src={panel.image} alt={panel.label} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: panel.objectPosition || 'center' }} />
             <div className={styles.panelOverlay} />
           </div>
 
@@ -76,7 +65,7 @@ export default function LookbookCTA() {
               ))}
             </h2>
             <p className={`${styles.panelSub} reveal reveal-delay-3`}>{panel.sub}</p>
-            <a href={panel.href} className={`btn btn-ivory reveal reveal-delay-4`}>
+            <a href={panel.href} className={`btn btn-gold reveal reveal-delay-4`}>
               <span>{panel.cta}</span>
               <span className="btn-arrow">&#8594;</span>
             </a>

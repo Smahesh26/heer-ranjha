@@ -84,23 +84,7 @@ export default function Hero() {
         </div>
       ))}
 
-      {/* Content */}
-      <div className={styles.content}>
-        {slides.map((slide, i) => (
-          <div
-            key={i}
-            className={`${styles.textSlide} ${i === activeIndex ? styles.active : ""}`}
-          >
-            <p className={`eyebrow ${styles.eyebrow} ${isMediaMode ? styles.eyebrowMedia : ""}`}>{slide.label}</p>
-            <h1 className={`display ${styles.headline}`}>{slide.title}</h1>
-            <p className={styles.sub}>{slide.sub}</p>
-            <a href={slide.ctaHref} className={`btn ${styles.heroCta} ${isMediaMode ? "btn-ivory" : ""}`}>
-              <span>{slide.cta}</span>
-              <span className="btn-arrow">&#8594;</span>
-            </a>
-          </div>
-        ))}
-      </div>
+      {/* Content removed per user request */}
 
       {/* Scroll indicator */}
       <div className={styles.scrollIndicator} aria-hidden="true">

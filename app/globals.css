@@ -207,6 +207,14 @@ button {
 .btn-ivory::before { background: var(--ivory); }
 .btn-ivory:hover { color: var(--charcoal); }
 
+/* ---- Gold button ---- */
+.btn-gold {
+  border-color: var(--gold-muted);
+  color: var(--gold-muted);
+}
+.btn-gold::before { background: var(--gold-muted); }
+.btn-gold:hover { color: var(--warm-white); }
+
 /* ---- Selection ---- */
 ::selection {
   background: var(--gold-muted);

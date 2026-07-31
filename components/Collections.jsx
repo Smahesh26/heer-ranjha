@@ -13,7 +13,8 @@ const COLLECTIONS = [
     cta: "Explore Nayi Leher",
     reverse: false,
     accent: "#C9A96E",
-    swatches: ["#E8B4A0", "#A8C4D4", "#D4C46A", "#98B4A0"],
+    image: "/images/collections/col1.jpg",
+    objectPosition: "50% 15%",
   },
   {
     id: "asaya",
@@ -25,7 +26,8 @@ const COLLECTIONS = [
     cta: "Explore Asaya",
     reverse: true,
     accent: "#9E7B5A",
-    swatches: ["#4A5A7A", "#8A4A5A", "#2A5A3A", "#C8B87A"],
+    image: "/images/collections/col2.jpg",
+    objectPosition: "50% 15%",
   },
   {
     id: "roomani",
@@ -37,7 +39,7 @@ const COLLECTIONS = [
     cta: "Explore Roomani",
     reverse: false,
     accent: "#B87A7A",
-    swatches: ["#C89090", "#7090B0", "#909090", "#607050"],
+    image: "/images/collections/col3.jpg",
   },
   {
     id: "ganga-jamuni",
@@ -49,7 +51,7 @@ const COLLECTIONS = [
     cta: "Explore Collection",
     reverse: true,
     accent: "#7A9E7A",
-    swatches: ["#6A8090", "#905A3A", "#7A9A5A", "#4A5A8A"],
+    image: "/images/collections/col4.jpg",
   },
 ];
 
@@ -86,21 +88,7 @@ function CollectionBlock({ col }) {
         <div className={styles.imageWrap}>
           {/* Abstract fabric swatch art as placeholder */}
           <div className={styles.swatchCanvas}>
-            {col.swatches.map((color, i) => (
-              <div
-                key={i}
-                className={styles.swatch}
-                style={{
-                  background: color,
-                  left: `${[12, 52, 10, 55][i]}%`,
-                  top: `${[8, 15, 55, 60][i]}%`,
-                  width: `${[45, 38, 42, 40][i]}%`,
-                  height: `${[40, 36, 38, 35][i]}%`,
-                  opacity: [0.65, 0.55, 0.5, 0.6][i],
-                  animationDelay: `${i * 0.8}s`,
-                }}
-              />
-            ))}
+            <img src={col.image} alt={col.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: col.objectPosition || 'center' }} />
             <div className={styles.swatchOverlay} />
             <div className={styles.swatchLabel}>
               <span className="eyebrow">{col.eyebrow}</span>
