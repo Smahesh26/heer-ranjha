@@ -18,7 +18,7 @@ export default function AboutContent() {
       <AtelierTeam />
       <ValuesGrid />
       <Testimonials />
-      <GalleryStrip />
+      {/* <GalleryStrip /> */}
       <AboutCTA />
     </>
   );
