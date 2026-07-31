@@ -1,39 +1,18 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductContent from "@/components/product/ProductContent";
-import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { PRODUCTS } from "@/components/shop/shopData";
 
-export const dynamic = "force-dynamic";
-
-function safeJsonParse(value, fallback) {
-  try {
-    return JSON.parse(value || "");
-  } catch {
-    return fallback;
-  }
-}
-
-function parseProduct(product) {
-  return {
-    ...product,
-    images: safeJsonParse(product.images, []),
-    sizes: safeJsonParse(product.sizeOptions, []),
-    sizeCharges: safeJsonParse(product.sizeCharges, {}),
-  };
-}
-
-async function findProductBySlug(inputSlug) {
-  const slug = String(inputSlug || "").toLowerCase().replace(/^\/+/, "");
-  return prisma.product.findFirst({
-    where: {
-      OR: [{ slug }, { slug: `/${slug}` }],
-    },
-  });
+export function generateStaticParams() {
+  return PRODUCTS.map((p) => ({
+    slug: p.slug || p.id,
+  }));
 }
 
 export async function generateMetadata({ params }) {
-  const product = await findProductBySlug(params.slug);
+  const slug = String(params.slug || "").toLowerCase().replace(/^\/+/, "");
+  const product = PRODUCTS.find((p) => (p.slug || p.id).toLowerCase() === slug);
 
   if (!product) {
     return {
@@ -48,31 +27,23 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function ProductPage({ params }) {
-  const productRecord = await findProductBySlug(params.slug);
+export default function ProductPage({ params }) {
+  const slug = String(params.slug || "").toLowerCase().replace(/^\/+/, "");
+  const productRecord = PRODUCTS.find((p) => (p.slug || p.id).toLowerCase() === slug);
 
-  if (!productRecord || !productRecord.active) {
+  if (!productRecord) {
     notFound();
   }
 
-  const relatedRecords = await prisma.product.findMany({
-    where: {
-      active: true,
-      collection: productRecord.collection,
-      NOT: { id: productRecord.id },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 4,
-  });
-
-  const product = parseProduct(productRecord);
-  const related = relatedRecords.map(parseProduct);
+  const relatedRecords = PRODUCTS.filter(
+    (p) => p.collection === productRecord.collection && p.id !== productRecord.id
+  ).slice(0, 4);
 
   return (
     <>
       <Navbar />
       <main>
-        <ProductContent product={product} related={related} />
+        <ProductContent product={productRecord} related={relatedRecords} />
       </main>
       <Footer />
     </>

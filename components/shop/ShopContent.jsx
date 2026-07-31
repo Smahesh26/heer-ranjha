@@ -25,43 +25,11 @@ const INITIAL_FILTERS = {
 
 export default function ShopContent() {
   const [products, setProducts] = useState(PRODUCTS);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadProducts() {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/products?active=true", { cache: "no-store" });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.error || "Unable to load products");
-        }
-
-        if (active && Array.isArray(data.products)) {
-          setProducts(data.products);
-        }
-      } catch {
-        if (active) {
-          setProducts(PRODUCTS);
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    }
-
-    void loadProducts();
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const subCategories = useMemo(() => {
     const values = [...new Set(products.map((p) => p.subCategory).filter(Boolean))];

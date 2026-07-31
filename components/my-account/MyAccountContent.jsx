@@ -270,37 +270,6 @@ function Dashboard({ user, cartItems, orders, continueCheckoutHref }) {
           </a>
         ))}
       </div>
-
-      <div className={styles.recentOrders}>
-        <h3 className={styles.recentTitle}>Current Cart Items</h3>
-        {cartItems.length ? (
-          <div className={styles.ordersTableWrap}>
-            <table className={styles.ordersTable}>
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Size</th>
-                  <th>Qty</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id} className={styles.orderRow}>
-                    <td className={styles.orderId}>{item.name}</td>
-                    <td className={styles.orderDate}>{item.size || "-"}</td>
-                    <td className={styles.orderItems}>{item.quantity}</td>
-                    <td className={styles.orderTotal}>{formatPrice(item.unitPrice * item.quantity)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className={styles.sectionSub}>No items in your cart yet.</p>
-        )}
-      </div>
-
       <div className={styles.recentOrders}>
         <h3 className={styles.recentTitle}>Recent Orders</h3>
         <div className={styles.ordersTableWrap}>

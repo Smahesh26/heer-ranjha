@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/components/shop/shopData";
 import {
-  addGuestCartItem,
   getGuestWishlist,
   removeGuestWishlistItem,
   syncGuestDataToUser,
@@ -80,64 +79,10 @@ export default function WishlistContent() {
     setItems((prev) => prev.filter((entry) => entry.productId !== item.productId));
   };
 
-  const addToCart = async (item) => {
-    if (isLoggedIn) {
-      await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: item.productId, quantity: 1, size: "" }),
-      }).catch(() => {});
-    } else {
-      addGuestCartItem({
-        productId: item.productId,
-        slug: item.slug,
-        name: item.name,
-        detail: item.detail,
-        collection: item.collection,
-        price: item.price,
-        image: item.image,
-        size: "",
-        quantity: 1,
-        inStock: item.inStock,
-      });
-    }
-
-    setAddedIds((prev) => [...prev, item.productId]);
-    setTimeout(() => setAddedIds((prev) => prev.filter((i) => i !== item.productId)), 2000);
-  };
-
-  const addAllToCart = async () => {
-    const inStockItems = items.filter((i) => i.inStock);
-    if (isLoggedIn) {
-      await Promise.all(
-        inStockItems.map((item) =>
-          fetch("/api/cart", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ productId: item.productId, quantity: 1, size: "" }),
-          }).catch(() => {})
-        )
-      );
-    } else {
-      inStockItems.forEach((item) => {
-        addGuestCartItem({
-          productId: item.productId,
-          slug: item.slug,
-          name: item.name,
-          detail: item.detail,
-          collection: item.collection,
-          price: item.price,
-          image: item.image,
-          size: "",
-          quantity: 1,
-          inStock: item.inStock,
-        });
-      });
-    }
-
-    const inStockIds = inStockItems.map((i) => i.productId);
-    setAddedIds(inStockIds);
-    setTimeout(() => setAddedIds([]), 2000);
+  const enquireItem = (item) => {
+    const message = `Hi, I am interested in ${item.name}.`;
+    const whatsappUrl = `https://wa.me/917777045554?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -221,12 +166,12 @@ export default function WishlistContent() {
                         </td>
                         <td className={styles.tdAction}>
                           <button
-                            className={`${styles.addBtn} ${added ? styles.addBtnAdded : ""} ${!item.inStock ? styles.addBtnDisabled : ""}`}
-                            onClick={() => item.inStock && addToCart(item)}
+                            className={`${styles.addBtn} ${!item.inStock ? styles.addBtnDisabled : ""}`}
+                            onClick={() => item.inStock && enquireItem(item)}
                             disabled={!item.inStock}
-                            aria-label={`Add ${item.name} to cart`}
+                            aria-label={`Enquire about ${item.name}`}
                           >
-                            {added ? "Added" : item.inStock ? "Add to Cart" : "Unavailable"}
+                            {item.inStock ? "Enquire" : "Unavailable"}
                           </button>
                         </td>
                       </tr>
@@ -240,14 +185,6 @@ export default function WishlistContent() {
               <a href="/shop" className={styles.continueLink}>
                 Continue Shopping
               </a>
-              <button
-                className="btn"
-                onClick={addAllToCart}
-                disabled={!items.some((i) => i.inStock)}
-              >
-                <span>Add All to Cart</span>
-                <span className="btn-arrow">&#8594;</span>
-              </button>
             </div>
           </>
         ) : null}

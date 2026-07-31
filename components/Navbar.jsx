@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { getGuestCart, getGuestWishlist } from "@/lib/client-cart-wishlist";
+import { getGuestWishlist } from "@/lib/client-cart-wishlist";
 import styles from "./Navbar.module.css";
 
 const navLinks = [
@@ -18,7 +18,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
 
   useEffect(() => {
@@ -47,39 +46,31 @@ export default function Navbar() {
           const role = meData?.user?.role;
 
           if (role === "ADMIN") {
-            setCartCount(0);
             setWishlistCount(0);
             return;
           }
 
-          const [cartRes, wishlistRes] = await Promise.all([
-            fetch("/api/cart", { cache: "no-store" }),
+          const [wishlistRes] = await Promise.all([
             fetch("/api/wishlist", { cache: "no-store" }),
           ]);
 
-          const cartData = await cartRes.json().catch(() => ({ items: [] }));
           const wishlistData = await wishlistRes.json().catch(() => ({ items: [] }));
 
           if (!active) return;
 
-          const cartItems = Array.isArray(cartData.items) ? cartData.items : [];
           const wishlistItems = Array.isArray(wishlistData.items) ? wishlistData.items : [];
 
-          setCartCount(cartItems.reduce((sum, item) => sum + Number(item.quantity || 1), 0));
           setWishlistCount(wishlistItems.length);
           return;
         }
 
-        const guestCart = getGuestCart();
         const guestWishlist = getGuestWishlist();
 
         if (!active) return;
 
-        setCartCount(guestCart.reduce((sum, item) => sum + Number(item.quantity || 1), 0));
         setWishlistCount(guestWishlist.length);
       } catch {
         if (!active) return;
-        setCartCount(0);
         setWishlistCount(0);
       }
     }
@@ -140,14 +131,6 @@ export default function Navbar() {
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
               {wishlistCount > 0 ? <span className={styles.countBadge}>{wishlistCount}</span> : null}
-            </a>
-            <a href="/cart" className={styles.iconBtn} aria-label={`Cart (${cartCount} items)`}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" strokeLinecap="round" strokeLinejoin="round"/>
-                <line x1="3" y1="6" x2="21" y2="6" strokeLinecap="round"/>
-                <path d="M16 10a4 4 0 0 1-8 0" strokeLinecap="round"/>
-              </svg>
-              {cartCount > 0 ? <span className={styles.countBadge}>{cartCount}</span> : null}
             </a>
             <a href="/my-account" className={styles.iconBtn} aria-label="My Account">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

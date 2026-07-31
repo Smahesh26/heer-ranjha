@@ -306,7 +306,7 @@ function RelatedProducts({ products }) {
             </div>
             <p className={styles.relatedCollection}>{p.collection}</p>
             <h3 className={`display ${styles.relatedName}`}>{p.name}</h3>
-            <p className={styles.relatedPrice}>{formatPrice(p.price)}</p>
+            {p.price > 0 && <p className={styles.relatedPrice}>{formatPrice(p.price)}</p>}
           </a>
         ))}
       </div>
@@ -425,19 +425,30 @@ export default function ProductContent({ product, related }) {
 
         {/* Right: Info */}
         <div className={styles.productInfo}>
+          {/* Product Meta */}
+          <div className={styles.productMeta}>
+            {product.featured && <span className={styles.metaBadge}>New Arrival</span>}
+            <span className={styles.metaCollection}>{product.collection}</span>
+          </div>
+
+        {/* Title & Price */}
+        <div className={styles.titlePrice}>
           <p className={styles.productCollection}>{product.collection}</p>
           <h1 className={`display ${styles.productName}`}>{product.name}</h1>
           <div className={styles.ratingRow}>
             <StarRating rating={4.7} />
             <span className={styles.ratingCount}>(3 reviews)</span>
           </div>
-          <p className={styles.productPrice}>{formatPrice(unitPrice)}</p>
+          {unitPrice > 0 && <p className={styles.productPrice}>{formatPrice(unitPrice)}</p>}
           {selectedSizeCharge > 0 ? <p className={styles.priceHint}>Base {formatPrice(product.price)} + Size {selectedSize} charge {formatPrice(selectedSizeCharge)}</p> : null}
-          <p className={styles.productShortDesc}>
-            {shortDescription}. A piece from the {product.collection} collection, hand-crafted in {product.fabric.toLowerCase()} by artisans at our Bareilly atelier.
-          </p>
+        </div>
 
-          <div className={styles.divider} />
+        {/* Desc */}
+        <p className={styles.productShortDesc}>
+          {shortDescription}. A piece from the {product.collection} collection, hand-crafted in {product.fabric.toLowerCase()} by artisans at our Bareilly atelier.
+        </p>
+
+        <div className={styles.divider} />
 
           {/* Size selector */}
           <div className={styles.sizeSection}>
@@ -486,28 +497,21 @@ export default function ProductContent({ product, related }) {
                 &#43;
               </button>
             </div>
-            <span className={styles.qtyTotal}>Total: {formatPrice(totalPrice)}</span>
+            {unitPrice > 0 && <span className={styles.qtyTotal}>Total: {formatPrice(totalPrice)}</span>}
           </div>
 
           {/* Actions */}
+          {/* Actions */}
           <div className={styles.actions}>
-            <button
-              className={`${styles.addToCartBtn} ${addedToCart ? styles.addedToCart : ""}`}
-              onClick={handleAddToCart}
+            <a
+              href={`https://wa.me/917777045554?text=${encodeURIComponent(`Hi, I'm interested in the ${product.name} (SKU: ${product.id}).`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.addToCartBtn}
+              style={{ textDecoration: 'none', textAlign: 'center' }}
             >
-              {addedToCart ? "Added to Cart" : "Add to Cart"}
-            </button>
-            <button
-              className={`${styles.wishlistBtn} ${wished ? styles.wishlistBtnActive : ""}`}
-              onClick={handleWishlistToggle}
-              aria-pressed={wished}
-              aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill={wished ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-              {wished ? "Wishlisted" : "Add to Wishlist"}
-            </button>
+              Enquire Now
+            </a>
           </div>
 
           <div className={styles.divider} />

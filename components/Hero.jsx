@@ -11,54 +11,22 @@ function isVideoBanner(banner) {
 }
 
 export default function Hero() {
-  const [slides, setSlides] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Static banner pointing to banner.mp4
+  const slides = [{
+    label: "Featured",
+    title: "Heer Ranjha",
+    sub: "Luxury Indian Couture",
+    cta: "Explore",
+    ctaHref: "/shop",
+    bg: "slide1",
+    mediaUrl: "/banner.mp4",
+    mediaType: "video",
+  }];
+
   const activeSlide = slides[activeIndex];
   const isMediaMode = Boolean(activeSlide?.mediaUrl);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadBanners() {
-      try {
-        const response = await fetch("/api/banners", { cache: "no-store" });
-        if (!response.ok) return;
-        const data = await response.json();
-        const activeBanners = (data?.banners || [])
-          .filter((banner) => banner.active)
-          .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-
-        if (!isMounted) return;
-
-        if (!activeBanners.length) {
-          setSlides([]);
-          return;
-        }
-
-        const mapped = activeBanners.map((banner, index) => ({
-          label: `Banner ${index + 1}`,
-          title: banner.title || "Heer Ranjha",
-          sub: banner.subtitle || "Luxury Indian Couture",
-          cta: "Explore",
-          ctaHref: banner.link || "/shop",
-          bg: BG_VARIANTS[index % BG_VARIANTS.length],
-          mediaUrl: banner.image || "",
-          mediaType: isVideoBanner(banner) ? "video" : "image",
-        }));
-
-        setSlides(mapped);
-        setActiveIndex(0);
-      } catch {
-        // Keep defaults when banner fetch fails.
-      }
-    }
-
-    loadBanners();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     if (slides.length <= 1) return;

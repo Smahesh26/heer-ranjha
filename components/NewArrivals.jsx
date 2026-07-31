@@ -1,97 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import styles from "./NewArrivals.module.css";
-
-const PRODUCTS = [
-  {
-    id: 1,
-    category: "Men",
-    sub: "Kurta Set",
-    name: "Pink Matka Kurta",
-    detail: "Cotton Pant · Hand Embroidery",
-    collection: "Nayi Leher",
-    code: "HKM-304",
-    color: "#D4A090",
-    accent: "#8A5040",
-  },
-  {
-    id: 2,
-    category: "Men",
-    sub: "Nehru Jacket",
-    name: "Sky Blue Nehru Jacket",
-    detail: "Hand Embroidery · Indian Ethnic",
-    collection: "Nayi Leher",
-    code: "HJM-311",
-    color: "#7AA8C8",
-    accent: "#2A6080",
-  },
-  {
-    id: 3,
-    category: "Women",
-    sub: "Lehenga Set",
-    name: "Red Chanderi Lehenga",
-    detail: "Organza Dupatta · Hand Embroidery",
-    collection: "Asaya",
-    code: "AL-1430",
-    color: "#C04040",
-    accent: "#8A1A1A",
-  },
-  {
-    id: 4,
-    category: "Women",
-    sub: "Co-ord Set",
-    name: "Midnight Blue Dupion",
-    detail: "2PC Co-ord Set · Hand Embroidery",
-    collection: "Asaya",
-    code: "AI-1426",
-    color: "#2A3A6A",
-    accent: "#101830",
-  },
-  {
-    id: 5,
-    category: "Men",
-    sub: "Sherwani",
-    name: "Mint Green Sherwani",
-    detail: "Dupion Fabric · Hand Embroidery",
-    collection: "Nayi Leher",
-    code: "HSD-348",
-    color: "#7ABAA0",
-    accent: "#2A6A50",
-  },
-  {
-    id: 6,
-    category: "Women",
-    sub: "Suit Set",
-    name: "Green Dupion Set",
-    detail: "Red Organza Dupatta · Indian Ethnic",
-    collection: "Nayi Leher",
-    code: "AS-2077",
-    color: "#4A8A60",
-    accent: "#1A4030",
-  },
-  {
-    id: 7,
-    category: "Men",
-    sub: "Bandhgala Set",
-    name: "Navy Blue Bandhgala",
-    detail: "Matka Fabric · Hand Embroidery",
-    collection: "Nayi Leher",
-    code: "HBM-336",
-    color: "#2A3A60",
-    accent: "#0A1030",
-  },
-  {
-    id: 8,
-    category: "Women",
-    sub: "Sharara Set",
-    name: "Silver Tissue Sharara",
-    detail: "4PC Set with Potli · Hand Embroidery",
-    collection: "Asaya",
-    code: "AS-1756",
-    color: "#B0B0B8",
-    accent: "#606070",
-  },
-];
+import { PRODUCTS } from "@/components/shop/shopData";
 
 const FILTERS = ["All", "Men", "Women"];
 
@@ -112,6 +22,13 @@ function ProductCard({ product, index }) {
     return () => { if (el) observer.unobserve(el); };
   }, []);
 
+  const normalizedSlug = String(product.slug || product.id || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+/, "");
+    
+  const previewImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
+
   return (
     <div
       ref={ref}
@@ -120,33 +37,37 @@ function ProductCard({ product, index }) {
     >
       {/* Image placeholder */}
       <div className={styles.cardImage}>
-        <div
-          className={styles.cardBg}
-          style={{
-            background: `radial-gradient(ellipse 70% 70% at 60% 40%, ${product.color} 0%, ${product.accent} 100%)`,
-          }}
-        />
+        {previewImage ? (
+          <img className={styles.cardBg} src={previewImage} alt={product.name} style={{ objectFit: 'cover' }} />
+        ) : (
+          <div
+            className={styles.cardBg}
+            style={{
+              background: `radial-gradient(ellipse 70% 70% at 60% 40%, #d4c2a3 0%, #7a5635 100%)`,
+            }}
+          />
+        )}
         <div className={styles.cardOverlay} />
 
         {/* Product code badge */}
-        <span className={styles.codeBadge}>{product.code}</span>
+        <span className={styles.codeBadge}>{product.code || product.slug}</span>
 
         {/* Collection tag */}
         <span className={styles.collectionTag}>{product.collection}</span>
 
         {/* Hover action */}
         <div className={styles.cardActions}>
-          <button className={styles.viewBtn}>
+          <a href={`/product/${normalizedSlug}`} className={styles.viewBtn}>
             <span>View Piece</span>
-          </button>
+          </a>
         </div>
       </div>
 
       {/* Card info */}
       <div className={styles.cardInfo}>
-        <p className={styles.cardSub}>{product.sub}</p>
+        <p className={styles.cardSub}>{product.subCategory || product.category}</p>
         <h3 className={`display ${styles.cardName}`}>{product.name}</h3>
-        <p className={styles.cardDetail}>{product.detail}</p>
+        <p className={styles.cardDetail}>{product.detail || product.description}</p>
       </div>
     </div>
   );
@@ -172,9 +93,10 @@ export default function NewArrivals() {
     return () => observer.disconnect();
   }, []);
 
+  const newArrivals = PRODUCTS.slice(0, 8);
   const filtered = activeFilter === "All"
-    ? PRODUCTS
-    : PRODUCTS.filter((p) => p.category === activeFilter);
+    ? newArrivals
+    : newArrivals.filter((p) => p.category === activeFilter);
 
   return (
     <section id="new-arrivals" className={styles.section}>
@@ -211,7 +133,7 @@ export default function NewArrivals() {
       </div>
 
       <div className={styles.viewAllWrap}>
-        <a href="#collections" className="btn">
+        <a href="/shop" className="btn">
           <span>View All Collections</span>
           <span className="btn-arrow">&#8594;</span>
         </a>
