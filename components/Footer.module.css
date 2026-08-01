@@ -61,7 +61,7 @@
 }
 
 .footerLogo {
-  width: 100px;
+  width: 170px;
   height: auto;
   object-fit: contain;
   filter: brightness(0) saturate(100%);

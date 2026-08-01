@@ -69,7 +69,7 @@
 }
 
 .logoImg {
-  height: 80px;
+  height: 120px;
   width: auto;
   object-fit: contain;
   /* Make cream logo visible on light background */
@@ -234,5 +234,5 @@
 }
 
 @media (max-width: 480px) {
-  .logoImg { height: 60px; }
+  .logoImg { height: 90px; }
 }
