@@ -21,7 +21,7 @@ export default function Hero() {
     cta: "Explore",
     ctaHref: "/shop",
     bg: "slide1",
-    mediaUrl: "/banner.mp4",
+    mediaUrl: "/heer-ranjha-video.mp4",
     mediaType: "video",
   }];
 
