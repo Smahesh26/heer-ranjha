@@ -64,6 +64,9 @@
   object-fit: cover;
 }
 
+.slideVideo {
+}
+
 .slide.active { opacity: 1; }
 
 /* Light editorial gradient backgrounds */
@@ -286,7 +289,6 @@
   transform: scale(1.3);
 }
 
-/* ---- Bottom strip ---- */
 .bottomStrip {
   position: absolute;
   bottom: 0;
@@ -302,6 +304,11 @@
   justify-content: center;
   gap: 2rem;
   padding-inline: var(--gutter);
+}
+
+.bottomStrip .eyebrow {
+  position: relative;
+  top: 4px;
 }
 
 .stripRule {
