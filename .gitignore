@@ -26,5 +26,6 @@ next-env.d.ts
 
 # Large files
 *.mp4
+!public/heer-ranjha-home-new.mp4
 *.mov
 *.avi
