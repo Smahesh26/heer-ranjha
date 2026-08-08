@@ -899,6 +899,6 @@
   .viewPieceBtn { font-size: 0.58rem; padding: 0.55rem 1rem; }
 }
 
-@media (max-width: 380px) {
-  .grid { grid-template-columns: 1fr; max-width: 280px; margin-inline: auto; }
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr; max-width: 340px; margin-inline: auto; gap: 1.5rem; }
 }

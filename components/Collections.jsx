@@ -62,6 +62,7 @@ function useReveal(ref) {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
+            entry.target.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
           }
         });
       },
@@ -88,7 +89,7 @@ function CollectionBlock({ col }) {
         <div className={styles.imageWrap}>
           {/* Abstract fabric swatch art as placeholder */}
           <div className={styles.swatchCanvas}>
-            <img src={col.image} alt={col.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: col.objectPosition || 'center' }} />
+            <img src={col.image} alt={col.name} className={styles.collectionImage} style={{ objectPosition: col.objectPosition || 'top' }} />
             <div className={styles.swatchOverlay} />
             <div className={styles.swatchLabel}>
               <span className="eyebrow">{col.eyebrow}</span>

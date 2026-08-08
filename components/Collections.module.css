@@ -69,6 +69,12 @@
   overflow: hidden;
 }
 
+.collectionImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .swatch {
   position: absolute;
   border-radius: 2px;
@@ -160,13 +166,30 @@
   .block.reverse { direction: ltr; }
 
   .visual {
-    height: 52vw;
-    min-height: 260px;
-    max-height: 400px;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    max-height: none;
   }
 
   .imageWrap { position: relative; height: 100%; }
   .swatchCanvas { position: absolute; inset: 0; }
+  .swatchLabel {
+    display: inline-block;
+    top: auto;
+    bottom: 2.2rem;
+    left: 2.2rem;
+    background: rgba(245, 240, 230, 0.85); /* Ivory base */
+    backdrop-filter: blur(4px);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2px;
+    border: 1px solid rgba(160, 120, 64, 0.25); /* Gold muted border */
+  }
+  
+  .swatchLabel span {
+    color: var(--gold-muted) !important;
+    text-shadow: none;
+    font-weight: 500;
+  }
 
   .text {
     padding: 2.5rem var(--gutter);
@@ -174,7 +197,7 @@
 }
 
 @media (max-width: 480px) {
-  .visual { height: 65vw; min-height: 220px; }
+  .visual { height: auto; aspect-ratio: 3 / 4; min-height: unset; }
 
   .colName { font-size: clamp(2.4rem, 11vw, 4rem); }
 

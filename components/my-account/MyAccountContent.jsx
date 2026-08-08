@@ -190,7 +190,7 @@ function LoggedOutView({ onLogin, onRegister, loading, authError, autoFocusLogin
             <span className={styles.checkboxMark} aria-hidden="true" />
             <span className={styles.checkboxText}>Remember me</span>
           </label>
-          <a href="#" className={styles.forgotLink}>Lost your password?</a>
+          <a href="javascript:void(0)" className={styles.forgotLink}>Lost your password?</a>
         </div>
 
         <button className={`btn ${styles.authBtn}`} onClick={handleLogin} disabled={loading}>

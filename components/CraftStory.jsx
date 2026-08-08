@@ -65,7 +65,7 @@ export default function CraftStory() {
         <p className={`display ${styles.ctaText} reveal`}>
           Explore the making
         </p>
-        <a href="#collections" className={`btn btn-ivory reveal reveal-delay-1`}>
+        <a href="#collections" className={`btn btn-dark reveal reveal-delay-1`}>
           <span>View Lookbook</span>
           <span className="btn-arrow">&#8594;</span>
         </a>
