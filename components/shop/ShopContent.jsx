@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import ShopHero from "./ShopHero";
 import ShopSidebar from "./ShopSidebar";
 import ShopGrid from "./ShopGrid";
@@ -24,27 +25,98 @@ const INITIAL_FILTERS = {
 };
 
 export default function ShopContent() {
+  const searchParams = useSearchParams();
+
   const [products, setProducts] = useState(PRODUCTS);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [filters, setFilters] = useState(() => {
+    const initialGender = searchParams.get("gender");
+    const initialCollection = searchParams.get("collection");
+    const initialSubCategory = searchParams.get("subCategory");
+
+    const f = { ...INITIAL_FILTERS };
+    if (initialGender && ["Men", "Women"].includes(initialGender)) {
+      f.gender = initialGender;
+    }
+    if (initialCollection) {
+      f.collections = [initialCollection];
+    }
+    if (initialSubCategory) {
+      f.subCategories = [initialSubCategory];
+    }
+    return f;
+  });
+
+  useEffect(() => {
+    const initialGender = searchParams.get("gender");
+    const initialCollection = searchParams.get("collection");
+    const initialSubCategory = searchParams.get("subCategory");
+
+    setFilters((f) => {
+      const next = { ...f };
+      // Only apply if the URL actually has these params (useful when navigating from within the page)
+      if (initialGender && ["Men", "Women"].includes(initialGender)) {
+        next.gender = initialGender;
+      }
+      if (initialCollection) {
+        next.collections = [initialCollection];
+      }
+      if (initialSubCategory) {
+        next.subCategories = [initialSubCategory];
+      }
+      return next;
+    });
+  }, [searchParams]);
+
+  const genderFilteredProducts = useMemo(() => {
+    let list = products;
+    if (filters.gender !== "All") {
+      const targetCategory = filters.gender === "Men" ? "Men's Wear" : "Women's Wear";
+      list = list.filter((p) => String(p.category || "").toLowerCase() === targetCategory.toLowerCase());
+    }
+    if (filters.search.trim()) {
+      const q = filters.search.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.subCategory.toLowerCase().includes(q) ||
+          p.fabric.toLowerCase().includes(q) ||
+          p.collection.toLowerCase().includes(q)
+      );
+    }
+    list = list.filter(
+      (p) => Number(p.price || 0) >= filters.minPrice && Number(p.price || 0) <= filters.maxPrice
+    );
+    return list;
+  }, [products, filters.gender, filters.search, filters.minPrice, filters.maxPrice]);
+
   const subCategories = useMemo(() => {
-    const values = [...new Set(products.map((p) => p.subCategory).filter(Boolean))];
+    let list = genderFilteredProducts;
+    if (filters.collections.length > 0) list = list.filter((p) => filters.collections.includes(p.collection));
+    if (filters.fabrics.length > 0) list = list.filter((p) => filters.fabrics.includes(p.fabric));
+    const values = [...new Set(list.map((p) => p.subCategory).filter(Boolean))];
     return values.length ? values : SUB_CATEGORIES;
-  }, [products]);
+  }, [genderFilteredProducts, filters.collections, filters.fabrics]);
 
   const collections = useMemo(() => {
-    const values = [...new Set(products.map((p) => p.collection).filter(Boolean))];
+    let list = genderFilteredProducts;
+    if (filters.subCategories.length > 0) list = list.filter((p) => filters.subCategories.includes(p.subCategory));
+    if (filters.fabrics.length > 0) list = list.filter((p) => filters.fabrics.includes(p.fabric));
+    const values = [...new Set(list.map((p) => p.collection).filter(Boolean))];
     return values.length ? values : COLLECTIONS;
-  }, [products]);
+  }, [genderFilteredProducts, filters.subCategories, filters.fabrics]);
 
   const fabrics = useMemo(() => {
-    const values = [...new Set(products.map((p) => p.fabric).filter(Boolean))];
+    let list = genderFilteredProducts;
+    if (filters.subCategories.length > 0) list = list.filter((p) => filters.subCategories.includes(p.subCategory));
+    if (filters.collections.length > 0) list = list.filter((p) => filters.collections.includes(p.collection));
+    const values = [...new Set(list.map((p) => p.fabric).filter(Boolean))];
     return values.length ? values : FABRICS;
-  }, [products]);
+  }, [genderFilteredProducts, filters.subCategories, filters.collections]);
 
   // Derived: filtered + sorted products
   const filteredProducts = useMemo(() => {
@@ -62,8 +134,9 @@ export default function ShopContent() {
     }
 
     if (filters.gender !== "All") {
+      const targetCategory = filters.gender === "Men" ? "Men's Wear" : "Women's Wear";
       list = list.filter(
-        (p) => String(p.category || "").toLowerCase() === filters.gender.toLowerCase()
+        (p) => String(p.category || "").toLowerCase() === targetCategory.toLowerCase()
       );
     }
 
@@ -116,6 +189,7 @@ export default function ShopContent() {
   const setGender = useCallback((val) => {
     setFilters((f) => ({ ...f, gender: val }));
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const toggleSubCategory = useCallback((val) => {
@@ -126,6 +200,7 @@ export default function ShopContent() {
       return { ...f, subCategories: next };
     });
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const toggleCollection = useCallback((val) => {
@@ -136,6 +211,7 @@ export default function ShopContent() {
       return { ...f, collections: next };
     });
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const toggleFabric = useCallback((val) => {
@@ -146,26 +222,31 @@ export default function ShopContent() {
       return { ...f, fabrics: next };
     });
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const setSearch = useCallback((val) => {
     setFilters((f) => ({ ...f, search: val }));
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const setPriceRange = useCallback((min, max) => {
     setFilters((f) => ({ ...f, minPrice: min, maxPrice: max }));
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const clearFilters = useCallback(() => {
     setFilters(INITIAL_FILTERS);
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const handleSort = useCallback((val) => {
     setSort(val);
     setPage(1);
+    document.getElementById("shop-layout")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const activeFilterCount =
@@ -178,7 +259,7 @@ export default function ShopContent() {
     <>
       <ShopHero />
 
-      <div className={styles.shopLayout}>
+      <div id="shop-layout" className={styles.shopLayout}>
         {/* Mobile top bar */}
         <div className={styles.mobileTopBar}>
           <button

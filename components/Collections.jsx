@@ -11,9 +11,10 @@ const COLLECTIONS = [
     desc: "A vibrant ensemble of Matka and Dupion silks, shaped by the energy of new beginnings. Kurtas in soft pinks and blues meet hand-embroidered Nehru jackets and Sherwanis that carry the weight of Indian craftsmanship.",
     highlight: "Hand Embroidery · Matka Silk · Dupion Fabric",
     cta: "Explore Nayi Leher",
+    ctaHref: "/shop?collection=NAYI+LEHER#shop-layout",
     reverse: false,
     accent: "#C9A96E",
-    image: "/images/products/indigo-blue-hand-embroidered-kurta-1.jpg",
+    image: "/images/products/azure-blue-hand-emroidered-kurta-1.jpg",
     objectPosition: "50% 15%",
   },
   {
@@ -24,34 +25,11 @@ const COLLECTIONS = [
     desc: "Where Indo-Western sensibility meets Indian craftsmanship. Dupion silk co-ord sets, Chanderi ensembles, and architectural silhouettes for the woman who holds both worlds with ease.",
     highlight: "Dupion Silk · Chanderi · Indo-Western",
     cta: "Explore Asaya",
+    ctaHref: "/shop?collection=ASAYA#shop-layout",
     reverse: true,
     accent: "#9E7B5A",
-    image: "/images/products/black-matka-silk-embroidered-kurta-1.jpg",
+    image: "/images/products/indo-western-sunshine-yellow-3pc-suit-set-1.jpg",
     objectPosition: "50% 15%",
-  },
-  {
-    id: "roomani",
-    eyebrow: "Archive Collection",
-    name: "Roomani",
-    translation: "Romantic, ardent",
-    desc: "Soft pinks and earthy tones rendered in Matka fabric. Kurtas, Nehru Jackets, Bandhgalas, and Sherwanis embroidered with intimate precision. A love letter written in thread and cloth.",
-    highlight: "Machine Embroidery · Hand Embroidery · Indian Ethnic",
-    cta: "Explore Roomani",
-    reverse: false,
-    accent: "#B87A7A",
-    image: "/images/products/olive-green-hand-embroidered-kurta-1.jpg",
-  },
-  {
-    id: "ganga-jamuni",
-    eyebrow: "Heritage Collection",
-    name: "Ganga Jamuni",
-    translation: "Two rivers, one culture",
-    desc: "An ode to India's composite heritage. Raw silks and handloom weaves carry the shared vocabulary of communities, rendered in ensembles that speak of courts, rivers, and the quiet majesty of everyday devotion.",
-    highlight: "Raw Silk · Handloom · Indian Ethnic",
-    cta: "Explore Collection",
-    reverse: true,
-    accent: "#7A9E7A",
-    image: "/images/products/black-botanical-jacket-with-sharara-set-1.jpg",
   },
 ];
 
@@ -118,7 +96,7 @@ function CollectionBlock({ col }) {
         <p className={`eyebrow ${styles.highlight} reveal reveal-delay-4`}>
           {col.highlight}
         </p>
-        <a href={`#${col.id}`} className={`btn reveal reveal-delay-5`}>
+        <a href={col.ctaHref || `/shop?collection=${col.id}#shop-layout`} className={`btn reveal reveal-delay-5`}>
           <span>{col.cta}</span>
           <span className="btn-arrow">&#8594;</span>
         </a>
@@ -133,7 +111,7 @@ export default function Collections() {
       <div className={styles.sectionHeader}>
         <p className="eyebrow">Our Collections</p>
         <h2 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "var(--charcoal)" }}>
-          Four chapters, one story
+          Two collections, one story
         </h2>
         <p className={styles.sectionSub}>
           Each collection is a conversation between craft and creativity, between India's textile heritage and the pulse of the contemporary.

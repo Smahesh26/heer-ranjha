@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ShopContent from "@/components/shop/ShopContent";
@@ -13,7 +14,9 @@ export default function ShopPage() {
     <>
       <Navbar />
       <main>
-        <ShopContent />
+        <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+          <ShopContent />
+        </Suspense>
       </main>
       <Footer />
     </>

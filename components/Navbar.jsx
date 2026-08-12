@@ -7,11 +7,11 @@ import styles from "./Navbar.module.css";
 
 const navLinks = [
   { label: "Collections", href: "/#collections" },
-  { label: "Men", href: "/#men" },
-  { label: "Women", href: "/#women" },
+  { label: "Men", href: "/shop?gender=Men#shop-layout" },
+  { label: "Women", href: "/shop?gender=Women#shop-layout" },
   { label: "Shop", href: "/shop" },
   { label: "About", href: "/about-us" },
-  { label: "Stores", href: "/#stores" },
+  { label: "Stores", href: "/stores" },
 ];
 
 export default function Navbar() {

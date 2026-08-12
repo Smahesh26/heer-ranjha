@@ -23,19 +23,17 @@ export const SUB_CATEGORIES = [
 ];
 
 export const COLLECTIONS = [
-  "Nayi Leher",
-  "Asaya",
-  "Roomani",
-  "Ganga Jamuni",
+  "ASAYA",
+  "NAYI LEHER",
 ];
 
 export const FABRICS = [
   "Matka Silk",
-  "Dupion",
+  "Dupion Silk",
   "Chanderi",
   "Raw Silk",
-  "Organza",
   "Tissue",
+  "Georgette",
 ];
 
 export const SORT_OPTIONS = [

@@ -1,10 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import xlsx from 'xlsx';
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
-
-const prisma = new PrismaClient();
 
 function slugify(text) {
   return text
@@ -53,6 +50,8 @@ function downloadImage(url, dest) {
     }).on('error', (err) => reject(err));
   });
 }
+
+const allProducts = [];
 
 async function importFile(filePath) {
   const workbook = xlsx.readFile(filePath);
@@ -105,9 +104,7 @@ async function importFile(filePath) {
     const baseSlug = slugify(name);
     let slug = baseSlug;
     let counter = 1;
-    while (true) {
-      const existing = await prisma.product.findUnique({ where: { slug } });
-      if (!existing) break;
+    while (allProducts.some(p => p.slug === slug)) {
       slug = `${baseSlug}-${counter}`;
       counter++;
     }
@@ -140,54 +137,45 @@ async function importFile(filePath) {
       }
     }
 
-    const imagesStr = JSON.stringify(downloadedImages);
-
-    try {
-      await prisma.product.create({
-        data: {
-          name,
-          slug,
-          description,
-          category,
-          subCategory,
-          collection,
-          fabric,
-          price,
-          mrp,
-          stock,
-          images: imagesStr,
-          sizeOptions: JSON.stringify(["S", "M", "L", "XL"]),
-          sizeCharges: '{}',
-          active: true,
-          featured: false
-        }
-      });
-      console.log(`Created product: ${name}`);
-    } catch (err) {
-      console.error(`Failed to create product: ${name}`, err.message);
-    }
+    const newProduct = {
+      id: slug,
+      slug: slug,
+      name,
+      description,
+      detail: description,
+      category,
+      subCategory,
+      collection,
+      fabric,
+      price,
+      mrp,
+      stock,
+      images: downloadedImages,
+      sizeOptions: ["S", "M", "L", "XL"],
+      sizeCharges: {},
+      active: true,
+      featured: false
+    };
+    
+    allProducts.push(newProduct);
+    console.log(`Created product: ${name}`);
   }
 }
 
 async function main() {
-  console.log("Deleting all existing products...");
-  await prisma.product.deleteMany({});
-  console.log("All existing products deleted.");
-
   console.log("Importing Asaya Collection...");
   await importFile('Collection- Asaya Detailed Sheet.xlsx');
   
   console.log("Importing Nayi Leher Collection...");
   await importFile('NAYI LEHER WEBSITE.xlsx');
   
-  console.log("Import completed!");
+  const outFile = path.join(process.cwd(), 'components', 'shop', 'products.json');
+  fs.writeFileSync(outFile, JSON.stringify(allProducts, null, 2));
+  console.log(`Saved ${allProducts.length} products to ${outFile}`);
 }
 
 main()
   .catch(e => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });

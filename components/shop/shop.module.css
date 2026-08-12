@@ -94,6 +94,7 @@
   gap: 3rem;
   align-items: start;
   position: relative;
+  scroll-margin-top: calc(var(--nav-height) + 1rem);
 }
 
 /* Mobile top bar (hidden on desktop) */
