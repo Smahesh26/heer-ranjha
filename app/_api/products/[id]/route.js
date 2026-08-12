@@ -1,3 +1,4 @@
+import { getProductById } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import { json, notFound, badRequest } from "@/lib/http";
 import { productSchema } from "@/lib/validators";
@@ -93,130 +94,15 @@ function parseSizeCharges(value) {
 }
 
 export async function GET(_, { params }) {
-  const product = await prisma.product.findUnique({ where: { id: params.id } });
+  const product = await getProductById(params.id);
   if (!product) return notFound("Product not found");
   return json({ product: parseProduct(product) });
 }
 
 export async function PATCH(request, { params }) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return json({ error: "Admin access required" }, { status: 401 });
-  }
-
-  const contentType = request.headers.get("content-type") || "";
-  let payload = null;
-
-  if (contentType.includes("multipart/form-data")) {
-    const formData = await request.formData();
-    const files = formData
-      .getAll("images")
-      .filter((file) => file instanceof File)
-      .slice(0, 5);
-    const uploadedImages = [];
-
-    for (const file of files) {
-      try {
-        uploadedImages.push(await uploadProductMedia(file));
-      } catch (error) {
-        return badRequest(error?.message || "Unable to process product image upload");
-      }
-    }
-
-    payload = {
-      slug: normalizeSlug(formData.get("slug")?.toString()),
-      name: formData.get("name")?.toString() || undefined,
-      description: formData.get("description")?.toString() || undefined,
-      category: formData.get("category")?.toString() || undefined,
-      subCategory: formData.get("subCategory")?.toString() || undefined,
-      collection: formData.get("collection")?.toString() || undefined,
-      fabric: formData.get("fabric")?.toString() || undefined,
-      price: toNumber(formData.get("price")),
-      mrp: toNumber(formData.get("mrp")),
-      stock: toNumber(formData.get("stock")),
-      images: uploadedImages.length ? uploadedImages : undefined,
-      sizes: parseSizes(formData.get("sizes")),
-      sizeCharges: parseSizeCharges(formData.get("sizeCharges")),
-      clothCare: formData.get("clothCare")?.toString() || undefined,
-      termsAndConditions: formData.get("termsAndConditions")?.toString() || undefined,
-      featured: toBool(formData.get("featured")),
-      active: toBool(formData.get("active")),
-    };
-  } else {
-    payload = await request.json().catch(() => null);
-  }
-
-  const parsed = productSchema.partial().safeParse(payload);
-
-  if (!parsed.success) {
-    return badRequest("Invalid product data", parsed.error.flatten());
-  }
-
-  const {
-    images,
-    sizes,
-    sizeCharges,
-    ...restData
-  } = parsed.data;
-
-  const updated = await prisma.product.update({
-    where: { id: params.id },
-    data: {
-      ...restData,
-      ...(Object.prototype.hasOwnProperty.call(parsed.data, "images")
-        ? { images: JSON.stringify(images || []) }
-        : {}),
-      ...(Object.prototype.hasOwnProperty.call(parsed.data, "sizes")
-        ? { sizeOptions: JSON.stringify(sizes || []) }
-        : {}),
-      ...(Object.prototype.hasOwnProperty.call(parsed.data, "sizeCharges")
-        ? { sizeCharges: JSON.stringify(sizeCharges || {}) }
-        : {}),
-    },
-  });
-  return json({ product: parseProduct(updated) });
+  return badRequest("Product modification is disabled in static mode.");
 }
 
 export async function DELETE(_, { params }) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return json({ error: "Admin access required" }, { status: 401 });
-  }
-
-  const existingProduct = await prisma.product.findUnique({ where: { id: params.id } });
-  if (!existingProduct) {
-    return notFound("Product not found");
-  }
-
-  const existingImages = safeJsonParse(existingProduct.images, []);
-
-  try {
-    await prisma.$transaction(async (tx) => {
-      await tx.cartItem.deleteMany({ where: { productId: params.id } });
-      await tx.wishlistItem.deleteMany({ where: { productId: params.id } });
-      await tx.product.delete({ where: { id: params.id } });
-    });
-
-    await Promise.all(existingImages.map((image) => deleteProductMedia(image)));
-
-    return json({ ok: true, deleted: true, archived: false });
-  } catch (error) {
-    const code = error?.code || "";
-
-    if (code === "P2003") {
-      await prisma.product.update({
-        where: { id: params.id },
-        data: { active: false, featured: false },
-      });
-
-      return json({
-        ok: true,
-        deleted: false,
-        archived: true,
-        message: "Product has order history, so it was archived instead of being deleted.",
-      });
-    }
-
-    throw error;
-  }
+  return badRequest("Product deletion is disabled in static mode.");
 }

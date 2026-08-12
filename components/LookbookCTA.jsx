@@ -10,7 +10,7 @@ const PANELS = [
     sub: "Kurtas, Sherwanis, Nehru Jackets, Bandhgalas , hand-embroidered in Matka, Dupion and Raw Silk.",
     cta: "Shop Men's Wear",
     href: "/shop?category=Men",
-    image: "/images/products/ivory-matka-fabric-nehru-jacketraw-silk-kurta-and-pant.jpg",
+    image: "/images/products/black-matka-silk-embroidered-kurta-1.jpg",
     objectPosition: "50% 15%",
   },
   {
@@ -20,7 +20,7 @@ const PANELS = [
     sub: "Sarees, Lehengas, Co-ord Sets and Suit Sets , woven in Chanderi, Dupion and Organza.",
     cta: "Shop Women's Wear",
     href: "/shop?category=Women",
-    image: "/images/products/tissue-saree.jpg",
+    image: "/images/products/black-botanical-jacket-with-sharara-set-1.jpg",
     objectPosition: "50% 15%",
   },
 ];

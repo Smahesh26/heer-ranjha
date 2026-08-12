@@ -1,3 +1,4 @@
+import { getProducts } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import { json, badRequest } from "@/lib/http";
 import { productSchema } from "@/lib/validators";
@@ -96,13 +97,12 @@ export async function GET(request) {
   const featured = url.searchParams.get("featured");
   const lowStock = url.searchParams.get("lowStock");
 
-  const products = await prisma.product.findMany({
-    where: {
-      ...(active === "true" ? { active: true } : {}),
-      ...(featured === "true" ? { featured: true } : {}),
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const params = {};
+  if (active === "true") params.active = true;
+  if (featured === "true") params.featured = true;
+
+  const result = await getProducts(params);
+  const products = result.products;
 
   const mappedProducts = products.map(parseProduct);
   const filteredProducts =
@@ -114,73 +114,5 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return json({ error: "Admin access required" }, { status: 401 });
-  }
-
-  const contentType = request.headers.get("content-type") || "";
-  let payload = null;
-
-  if (contentType.includes("multipart/form-data")) {
-    const formData = await request.formData();
-    const files = formData
-      .getAll("images")
-      .filter((file) => file instanceof File)
-      .slice(0, 5);
-    const uploadedImages = [];
-
-    for (const file of files) {
-      try {
-        uploadedImages.push(await uploadProductMedia(file));
-      } catch (error) {
-        return badRequest(error?.message || "Unable to process product image upload");
-      }
-    }
-
-    payload = {
-      slug: normalizeSlug(formData.get("slug")?.toString(), formData.get("name")?.toString() || ""),
-      name: formData.get("name")?.toString() || "",
-      description: formData.get("description")?.toString() || "",
-      category: formData.get("category")?.toString() || "",
-      subCategory: formData.get("subCategory")?.toString() || "",
-      collection: formData.get("collection")?.toString() || "",
-      fabric: formData.get("fabric")?.toString() || "",
-      price: toNumber(formData.get("price"), 0),
-      mrp: formData.get("mrp") ? toNumber(formData.get("mrp"), 0) : undefined,
-      stock: toNumber(formData.get("stock"), 0),
-      images: uploadedImages,
-      sizes: parseSizes(formData.get("sizes")),
-      sizeCharges: parseSizeCharges(formData.get("sizeCharges")),
-      clothCare: formData.get("clothCare")?.toString() || undefined,
-      termsAndConditions: formData.get("termsAndConditions")?.toString() || undefined,
-      featured: toBool(formData.get("featured"), false),
-      active: toBool(formData.get("active"), true),
-    };
-  } else {
-    payload = await request.json().catch(() => null);
-  }
-
-  const parsed = productSchema.safeParse(payload);
-
-  if (!parsed.success) {
-    return badRequest("Invalid product data", parsed.error.flatten());
-  }
-
-  const {
-    images,
-    sizes,
-    sizeCharges,
-    ...restData
-  } = parsed.data;
-
-  const created = await prisma.product.create({
-    data: {
-      ...restData,
-      images: JSON.stringify(images),
-      sizeOptions: JSON.stringify(sizes || []),
-      sizeCharges: JSON.stringify(sizeCharges || {}),
-    },
-  });
-  return json({ product: parseProduct(created) }, { status: 201 });
+  return badRequest("Product creation is disabled in static mode.");
 }

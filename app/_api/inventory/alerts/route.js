@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { getProducts } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
 import { forbidden, json, unauthorized } from "@/lib/http";
@@ -23,18 +24,7 @@ export async function GET() {
   if (!user) return unauthorized();
   if (user.role !== "ADMIN") return forbidden("Admin access required");
 
-  const products = await prisma.product.findMany({
-    select: {
-      id: true,
-      slug: true,
-      name: true,
-      stock: true,
-      lowStockThreshold: true,
-      updatedAt: true,
-      active: true,
-    },
-    orderBy: [{ stock: "asc" }, { updatedAt: "desc" }],
-  });
+  const { products } = await getProducts();
 
   const alerts = products
     .filter((product) => product.active && product.stock <= product.lowStockThreshold)

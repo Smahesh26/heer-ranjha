@@ -13,7 +13,7 @@ const COLLECTIONS = [
     cta: "Explore Nayi Leher",
     reverse: false,
     accent: "#C9A96E",
-    image: "/images/collections/col1.jpg",
+    image: "/images/products/indigo-blue-hand-embroidered-kurta-1.jpg",
     objectPosition: "50% 15%",
   },
   {
@@ -26,7 +26,7 @@ const COLLECTIONS = [
     cta: "Explore Asaya",
     reverse: true,
     accent: "#9E7B5A",
-    image: "/images/collections/col2.jpg",
+    image: "/images/products/black-matka-silk-embroidered-kurta-1.jpg",
     objectPosition: "50% 15%",
   },
   {
@@ -39,7 +39,7 @@ const COLLECTIONS = [
     cta: "Explore Roomani",
     reverse: false,
     accent: "#B87A7A",
-    image: "/images/collections/col3.jpg",
+    image: "/images/products/olive-green-hand-embroidered-kurta-1.jpg",
   },
   {
     id: "ganga-jamuni",
@@ -51,7 +51,7 @@ const COLLECTIONS = [
     cta: "Explore Collection",
     reverse: true,
     accent: "#7A9E7A",
-    image: "/images/collections/col4.jpg",
+    image: "/images/products/black-botanical-jacket-with-sharara-set-1.jpg",
   },
 ];
 
