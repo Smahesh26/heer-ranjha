@@ -19,20 +19,6 @@ const TEAM = [
     accent: "#4A6070",
     image: "/image2.jpeg",
   },
-  {
-    name: "The Atelier Team",
-    role: "Pattern, Embroidery & Finishing",
-    bio: "A closely coordinated group of specialists who bring each piece to life with precision, patience, and a strong respect for the final wearer.",
-    color: "#B89090",
-    accent: "#785858",
-  },
-  {
-    name: "Heritage Craftspeople",
-    role: "Hand Embroidery & Finishing",
-    bio: "The work is ultimately defined by skilled hands that respect detail, balance, and the quiet discipline behind luxury clothing.",
-    color: "#8A9880",
-    accent: "#506048",
-  },
 ];
 
 export default function AtelierTeam() {

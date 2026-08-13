@@ -34,9 +34,10 @@ export default function ShopContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [filters, setFilters] = useState(() => {
-    const initialGender = searchParams.get("gender");
+    const initialGender = searchParams.get("gender") || searchParams.get("category");
     const initialCollection = searchParams.get("collection");
     const initialSubCategory = searchParams.get("subCategory");
+    const initialSearch = searchParams.get("q") || searchParams.get("search");
 
     const f = { ...INITIAL_FILTERS };
     if (initialGender && ["Men", "Women"].includes(initialGender)) {
@@ -48,17 +49,20 @@ export default function ShopContent() {
     if (initialSubCategory) {
       f.subCategories = [initialSubCategory];
     }
+    if (initialSearch) {
+      f.search = initialSearch;
+    }
     return f;
   });
 
   useEffect(() => {
-    const initialGender = searchParams.get("gender");
+    const initialGender = searchParams.get("gender") || searchParams.get("category");
     const initialCollection = searchParams.get("collection");
     const initialSubCategory = searchParams.get("subCategory");
+    const initialSearch = searchParams.get("q") || searchParams.get("search");
 
     setFilters((f) => {
       const next = { ...f };
-      // Only apply if the URL actually has these params (useful when navigating from within the page)
       if (initialGender && ["Men", "Women"].includes(initialGender)) {
         next.gender = initialGender;
       }
@@ -67,6 +71,9 @@ export default function ShopContent() {
       }
       if (initialSubCategory) {
         next.subCategories = [initialSubCategory];
+      }
+      if (typeof initialSearch === "string") {
+        next.search = initialSearch;
       }
       return next;
     });

@@ -598,12 +598,13 @@
 }
 
 .teamGrid {
-  max-width: var(--max-width);
+  max-width: 960px;
   margin-inline: auto;
   padding-inline: var(--gutter);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  justify-content: center;
 }
 
 .teamCard {

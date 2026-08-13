@@ -1,9 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./NewArrivals.module.css";
 import { PRODUCTS } from "@/components/shop/shopData";
-
-const FILTERS = ["All", "Men", "Women"];
 
 function ProductCard({ product, index }) {
   const ref = useRef(null);
@@ -74,7 +72,6 @@ function ProductCard({ product, index }) {
 }
 
 export default function NewArrivals() {
-  const [activeFilter, setActiveFilter] = useState("All");
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -94,9 +91,6 @@ export default function NewArrivals() {
   }, []);
 
   const newArrivals = PRODUCTS.slice(0, 8);
-  const filtered = activeFilter === "All"
-    ? newArrivals
-    : newArrivals.filter((p) => p.category === activeFilter);
 
   return (
     <section id="new-arrivals" className={styles.section}>
@@ -112,22 +106,9 @@ export default function NewArrivals() {
         </p>
       </div>
 
-      {/* Filters */}
-      <div className={styles.filters}>
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            className={`${styles.filterBtn} ${activeFilter === f ? styles.filterActive : ""}`}
-            onClick={() => setActiveFilter(f)}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
       {/* Grid */}
       <div className={styles.grid}>
-        {filtered.map((product, i) => (
+        {newArrivals.map((product, i) => (
           <ProductCard key={product.id} product={product} index={i} />
         ))}
       </div>

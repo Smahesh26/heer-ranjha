@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { getGuestWishlist } from "@/lib/client-cart-wishlist";
+import SearchModal from "./SearchModal";
 import styles from "./Navbar.module.css";
 
 const navLinks = [
@@ -18,6 +19,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
 
   useEffect(() => {
@@ -120,7 +122,11 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
-            <button className={styles.iconBtn} aria-label="Search">
+            <button
+              className={styles.iconBtn}
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
@@ -140,6 +146,26 @@ export default function Navbar() {
             </a>
           </nav>
 
+          {/* Mobile Actions Header */}
+          <div className={styles.mobileIcons}>
+            <button
+              className={styles.iconBtn}
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+              </svg>
+            </button>
+            <a href="/wishlist" className={styles.iconBtn} aria-label={`Wishlist (${wishlistCount} items)`}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {wishlistCount > 0 ? <span className={styles.countBadge}>{wishlistCount}</span> : null}
+            </a>
+          </div>
+
           {/* Hamburger (mobile) */}
           <button
             className={`${styles.hamburger} ${menuOpen ? styles.hamburgerOpen : ""}`}
@@ -157,6 +183,20 @@ export default function Navbar() {
       {/* Mobile drawer */}
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ""}`} aria-hidden={!menuOpen}>
         <nav className={styles.mobileNav}>
+          <button
+            className={styles.mobileSearchTrigger}
+            onClick={() => {
+              setMenuOpen(false);
+              setSearchOpen(true);
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+            </svg>
+            <span>Search Catalog...</span>
+          </button>
+
           {navLinks.map((link, i) => (
             <a
               key={link.label}
@@ -174,6 +214,10 @@ export default function Navbar() {
           <p className="eyebrow">Delhi &nbsp;&nbsp;|&nbsp;&nbsp; Bareilly</p>
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
+

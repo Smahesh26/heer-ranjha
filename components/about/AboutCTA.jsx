@@ -48,7 +48,7 @@ export default function AboutCTA() {
         </div>
 
         <div className={`${styles.ctaButtons} reveal reveal-delay-4`}>
-          <a href="/" className="btn btn-ivory">
+          <a href="/shop" className="btn btn-ivory">
             <span>Explore Collections</span>
             <span className="btn-arrow">&#8594;</span>
           </a>
