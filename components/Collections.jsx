@@ -14,7 +14,7 @@ const COLLECTIONS = [
     ctaHref: "/shop?collection=NAYI+LEHER#shop-layout",
     reverse: false,
     accent: "#C9A96E",
-    image: "/images/products/azure-blue-hand-emroidered-kurta-1.jpg",
+    image: "/images/products/azure-blue-hand-emroidered-kurta-1.webp",
     objectPosition: "50% 15%",
   },
   {
@@ -28,7 +28,7 @@ const COLLECTIONS = [
     ctaHref: "/shop?collection=ASAYA#shop-layout",
     reverse: true,
     accent: "#9E7B5A",
-    image: "/images/products/indo-western-sunshine-yellow-3pc-suit-set-1.jpg",
+    image: "/images/products/indo-western-sunshine-yellow-3pc-suit-set-1.webp",
     objectPosition: "50% 15%",
   },
 ];
