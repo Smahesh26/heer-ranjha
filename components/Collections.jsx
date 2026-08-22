@@ -28,7 +28,7 @@ const COLLECTIONS = [
     ctaHref: "/shop?collection=ASAYA#shop-layout",
     reverse: true,
     accent: "#9E7B5A",
-    image: "/images/products/indo-western-sunshine-yellow-3pc-suit-set-1.webp",
+    image: "/images/products/indo-western-sunshine-yellow-suit-set-1.webp",
     objectPosition: "50% 15%",
   },
 ];

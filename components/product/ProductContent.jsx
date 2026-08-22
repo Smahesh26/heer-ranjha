@@ -321,7 +321,11 @@ export default function ProductContent({ product, related }) {
   const [wished, setWished] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
-  const availableSizes = Array.isArray(product.sizes) && product.sizes.length ? product.sizes : DEFAULT_SIZES;
+  const availableSizes = Array.isArray(product.sizeOptions) && product.sizeOptions.length 
+    ? product.sizeOptions 
+    : Array.isArray(product.sizes) && product.sizes.length 
+    ? product.sizes 
+    : DEFAULT_SIZES;
   const sizeCharges = product.sizeCharges && typeof product.sizeCharges === "object" ? product.sizeCharges : {};
   const selectedSizeCharge = selectedSize ? Number(sizeCharges[selectedSize] || 0) : 0;
   const unitPrice = Number(product.price || 0) + selectedSizeCharge;
