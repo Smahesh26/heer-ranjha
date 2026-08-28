@@ -516,6 +516,36 @@
   margin: 0;
 }
 
+.disclaimerBox {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(26, 21, 18, 0.025);
+  border: 1px dashed rgba(26, 21, 18, 0.15);
+  border-radius: 4px;
+}
+.disclaimerHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  margin-bottom: 0.35rem;
+}
+.disclaimerHeader svg {
+  color: var(--gold-muted);
+}
+.disclaimerText {
+  font-size: 0.72rem;
+  line-height: 1.65;
+  color: rgba(26, 21, 18, 0.65);
+  font-style: italic;
+  margin: 0;
+}
+
 .tabContent {}
 
 /* Description */
