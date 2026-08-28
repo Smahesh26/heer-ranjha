@@ -196,8 +196,8 @@ function TabSection({ product }) {
             <ul className={styles.descList}>
               <li>Fabric: {product.fabric}</li>
               <li>Embroidery: {embroideryLabel}</li>
-              <li>Set includes: Kurta and cotton pant</li>
-              <li>Wash care: Gentle hand wash in cold water, dry in shade</li>
+              <li>Set Includes: {product.setIncludes || "Ensemble"}</li>
+              <li>Wash Care: {product.washCare || product.clothCare || "Dry Clean Only"}</li>
               <li>Country of origin: India</li>
             </ul>
           </div>
@@ -235,9 +235,19 @@ function TabSection({ product }) {
 
         {tab === "care" && (
           <div className={styles.infoContent}>
-            <h3 className={`display ${styles.infoTitle}`}>Cloth Care</h3>
+            <h3 className={`display ${styles.infoTitle}`}>Shipping & Delivery</h3>
             <p className={styles.infoNote}>
-              {product.clothCare || "Dry clean preferred. If hand washing, use cold water and mild detergent. Dry in shade and steam iron on low heat from reverse side."}
+              {product.shippingDetails || "Free shipping across India on all orders. Made-To-Order timeline: 2-3 weeks."}
+            </p>
+
+            <h3 className={`display ${styles.infoTitle}`}>Cloth Wash Care</h3>
+            <p className={styles.infoNote}>
+              {product.washCare || product.clothCare || "Dry Clean Only"}
+            </p>
+
+            <h3 className={`display ${styles.infoTitle}`}>Disclaimer</h3>
+            <p className={styles.infoNote}>
+              {product.disclaimer || "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Product colours may vary slightly due to lighting and screen settings."}
             </p>
 
             <h3 className={`display ${styles.infoTitle}`}>Terms & Conditions</h3>
@@ -505,7 +515,6 @@ export default function ProductContent({ product, related }) {
           </div>
 
           {/* Actions */}
-          {/* Actions */}
           <div className={styles.actions}>
             <a
               href={`https://wa.me/917777045554?text=${encodeURIComponent(`Hi, I'm interested in the ${product.name} (SKU: ${product.id}).`)}`}
@@ -518,14 +527,32 @@ export default function ProductContent({ product, related }) {
             </a>
           </div>
 
+          {/* Shipping & Delivery Info Box */}
+          {product.shippingDetails && (
+            <div className={styles.shippingBox}>
+              <div className={styles.shippingHeader}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+                <span>Shipping & Delivery Details</span>
+              </div>
+              <p className={styles.shippingText}>{product.shippingDetails}</p>
+            </div>
+          )}
+
           <div className={styles.divider} />
 
           {/* Product meta */}
           <dl className={styles.productMeta}>
+            {product.styleCode && <div className={styles.metaRow}><dt>Style Code</dt><dd>{product.styleCode}</dd></div>}
             <div className={styles.metaRow}><dt>SKU</dt><dd>{product.id}</dd></div>
             <div className={styles.metaRow}><dt>Category</dt><dd><a href="/shop">{product.subCategory}</a></dd></div>
             <div className={styles.metaRow}><dt>Collection</dt><dd>{product.collection}</dd></div>
             <div className={styles.metaRow}><dt>Fabric</dt><dd>{product.fabric}</dd></div>
+            {product.setIncludes && <div className={styles.metaRow}><dt>Set Includes</dt><dd>{product.setIncludes}</dd></div>}
           </dl>
         </div>
       </div>

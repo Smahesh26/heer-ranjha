@@ -486,6 +486,36 @@
 .tabBtn:hover { color: var(--charcoal); }
 .tabBtnActive { color: var(--charcoal) !important; border-bottom-color: var(--charcoal); }
 
+.shippingBox {
+  margin-block: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: var(--ivory);
+  border: 1px solid rgba(26, 21, 18, 0.09);
+  border-radius: 4px;
+}
+.shippingHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  margin-bottom: 0.4rem;
+}
+.shippingHeader svg {
+  color: var(--gold-muted);
+}
+.shippingText {
+  font-size: 0.76rem;
+  line-height: 1.6;
+  color: rgba(26, 21, 18, 0.7);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
 .tabContent {}
 
 /* Description */
