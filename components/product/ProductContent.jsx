@@ -562,8 +562,7 @@ export default function ProductContent({ product, related }) {
 
           {/* Product meta */}
           <dl className={styles.productMeta}>
-            {product.styleCode && <div className={styles.metaRow}><dt>Style Code</dt><dd>{product.styleCode}</dd></div>}
-            <div className={styles.metaRow}><dt>SKU</dt><dd>{product.id}</dd></div>
+            <div className={styles.metaRow}><dt>SKU / Style Code</dt><dd>{product.sku || product.styleCode || product.id}</dd></div>
             <div className={styles.metaRow}><dt>Category</dt><dd><a href="/shop">{product.subCategory}</a></dd></div>
             <div className={styles.metaRow}><dt>Collection</dt><dd>{product.collection}</dd></div>
             <div className={styles.metaRow}><dt>Fabric</dt><dd>{product.fabric}</dd></div>
