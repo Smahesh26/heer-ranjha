@@ -29,3 +29,7 @@ next-env.d.ts
 !public/heer-ranjha-home-new.mp4
 *.mov
 *.avi
+
+# Excel temporary lock files
+~$*
+~$*.xlsx

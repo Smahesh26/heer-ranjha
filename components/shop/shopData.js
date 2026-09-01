@@ -25,6 +25,7 @@ export const SUB_CATEGORIES = [
 export const COLLECTIONS = [
   "ASAYA",
   "NAYI LEHER",
+  "ROOMANI",
 ];
 
 export const FABRICS = [

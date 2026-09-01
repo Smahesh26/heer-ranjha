@@ -10,6 +10,7 @@ const POPULAR_SEARCHES = [
   "Lehengas",
   "ASAYA",
   "NAYI LEHER",
+  "ROOMANI",
   "Matka Silk",
   "Bandhgalas",
 ];

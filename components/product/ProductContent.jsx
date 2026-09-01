@@ -184,20 +184,15 @@ function TabSection({ product }) {
       <div className={styles.tabContent} role="tabpanel">
         {tab === "description" && (
           <div className={styles.descContent}>
-            <p className={styles.descPara}>
-              The {product.name} is part of our {product.collection} collection, a line that began with a simple question: what does a contemporary Indian man reach for when the occasion demands both presence and ease?
-            </p>
-            <p className={styles.descPara}>
-              The kurta is cut from {product.fabric.toLowerCase()}, chosen for its natural sheen and its willingness to hold fine hand embroidery without distortion. The thread work is done by artisans in our Bareilly atelier using patterns drawn from Mughal geometric motifs, simplified into a language that reads as modern without losing its roots.
-            </p>
-            <p className={styles.descPara}>
-              The set includes a straight-cut kurta and matching cotton pant. Both are pre-washed for softness. The embroidery will not bleed or loosen with careful hand washing.
-            </p>
+            {product.description && (
+              <p className={styles.descPara}>
+                {product.description}
+              </p>
+            )}
             <ul className={styles.descList}>
-              <li>Fabric: {product.fabric}</li>
-              <li>Embroidery: {embroideryLabel}</li>
-              <li>Set Includes: {product.setIncludes || "Ensemble"}</li>
-              <li>Wash Care: {product.washCare || product.clothCare || "Dry Clean Only"}</li>
+              {product.fabric && <li>Fabric: {product.fabric}</li>}
+              {product.setIncludes && <li>Set Includes: {product.setIncludes}</li>}
+              {product.washCare && <li>Wash Care: {product.washCare}</li>}
               <li>Country of origin: India</li>
             </ul>
           </div>
