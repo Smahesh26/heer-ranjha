@@ -5,6 +5,7 @@ const LINKS = {
   Collections: [
     { label: "Nayi Leher", href: "/shop?collection=NAYI+LEHER#shop-layout" },
     { label: "Asaya", href: "/shop?collection=ASAYA#shop-layout" },
+    { label: "Roomani", href: "/shop?collection=ROOMANI#shop-layout" },
   ],
   "Men's Wear": [
     { label: "Kurta Sets", href: "/shop?gender=Men&subCategory=Kurta#shop-layout" },

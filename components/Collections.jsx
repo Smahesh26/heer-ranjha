@@ -31,6 +31,20 @@ const COLLECTIONS = [
     image: "/images/products/indo-western-sunshine-yellow-suit-set-1.webp",
     objectPosition: "50% 15%",
   },
+  {
+    id: "roomani",
+    eyebrow: "Romantic Collection",
+    name: "Roomani",
+    translation: "Poetry in Motion",
+    desc: "Hand-crafted ensembles featuring delicate floral embroideries, soft pastels, and refined matka silk silhouettes.",
+    highlight: "Matka Silk · Hand Embroidery · Floral Motifs",
+    cta: "Explore Roomani",
+    ctaHref: "/shop?collection=ROOMANI#shop-layout",
+    reverse: false,
+    accent: "#A38B74",
+    image: "/images/products/grey-pin-tuck-kurta-1.jpg",
+    objectPosition: "50% 15%",
+  },
 ];
 
 function useReveal(ref) {
@@ -111,7 +125,7 @@ export default function Collections() {
       <div className={styles.sectionHeader}>
         <p className="eyebrow">Our Collections</p>
         <h2 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "var(--charcoal)" }}>
-          Two collections, one story
+          Three collections, one story
         </h2>
         <p className={styles.sectionSub}>
           Each collection is a conversation between craft and creativity, between India's textile heritage and the pulse of the contemporary.
