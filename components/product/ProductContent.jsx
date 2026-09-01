@@ -453,9 +453,11 @@ export default function ProductContent({ product, related }) {
         </div>
 
         {/* Desc */}
-        <p className={styles.productShortDesc}>
-          {shortDescription}. A piece from the {product.collection} collection, hand-crafted in {product.fabric.toLowerCase()} by artisans at our Bareilly atelier.
-        </p>
+        {product.description && (
+          <p className={styles.productShortDesc}>
+            {product.description}
+          </p>
+        )}
 
         <div className={styles.divider} />
 
