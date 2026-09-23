@@ -1,0 +1,556 @@
+.loginShell {
+  position: relative;
+  min-height: 100vh;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background:
+    radial-gradient(circle at top left, rgba(201, 169, 110, 0.18), transparent 28%),
+    linear-gradient(180deg, #0f0d0b 0%, #17120f 52%, #110d0a 100%);
+  color: var(--ivory);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.loginBackdrop {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(245, 240, 230, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 240, 230, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at center, black 38%, transparent 82%);
+  pointer-events: none;
+}
+
+.loginPanel {
+  width: min(1180px, 100%);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+  border: 1px solid rgba(222, 194, 138, 0.18);
+  background: rgba(245, 240, 230, 0.035);
+  backdrop-filter: blur(16px);
+  border-radius: 34px;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+}
+
+.loginIntro,
+.loginForm {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.loginIntro {
+  border-right: 1px solid rgba(222, 194, 138, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+.loginTitle {
+  font-size: clamp(2.3rem, 4.8vw, 4.4rem);
+  line-height: 0.95;
+  max-width: 12ch;
+  margin-top: 0.5rem;
+}
+
+.loginCopy,
+.loginFormCopy,
+.sidebarCopy,
+.heroCopy,
+.placeholderCopy,
+.bannerSubtitle,
+.uploadHint,
+.userEmail {
+  color: rgba(245, 240, 230, 0.72);
+  line-height: 1.65;
+  font-size: 0.84rem;
+}
+
+.loginHighlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.highlightCard,
+.statCard {
+  padding: 0.85rem;
+  border-radius: 16px;
+  border: 1px solid rgba(222, 194, 138, 0.14);
+  background: rgba(250, 247, 242, 0.04);
+}
+
+.highlightValue,
+.statValue {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
+  color: var(--ivory);
+  line-height: 1;
+}
+
+.highlightLabel,
+.statLabel,
+.fieldLabel,
+.sidebarItemMeta,
+.bannerMeta,
+.bannerFoot,
+.badge,
+.userName {
+  display: block;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+}
+
+.highlightLabel,
+.statLabel,
+.bannerFoot,
+.userEmail,
+.sidebarItemMeta,
+.bannerMeta {
+  margin-top: 0.55rem;
+  color: rgba(245, 240, 230, 0.58);
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.loginFormTitle {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
+.fieldGroup {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.fieldLabel {
+  color: rgba(245, 240, 230, 0.65);
+}
+
+.fieldInput,
+.fieldTextarea,
+.fileInput {
+  width: 100%;
+  border: 1px solid rgba(222, 194, 138, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+}
+
+.fieldTextarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.fieldInput::placeholder,
+.fieldTextarea::placeholder {
+  color: rgba(245, 240, 230, 0.35);
+}
+
+.errorText,
+.successText {
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.errorText {
+  color: #ffbfbf;
+}
+
+.successText {
+  color: #d7c18d;
+}
+
+.dashboardPage {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(201, 169, 110, 0.12), transparent 25%),
+    linear-gradient(180deg, #0e0b08 0%, #15110d 100%);
+  color: var(--ivory);
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.dashboardShell {
+  width: min(1460px, 100%);
+  margin: 0 auto;
+  min-height: calc(100vh - 2rem);
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  border: 1px solid rgba(222, 194, 138, 0.1);
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(250, 247, 242, 0.03);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.24);
+}
+
+.sidebar {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem;
+  padding: 1.35rem 1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  border-right: 1px solid rgba(222, 194, 138, 0.08);
+}
+
+.sidebarTitle {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin-top: 0.2rem;
+}
+
+.sidebarNav {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.sidebarItem {
+  text-align: left;
+  padding: 0.8rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(222, 194, 138, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: inherit;
+  transition: transform var(--duration-sm) var(--ease-out), border-color var(--duration-sm) var(--ease-out), background var(--duration-sm) var(--ease-out);
+}
+
+.sidebarItem:hover,
+.sidebarItemActive {
+  transform: translateX(4px);
+  border-color: rgba(222, 194, 138, 0.22);
+  background: rgba(201, 169, 110, 0.08);
+}
+
+.sidebarItemLabel {
+  font-size: 1.15rem;
+  margin-top: 0.15rem;
+}
+
+.sidebarFooter {
+  padding: 0.85rem;
+  border-radius: 18px;
+  border: 1px solid rgba(222, 194, 138, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sidebarLogout {
+  width: 100%;
+  justify-content: center;
+}
+
+.mainPanel {
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.heroCard,
+.bannerPanel,
+.formPanel,
+.placeholderState {
+  border: 1px solid rgba(222, 194, 138, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.heroCard {
+  padding: clamp(1rem, 2vw, 1.35rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 1rem;
+  align-items: end;
+}
+
+.heroTitle {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  max-width: 12ch;
+  margin: 0.25rem 0 0.55rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1rem;
+}
+
+.bannerPanel,
+.formPanel,
+.placeholderState {
+  padding: 1rem;
+}
+
+.sectionHead,
+.sectionHeadCompact {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle,
+.placeholderTitle,
+.bannerTitle {
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+}
+
+.refreshBtn {
+  padding-inline: 1.4rem;
+}
+
+.bannerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.bannerCard {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(222, 194, 138, 0.1);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.productCard {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(222, 194, 138, 0.1);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.bannerMediaWrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.bannerMedia,
+.bannerFallback {
+  width: 100%;
+  height: 100%;
+}
+
+.bannerMedia {
+  object-fit: cover;
+}
+
+.bannerFallback {
+  display: grid;
+  place-items: center;
+  color: rgba(245, 240, 230, 0.45);
+}
+
+.bannerBadges {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(8, 6, 4, 0.66);
+  border: 1px solid rgba(222, 194, 138, 0.14);
+  color: var(--ivory);
+}
+
+.bannerBody {
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.productMediaWrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.productMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.productBody {
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.productActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.ghostBtn,
+.dangerBtn {
+  border-radius: 12px;
+  border: 1px solid rgba(222, 194, 138, 0.2);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--duration-sm) var(--ease-out), background var(--duration-sm) var(--ease-out), color var(--duration-sm) var(--ease-out);
+}
+
+.ghostBtn {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ivory);
+}
+
+.ghostBtn:hover {
+  border-color: rgba(222, 194, 138, 0.42);
+  background: rgba(201, 169, 110, 0.12);
+}
+
+.dangerBtn {
+  background: rgba(140, 40, 40, 0.14);
+  border-color: rgba(255, 120, 120, 0.28);
+  color: #ffd6d6;
+}
+
+.dangerBtn:hover {
+  background: rgba(160, 48, 48, 0.22);
+  border-color: rgba(255, 140, 140, 0.46);
+}
+
+.dangerBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bannerFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.bannerLink {
+  color: var(--gold-light);
+  font-size: 0.68rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.inlineFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+
+.checkboxGroup {
+  align-content: start;
+}
+
+.toggleWrap {
+  min-height: 46px;
+  border: 1px solid rgba(222, 194, 138, 0.18);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.82rem;
+}
+
+.uploadField {
+  padding: 0.85rem;
+  border-radius: 16px;
+  border: 1px dashed rgba(222, 194, 138, 0.22);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.fileInput {
+  padding-inline: 0;
+  border: none;
+  background: transparent;
+}
+
+.submitBtn {
+  justify-content: center;
+}
+
+.placeholderState {
+  min-height: 280px;
+  display: grid;
+  align-content: center;
+}
+
+@media (max-width: 1180px) {
+  .dashboardShell,
+  .contentGrid,
+  .heroCard,
+  .loginPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid rgba(222, 194, 138, 0.08);
+  }
+
+  .bannerGrid,
+  .productGrid,
+  .loginHighlights {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .mainPanel,
+  .sidebar,
+  .loginIntro,
+  .loginForm,
+  .bannerPanel,
+  .formPanel,
+  .heroCard {
+    padding: 0.85rem;
+  }
+
+  .bannerGrid,
+  .productGrid,
+  .statsGrid,
+  .inlineFields,
+  .loginHighlights {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHead,
+  .bannerFoot {
+    align-items: start;
+    flex-direction: column;
+  }
+}

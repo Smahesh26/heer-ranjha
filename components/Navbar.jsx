@@ -1,0 +1,223 @@
+"use client";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { getGuestWishlist } from "@/lib/client-cart-wishlist";
+import SearchModal from "./SearchModal";
+import styles from "./Navbar.module.css";
+
+const navLinks = [
+  { label: "Collections", href: "/#collections" },
+  { label: "Men", href: "/shop?gender=Men#shop-layout" },
+  { label: "Women", href: "/shop?gender=Women#shop-layout" },
+  { label: "Shop", href: "/shop" },
+  { label: "About", href: "/about-us" },
+  { label: "Stores", href: "/stores" },
+];
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadCounts() {
+      try {
+        const meRes = await fetch("/api/auth/me", { cache: "no-store" });
+
+        if (!active) return;
+
+        if (meRes.ok) {
+          const meData = await meRes.json().catch(() => null);
+          const role = meData?.user?.role;
+
+          if (role === "ADMIN") {
+            setWishlistCount(0);
+            return;
+          }
+
+          const [wishlistRes] = await Promise.all([
+            fetch("/api/wishlist", { cache: "no-store" }),
+          ]);
+
+          const wishlistData = await wishlistRes.json().catch(() => ({ items: [] }));
+
+          if (!active) return;
+
+          const wishlistItems = Array.isArray(wishlistData.items) ? wishlistData.items : [];
+
+          setWishlistCount(wishlistItems.length);
+          return;
+        }
+
+        const guestWishlist = getGuestWishlist();
+
+        if (!active) return;
+
+        setWishlistCount(guestWishlist.length);
+      } catch {
+        if (!active) return;
+        setWishlistCount(0);
+      }
+    }
+
+    void loadCounts();
+
+    const onFocus = () => {
+      void loadCounts();
+    };
+
+    window.addEventListener("focus", onFocus);
+    return () => {
+      active = false;
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [pathname]);
+
+  return (
+    <>
+      <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
+        <div className={styles.inner}>
+          {/* Left links */}
+          <nav className={`${styles.navLinks} ${styles.navLeft}`} aria-label="Primary navigation left">
+            {navLinks.slice(0, 3).map((link) => (
+              <a key={link.label} href={link.href} className={styles.navLink}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Logo */}
+          <a href="/" className={styles.logoWrap} aria-label="Heer Ranjha Home">
+            <Image
+              src="/logo.png"
+              alt="Heer Ranjha"
+              width={256}
+              height={320}
+              className={styles.logoImg}
+              priority
+            />
+          </a>
+
+          {/* Right links */}
+          <nav className={`${styles.navLinks} ${styles.navRight}`} aria-label="Primary navigation right">
+            {navLinks.slice(3).map((link) => (
+              <a key={link.label} href={link.href} className={styles.navLink}>
+                {link.label}
+              </a>
+            ))}
+            <button
+              className={styles.iconBtn}
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+              </svg>
+            </button>
+            <a href="/wishlist" className={styles.iconBtn} aria-label={`Wishlist (${wishlistCount} items)`}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {wishlistCount > 0 ? <span className={styles.countBadge}>{wishlistCount}</span> : null}
+            </a>
+            <a href="/my-account" className={styles.iconBtn} aria-label="My Account">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </a>
+          </nav>
+
+          {/* Mobile Actions Header */}
+          <div className={styles.mobileIcons}>
+            <button
+              className={styles.iconBtn}
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+              </svg>
+            </button>
+            <a href="/wishlist" className={styles.iconBtn} aria-label={`Wishlist (${wishlistCount} items)`}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {wishlistCount > 0 ? <span className={styles.countBadge}>{wishlistCount}</span> : null}
+            </a>
+          </div>
+
+          {/* Hamburger (mobile) */}
+          <button
+            className={`${styles.hamburger} ${menuOpen ? styles.hamburgerOpen : ""}`}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile drawer */}
+      <div className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ""}`} aria-hidden={!menuOpen}>
+        <nav className={styles.mobileNav}>
+          <button
+            className={styles.mobileSearchTrigger}
+            onClick={() => {
+              setMenuOpen(false);
+              setSearchOpen(true);
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+            </svg>
+            <span>Search Catalog...</span>
+          </button>
+
+          {navLinks.map((link, i) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className={styles.mobileLink}
+              style={{ transitionDelay: menuOpen ? `${i * 0.07 + 0.15}s` : "0s" }}
+              onClick={() => setMenuOpen(false)}
+            >
+              <span className="eyebrow">{String(i + 1).padStart(2, "0")}</span>
+              <span className={styles.mobileLinkText}>{link.label}</span>
+            </a>
+          ))}
+        </nav>
+        <div className={styles.mobileFooter}>
+          <p className="eyebrow">Delhi &nbsp;&nbsp;|&nbsp;&nbsp; Bareilly</p>
+        </div>
+      </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
+  );
+}
+

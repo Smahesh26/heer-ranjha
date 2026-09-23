@@ -1,0 +1,34 @@
+{
+  "name": "heer-ranjha",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test:security:register-role": "node scripts/test-register-role-guard.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "adm-zip": "^0.6.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "jsonwebtoken": "^9.0.3",
+    "next": "14.2.3",
+    "nodemailer": "^6.10.1",
+    "prisma": "^5.22.0",
+    "razorpay": "^2.9.6",
+    "react": "^18",
+    "react-dom": "^18",
+    "sharp": "^0.35.3",
+    "xlsx": "^0.18.5",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "26.0.1",
+    "@types/react": "19.2.17",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3"
+  }
+}

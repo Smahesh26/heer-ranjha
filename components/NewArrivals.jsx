@@ -1,0 +1,154 @@
+"use client";
+import { useEffect, useRef } from "react";
+import styles from "./NewArrivals.module.css";
+import { PRODUCTS } from "@/components/shop/shopData";
+
+function ProductCard({ product, index }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("visible");
+        });
+      },
+      { threshold: 0.15 }
+    );
+    const el = ref.current;
+    if (el) observer.observe(el);
+    return () => { if (el) observer.unobserve(el); };
+  }, []);
+
+  const normalizedSlug = String(product.slug || product.id || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+/, "");
+    
+  const previewImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
+
+  const productHref = `/product/${normalizedSlug}`;
+
+  const handleCardClick = (e) => {
+    if (e.target.closest("a") || e.target.closest("button")) return;
+    window.open(productHref, "_blank", "noopener,noreferrer");
+  };
+
+  return (
+    <div
+      ref={ref}
+      className={`${styles.card} reveal`}
+      style={{ transitionDelay: `${(index % 4) * 0.1}s`, cursor: 'pointer' }}
+      onClick={handleCardClick}
+    >
+      {/* Image placeholder */}
+      <div className={styles.cardImage}>
+        <a
+          href={productHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ position: 'absolute', inset: 0, zIndex: 1 }}
+          aria-label={`View ${product.name}`}
+        >
+          {previewImage ? (
+            <img className={styles.cardBg} src={previewImage} alt={product.name} style={{ objectFit: 'cover' }} />
+          ) : (
+            <div
+              className={styles.cardBg}
+              style={{
+                background: `radial-gradient(ellipse 70% 70% at 60% 40%, #d4c2a3 0%, #7a5635 100%)`,
+              }}
+            />
+          )}
+          <div className={styles.cardOverlay} />
+        </a>
+
+        {/* Product code badge */}
+        <span className={styles.codeBadge}>{product.code || product.slug}</span>
+
+        {/* Collection tag */}
+        <span className={styles.collectionTag}>{product.collection}</span>
+
+        {/* Hover action */}
+        <div className={styles.cardActions} style={{ zIndex: 3 }}>
+          <a
+            href={productHref}
+            className={styles.viewBtn}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>View Piece</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Card info */}
+      <div className={styles.cardInfo}>
+        <p className={styles.cardSub}>{product.subCategory || product.category}</p>
+        <h3 className={`display ${styles.cardName}`}>
+          <a
+            href={productHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'inherit', textDecoration: 'none' }}
+          >
+            {product.name}
+          </a>
+        </h3>
+        <p className={styles.cardDetail}>{product.detail || product.description}</p>
+      </div>
+    </div>
+  );
+}
+
+export default function NewArrivals() {
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("visible");
+        });
+      },
+      { threshold: 0.2 }
+    );
+    const el = headerRef.current;
+    if (el) {
+      el.querySelectorAll(".reveal").forEach((r) => observer.observe(r));
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  const newArrivals = PRODUCTS.slice(0, 8);
+
+  return (
+    <section id="new-arrivals" className={styles.section}>
+      <div className={styles.header} ref={headerRef}>
+        <p className="eyebrow reveal">New Arrivals</p>
+        <div className="gold-rule reveal reveal-delay-1" />
+        <h2 className={`display ${styles.title} reveal reveal-delay-2`}>
+          Pieces from<br />
+          <em>our latest collections</em>
+        </h2>
+        <p className={`${styles.sub} reveal reveal-delay-3`}>
+          Handcrafted ensembles for men and women, drawn from the Nayi Leher, Asaya, and Ganga Jamuni collections.
+        </p>
+      </div>
+
+      {/* Grid */}
+      <div className={styles.grid}>
+        {newArrivals.map((product, i) => (
+          <ProductCard key={product.id} product={product} index={i} />
+        ))}
+      </div>
+
+      <div className={styles.viewAllWrap}>
+        <a href="/shop" className="btn">
+          <span>View All Collections</span>
+          <span className="btn-arrow">&#8594;</span>
+        </a>
+      </div>
+    </section>
+  );
+}
