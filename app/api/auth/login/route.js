@@ -40,10 +40,11 @@ export async function POST(request) {
     const response = json({
       user: { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl },
     });
+    const isHttps = request.headers.get("x-forwarded-proto") === "https" || request.url.startsWith("https://");
     response.cookies.set(getAuthCookieName(), token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: isHttps,
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
@@ -130,10 +131,11 @@ export async function POST(request) {
   const response = json({
     user: { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl },
   });
+  const isHttps = request.headers.get("x-forwarded-proto") === "https" || request.url.startsWith("https://");
   response.cookies.set(getAuthCookieName(), token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isHttps,
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });

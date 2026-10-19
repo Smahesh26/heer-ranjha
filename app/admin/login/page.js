@@ -520,8 +520,29 @@ export default function AdminLoginPage() {
     }
   }
 
-  function handleExportExcel() {
-    window.open("/api/products/import-excel", "_blank");
+  async function handleExportExcel() {
+    setExcelStatus("Generating catalogue Excel spreadsheet...");
+    try {
+      const response = await fetch("/api/products/export", {
+        method: "GET",
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        throw new Error(`Export failed with status: ${response.status}`);
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `heer-ranjha-products-${Date.now()}.xlsx`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      window.URL.revokeObjectURL(url);
+      setExcelStatus("Catalog exported successfully! Download completed.");
+    } catch (err) {
+      setExcelStatus(err.message || "Failed to export catalog.");
+    }
   }
 
   async function handleProductUpload(event) {

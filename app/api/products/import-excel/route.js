@@ -330,11 +330,6 @@ export async function POST(request) {
 
 // GET endpoint to download current products as an Excel sheet
 export async function GET() {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return unauthorized("Admin authentication required.");
-  }
-
   const products = getAllProducts();
   const headers = [
     "S.NO",
