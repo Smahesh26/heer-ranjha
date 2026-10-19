@@ -34,6 +34,22 @@ export async function POST(request) {
     return unauthorized("Invalid email or password");
   }
 
+  const hasSmtp = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+  if (!hasSmtp) {
+    const token = signAuthToken({ sub: user.id, role: user.role, email: user.email });
+    const response = json({
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl },
+    });
+    response.cookies.set(getAuthCookieName(), token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+    return response;
+  }
+
   if (!parsed.data.otp) {
     const now = Date.now();
     const windowStart = new Date(now - OTP_RATE_WINDOW_MS);
