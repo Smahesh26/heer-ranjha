@@ -1115,6 +1115,11 @@ export default function AdminLoginPage() {
                               <p className={styles.bannerSubtitle}>
                                 {product.fabric ? `${product.fabric} • ` : ""}{product.subCategory || product.category}
                               </p>
+                              {product.description ? (
+                                <p className={styles.productDescPreview} title={product.description}>
+                                  {product.description}
+                                </p>
+                              ) : null}
                             </div>
                             <div className={styles.bannerFoot}>
                               <span>INR {Number(product.price || 0).toLocaleString("en-IN")}</span>

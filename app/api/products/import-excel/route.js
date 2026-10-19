@@ -157,7 +157,7 @@ export async function POST(request) {
     headerRow.forEach((col, idx) => {
       const h = normalizeHeader(col);
       if (!h) return;
-      if (h.includes("sku") || h.includes("style code") || h.includes("product code")) colIndex.sku = idx;
+      if (h.includes("sku") || h.includes("style code") || h.includes("product code") || h.includes("item sku")) colIndex.sku = idx;
       else if (h.includes("product name") || h === "name" || h === "title") colIndex.name = idx;
       else if (h.includes("sub category") || h.includes("subcategory")) colIndex.subCategory = idx;
       else if (h.includes("category")) colIndex.category = idx;
@@ -170,7 +170,7 @@ export async function POST(request) {
       else if (h.includes("price")) colIndex.price = idx;
       else if (h.includes("fit")) colIndex.fit = idx;
       else if (h.includes("disclaimer")) colIndex.disclaimer = idx;
-      else if (h.includes("shipping")) colIndex.shippingDetails = idx;
+      else if (h.includes("shipping") || h.includes("order processing")) colIndex.shippingDetails = idx;
       else if (h.includes("stock") || h.includes("inventory")) colIndex.stock = idx;
       else if (h.includes("color") || h.includes("colour")) colIndex.color = idx;
       else if (h.includes("active") || h.includes("status")) colIndex.active = idx;
@@ -328,12 +328,11 @@ export async function POST(request) {
   });
 }
 
-// GET endpoint to download current products as an Excel sheet
-export async function GET() {
-  const products = getAllProducts();
+function buildSheetRows(productsList) {
   const headers = [
     "S.NO",
     "SKU",
+    "Style Code",
     "Product Name",
     "Product Category",
     "Product Sub Category",
@@ -343,12 +342,14 @@ export async function GET() {
     "Wash Care",
     "Color",
     "Fit",
+    "Product Description",
     "Product Highlights (Description)",
     "Price",
     "MRP",
     "Stock",
     "Sizes",
     "Shipping Details",
+    "Shipping And Order Processing",
     "Disclaimer",
     "Image URLs (comma separated)",
     "Active(Yes/No)",
@@ -356,10 +357,13 @@ export async function GET() {
 
   const rows = [headers];
 
-  products.forEach((p, idx) => {
+  productsList.forEach((p, idx) => {
+    const desc = p.description || p.highlights || p.productHighlights || "";
+    const shipping = p.shippingDetails || p.shippingAndOrderProcessing || "Free shipping across India on all orders. Made-To-Order Timeline: 2-3 Weeks.";
     rows.push([
       idx + 1,
       p.sku || p.styleCode || "",
+      p.styleCode || p.sku || "",
       p.name || "",
       p.category || "",
       p.subCategory || "",
@@ -368,22 +372,71 @@ export async function GET() {
       p.fabric || "",
       p.washCare || "",
       p.color || "",
-      p.fit || "",
-      p.description || "",
-      p.price || 0,
-      p.mrp || p.price || 0,
+      p.fit || "Regular",
+      desc,
+      desc,
+      Number(p.price || 0),
+      Number(p.mrp || p.price || 0),
       p.stock || "MTO",
       Array.isArray(p.sizes) ? p.sizes.join(", ") : (p.sizes || "XS, S, M, L, XL, XXL"),
-      p.shippingDetails || "",
-      p.disclaimer || "",
+      shipping,
+      shipping,
+      p.disclaimer || "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles.",
       Array.isArray(p.images) ? p.images.join(", ") : (p.images || ""),
       p.active ? "Yes" : "No",
     ]);
   });
 
   const worksheet = xlsx.utils.aoa_to_sheet(rows);
+  worksheet["!cols"] = [
+    { wch: 6 },
+    { wch: 18 },
+    { wch: 18 },
+    { wch: 36 },
+    { wch: 16 },
+    { wch: 18 },
+    { wch: 16 },
+    { wch: 16 },
+    { wch: 16 },
+    { wch: 16 },
+    { wch: 14 },
+    { wch: 12 },
+    { wch: 55 },
+    { wch: 55 },
+    { wch: 12 },
+    { wch: 12 },
+    { wch: 10 },
+    { wch: 22 },
+    { wch: 45 },
+    { wch: 45 },
+    { wch: 45 },
+    { wch: 50 },
+    { wch: 14 },
+  ];
+
+  return worksheet;
+}
+
+// GET endpoint to download current products as an Excel sheet
+export async function GET() {
+  const products = getAllProducts();
   const workbook = xlsx.utils.book_new();
-  xlsx.utils.book_append_sheet(workbook, worksheet, "Products");
+
+  // 1. Master sheet with all products
+  const masterSheet = buildSheetRows(products);
+  xlsx.utils.book_append_sheet(workbook, masterSheet, "All Products");
+
+  // 2. Collection-specific sheets
+  const collections = ["ASAYA", "NAYI LEHER", "ROOMANI", "GANGA JAMUNI"];
+  collections.forEach((colName) => {
+    const subset = products.filter(
+      (p) => (p.collection || "").trim().toUpperCase() === colName
+    );
+    if (subset.length > 0) {
+      const colSheet = buildSheetRows(subset);
+      xlsx.utils.book_append_sheet(workbook, colSheet, colName);
+    }
+  });
 
   const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
 

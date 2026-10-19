@@ -28,7 +28,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "natural-color-linen-kurta",
@@ -59,7 +60,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "oat-beige-warli-art-kurta",
@@ -89,7 +91,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sunshine-yellow-embroidered-kurta",
@@ -121,7 +124,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "grey-raglan-sleeve-solid-kurta",
@@ -135,7 +139,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Raw Silk",
     "washCare": "Dry Clean Only",
-    "description": "Exude timeless elegance in this vibrant mustard Nehru-Jacket, intricately adorned with fine embroideries multi-colored floral motifs. This artisanal masterpiece brings rich texture to ethnic wear. An ideal choice for weddings, festive receptions, and grand celebrations.",
+    "description": "Crafted from rich matka silk, this statement nehru jacket showcases exquisite white hand embroidery depicting delicate natural motifs along the chest and pocket. Completed with a structured bandhgala collar and polished buttons, it brings an air of sophisticated elegance to festive celebrations and traditional occasions.",
     "price": 28500,
     "mrp": 28500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -151,7 +155,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "grey-matka-silk-hand-embroidered-waistcoat",
@@ -181,7 +186,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sage-green-raw-silk-hand-embroidered-waistcoat",
@@ -211,7 +217,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sage-chanderi-bustier-palazzo-with-organza-shrug",
@@ -244,7 +251,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "off-white-warli-art-co-ord-set",
@@ -277,7 +285,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "pink-bustier-palazzo-with-sheer-high-low-length-jacket",
@@ -310,7 +319,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "lime-yellow-sharara-set",
@@ -343,7 +353,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "red-fuchsia-embroidered-tunic-set",
@@ -376,7 +387,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "ivory-gond-art-inspired-co-ord-set",
@@ -409,7 +421,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-hand-embroidered-kurta",
@@ -423,7 +436,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Raw Silk",
     "washCare": "Dry Clean Only",
-    "description": "Make a bold and contemporary statement in this black raw silk kurta. The textured fabric provides a sophisticated base for the unique onion pink thread embroidery that starts from the mandarin collar and placket. Finished with metallic buttons, this kurta bridges traditional and modern aesthetics. Ideal for sangeet nights, festivals, or semi-formal evening gatherings.",
+    "description": "Make a bold and contemporary statement in this black raw silk kurta. The textured fabric provides a sophisticated base for the unique onion pink thread embroidery that starts from the mandarin collar and placket. Finished with mettallic buttons, this kurta bridges traditional and modern aesthetics. Ideal for sangeet nights, festivals, or semi-formal evening gatherings.",
     "price": 26900,
     "mrp": 26900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -439,7 +452,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "olive-green-hand-embroidered-kurta",
@@ -469,7 +483,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "green-matka-silk-embroidered-kurta",
@@ -498,7 +513,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "olive-green-matka-silk-embroidered-kurta",
@@ -528,7 +544,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "powder-blue-matka-silk-embroidered-kurta",
@@ -542,7 +559,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Tailored in breathable powder blue matka silk, this classic kurta highlights exquisite traditional kantha-inspired hand embroidery along the neckline and shoulders. Ideal for elegant daytime festivities, intimate gatherings, and sophisticated summer celebrations.",
+    "description": "Tailored in breathable powder blue matka silk, this classic kurta highlights exquisite traditonal kantha-inspired hand embroidery along the neckline and shoulders. Ideal for elegant daytime festivities, intimate gatherings, and sophisticated summer celebrations.",
     "price": 26900,
     "mrp": 26900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -559,7 +576,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "ice-blue-matka-silk-embroidered-kurta",
@@ -588,7 +606,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "green-matka-silk-embroidered-kurta-2",
@@ -602,7 +621,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This elegant green matka silk kurta features a symmetrical potli button placket and delicate hand-embroidered linear motifs running across the chest. Ideal for wedding ceremonies, formal festive hosting, and traditional celebrations.",
+    "description": "This elegant green matka silk kurta features a symmetrical potli button placket and delicate hand-embroidered linear motifs running across the chest. Ideal for wedding ceremonies, formal festive hosting, and traditonal celebrations.",
     "price": 23500,
     "mrp": 23500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -618,7 +637,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-matka-silk-embroidered-kurta",
@@ -647,7 +667,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "navy-blue-velvet-embroidered-kurta",
@@ -661,7 +682,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Velvet",
     "washCare": "Dry Clean Only",
-    "description": "Presenting luxurious midnight blue velvet kurta. This kurta is adorned with scattered motifs and embellishments in shimmery beads and threads. It features a classic bandhgala collar and a placket. This kurta is epitome of evening elegance, perfect for winter weddings, receptions, or cocktail parties.",
+    "description": "Presenting luxurious midnight blue velevt kurta. This kurta is adorned with scattered motifs and embellishments in shimmery beads and threads. It features a classic bandhgala collar and a placket. This kurta is epitome of evening elelgance, perfect for winter weddings, receptions, or cocktail parties.",
     "price": 25500,
     "mrp": 25500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -677,7 +698,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "royal-blue-blazer-with-intricate-embroidery",
@@ -691,7 +713,7 @@
     "setIncludes": "1 Blazer",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Tailored in rich blue matka silk, this blazer features intricate motif embroidery framing the lapels, cuffs' and hem. Suited for festive evening wear and high-end cultural events.",
+    "description": "Tailored in rich blue matka silk, this blazer features intricate motif embroidery framing  the lapels, cuffs' and hem. Suited for festive evening wear and high-end cultural events.",
     "price": 43500,
     "mrp": 43500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -707,7 +729,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "hand-embroidered-charcoal-black-blazer",
@@ -737,7 +760,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "hand-embroidered-greyish-blue-blazer",
@@ -767,7 +791,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "hand-embroidered-black-bandhgala",
@@ -798,7 +823,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-front-open-bandhgala",
@@ -827,7 +853,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "peachy-pink-hand-embroidered-sherwani",
@@ -857,7 +884,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "cream-hand-embroidered-sherwani",
@@ -888,7 +916,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "teal-green-geometric-nehru-jacket",
@@ -917,7 +946,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sage-green-hand-embroidered-nehru-jacket",
@@ -931,7 +961,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "A refined sage green Nehru jacket adorned with ivory thread geometric hand embroidery, perfect for formal elegance, wedding ceremonies, and traditional celebrations.",
+    "description": "A refined sage green Nehru jacket adorned with ivroy thread geometric hand embroidery, perfect for formal elegance, wedding ceremonies, and traditional celebrations.",
     "price": 24900,
     "mrp": 24900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -947,7 +977,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "yellow-hand-embroidered-waistcoat",
@@ -976,7 +1007,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "coral-red-hand-embroidered-waistcoat",
@@ -1005,7 +1037,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "peach-hand-embroidered-waistcoat",
@@ -1034,7 +1067,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-botanical-jacket-set",
@@ -1048,7 +1082,7 @@
     "setIncludes": "1 Blazer 1 Bustier 1 Belt 1 Bottom",
     "fabric": "Chanderi",
     "washCare": "Dry Clean Only",
-    "description": "A striking black botanical jacket, bustier, belt, and bottom. Crafted in elegant chanderi, the ensemble is elevated with intricate botanical inspired detailing for a sophisticated Indo-Western statement. Perfect for festive celebrations, cocktail evenings, and contemporary wedding occasions.",
+    "description": "A striking black botanical jacket, bustier, belt, and bottom. Crafted in elegant chanderi, the ensemble is elevated with intricate botanical inspired detailing for a sophisticated Indo-Western statement. Perfect for festive celebrations, cocktail evenings, and contemporary weding occasions.",
     "price": 76900,
     "mrp": 76900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1067,7 +1101,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "peony-pink-hand-embroidered-blazer-set",
@@ -1099,7 +1134,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "butter-yellow-suit-set",
@@ -1113,7 +1149,7 @@
     "setIncludes": "1 Kurta 1 Bottom 1 Dupatta",
     "fabric": "Chanderi",
     "washCare": "Dry Clean Only",
-    "description": "Radiating effortless charm, this sunshine yellow Chanderi set features delicate neckline embroidery and comes with a matching palazzo and a co-ordinating cutwork dupatta. Ideal for daytime festive celebrations, vibrant haldi ceremonies, and upscale spring or summer daytime gatherings.",
+    "description": "Radiating effortless charm, this sunshine yellow Chanderi set features delicate neckline embroidery and comes with a matching  palazzo and a co-ordinating cutwork dupatta. Ideal for daytime festive celebrations, vibrant haldi ceremonies, and upscale spring or summer daytime gatherings.",
     "price": 27900,
     "mrp": 27900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1130,7 +1166,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "red-hand-embroidered-suit-set",
@@ -1162,7 +1199,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "red-hand-embroidered-co-ord-set",
@@ -1192,7 +1230,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "bottle-green-threadwork-kurta-set",
@@ -1206,7 +1245,7 @@
     "setIncludes": "1 Kurta 1 Bottom",
     "fabric": "Dupion Silk",
     "washCare": "Dry Clean Only",
-    "description": "A refined kurta set featuring delicate hand embroidery in minimal geometric linear motifs.The understated threadwork adds subtle texture and dimension to the clean silhouette, creating a contemporary expression of artisanal craftsmanship.",
+    "description": "A refined kurta set featuring delicate hand embroidery in minimal geometric linear motifs.The understated threadwork adds subtle texture and dimesnsion to the clean silhouette, creating a contemporary expression of artisanal craftsmanship.",
     "price": 25500,
     "mrp": 25500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1224,7 +1263,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-hand-embroidered-kurta-set",
@@ -1256,7 +1296,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "muted-beige-kurta-set",
@@ -1287,7 +1328,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sapphire-blue-shirt-collar-kurta-set",
@@ -1301,7 +1343,7 @@
     "setIncludes": "1 Kurta 1 Bottom",
     "fabric": "Dupion Silk",
     "washCare": "Dry Clean Only",
-    "description": "An elegant A-Line kurta featuring hand embroidery with intricate threadwork forming geometric shapes and motifs across the shoulder and echoed at the opposite lower corner. A shirt collar with scattered miniature thread knots and a concealed placket accented with tiny beads complete the refined look.",
+    "description": "An elegant A-Line kurta featuring hand embroidery with intrictae threadwork forming geometric shapes and motifs across the shoulder and echoed at the opposite lower corner. A shirt collar with scattered miniature thread knots and a concealed placket accented with tiny beads complete the refined look.",
     "price": 31500,
     "mrp": 31500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1318,7 +1360,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "red-abstract-embroidered-lehenga-set",
@@ -1332,7 +1375,7 @@
     "setIncludes": "1 Skirt 1 Blouse 1 Dupatta",
     "fabric": "Chanderi & Organza",
     "washCare": "Dry Clean Only",
-    "description": "A graceful organza dupatta paired with a delicate lehenga set featuring intricate hand threadwork in sculptural motif across the bodice and lehenga front. Delicate linear embroidery extends onto sleeves and dupatta, framed by an organic geometric border for a refined, contemporary finish.",
+    "description": "A graceful organza dupatta paired with a delicate lehenga set featuring intricate hand threadwork in sculptural motif across the bodice and lehenga front. Delicate linear embroidery extends onto slseeves and dupatta, framed by an organic geometric border for a refined, contemporary finish.",
     "price": 36900,
     "mrp": 36900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1349,7 +1392,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-organza-shrug-set",
@@ -1380,7 +1424,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "mint-green-slit-dress-with-dramatic-bell-sleeves",
@@ -1412,7 +1457,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "green-co-ord-set",
@@ -1444,7 +1490,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "lavender-button-down-kurta-set",
@@ -1475,7 +1522,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "midnight-blue-collared-co-ord-set",
@@ -1505,7 +1553,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "regal-red-embroidered-jacket-silk-satin-skirt-set",
@@ -1519,7 +1568,7 @@
     "setIncludes": "1 Jacket 1 Skirt",
     "fabric": "Satin Silk & Dupion silk",
     "washCare": "Dry Clean Only",
-    "description": "Make an unforgettable statement in heirloom-Inspired elegance. Crafted with a luminous red satin-finish skirt paired with a striking structured jacket top featuring rich, heavy thread and artisanal embroidery. Designed for grand celebrations and intimate festivities. This ensemble is a masterpiece of traditional craftsmanship meeting contemporary silhouette design.",
+    "description": "Make an unforgettable statement in heirloom-Inspired elegance. Crafted with a luminous red satin-finish skirt paired with a striking structured jacket top featuring rich, heavy thread and artisanal embroidery. Designed for grand celebrations and initimate festivities. This ensemble is a masterpiece of traditional craftsmanship meeting contemporary silhouette design.",
     "price": 66000,
     "mrp": 66000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1536,7 +1585,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "mauve-suit-set",
@@ -1567,7 +1617,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "indigo-blue-hand-embroidered-kurta",
@@ -1597,7 +1648,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "blue-kurta-with-paisley-hand-embroidered-motifs",
@@ -1611,7 +1663,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This premium blue matka silk kurta is a masterclass in artisanal detail. It features intricate coral and orange thread embroidery that forms a prominent yoke shape around the mandarin collar and button placket. Delicate coral thread dots are scattered across the body and cuffs. Ideal for daytime weddings, festive gatherings, or semi formal events.",
+    "description": "This premium blue matka silk kurta is a masterclass in artisanal detail. It features intricate coral and orange thread embroidery that forms a prominent yoke shape around the mandarin  collar and button placket. Delicate coral thread dots are scattered across the body and cuffs. Ideal for daytime weddings, festive gatherings, or semi formal events.",
     "price": 27500,
     "mrp": 27500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1627,7 +1679,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "plum-pink-embroidered-kurta",
@@ -1657,7 +1710,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "indigo-blue-hand-embroidered-kurta-2",
@@ -1671,7 +1725,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Make a bold statement in this indigo blue kurta. It features vibrant red floral hand embroidery designed in a unique 'dripping' pattern that starts from the yoke and continues onto the sleeves and lower body. This kurta is ideal for sangeets, mehendi functions, or festive parties where you want to stand out.",
+    "description": "Make a bold statement in this indigo blue kurta. It features vibrant red floral hand embroidery designed in a unique 'dripping' pattern that starts from the yoke and continues onto the sleeves and lower body. This kurta is ideal for sangeets,mehendi functions, or festive parties where you want to stand out.",
     "price": 21900,
     "mrp": 21900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1687,7 +1741,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "beige-matka-silk-embroidered-kurta",
@@ -1717,7 +1772,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "brown-linear-hand-embroidered-kurta",
@@ -1731,7 +1787,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Crafted in brown matka silk, this kurta is detailed with vertical linear embroidery and subtle motifs running along the placket and chest, offers a refined aesthetic for sophisticated daytime celebrations.",
+    "description": "Crafted in brown matka silk, this kurta is detailed with  vertcial linear e,nbroidery and subtle motifs running along the placket and chest, offers a refined aesthetic for sophisticated daytime celebrations.",
     "price": 25500,
     "mrp": 25500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1746,7 +1802,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "blue-hand-embroidered-kurta",
@@ -1760,7 +1817,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Crafted from matka silk, this kurta offers a refined texture. It has unique coral and pink thread work arranged in clean, linear patterns along the upper chest,creating a structured contemporary design around the neck. Perfect for evening functions, sangeet ceremonies, or cultural festivals.",
+    "description": "Crafted from matka silk, this kurta offers a refined texture. It has unique coral and pink thread work arranged in clean , linear patterns along the upper chest,craeting a structured contemporary design around the neck. Perfect for evening functions, sangeet ceremonies, or cultural festivals.",
     "price": 22500,
     "mrp": 22500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1776,7 +1833,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "azure-blue-hand-emroidered-kurta",
@@ -1807,7 +1865,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "light-blue-hand-embroidered-kurta",
@@ -1838,7 +1897,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "cobalt-blue-hand-embroidered-kurta",
@@ -1869,7 +1929,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "charcoal-blue-hand-embroidered-kurta",
@@ -1899,7 +1960,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "brown-hand-embroidered-kurta",
@@ -1930,7 +1992,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "matka-silk-embroidered-kurta",
@@ -1960,7 +2023,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "silver-tissue-hand-embroidered-kurta",
@@ -1974,7 +2038,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Tissue",
     "washCare": "Dry Clean Only",
-    "description": "This silver tissue kurta is a masterpiece of craftsmanship. The fabric is richly decorated with intricate hand embroidery depicting blooming garden motifs, including trees and floral vines, rendered in multicoloured threads and embellishments with gold and silver accents. This statement piece is designed for grand celebrations, festivals, and special occasions where you want to stand out.",
+    "description": "This silver tissue kurta is a master piece of craftmanship. The fabric is richly decorated with intricate hand embroidery depicting blooming garden motifs, including trees and floral vines, rendered in multicoloured threads and embellishments with gold and silver accents. This statement piece is designed for grand celebrations, festivals, and special occasions where you want to stand out.",
     "price": 48000,
     "mrp": 48000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -1991,7 +2055,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "mustard-yellow-hand-embroidered-kurta",
@@ -2005,7 +2070,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Brighten up any celebration with this vibrant mustard Matka Silk Kurta. It showcases an ornate pink hand embroidery pattern on the upper chest that flows downwards.This joyful and stylish kurta is perfect for haldi ceremonies, mehendi functions, or daytime festive events.",
+    "description": "Brighten up any celebration with this vibrant mustard yellow matka silk kurta. It showcases an ornate pink hand embroidery pattern on the upper chest that flows downwards.This joyful and stylish kurta is perfect for haldi ceremonies, mehendi functions, or daytime festive events.",
     "price": 23500,
     "mrp": 23500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2022,7 +2087,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "matka-silk-embroidered-waistcoat",
@@ -2053,7 +2119,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sage-green-matka-silk-embroidered-waistcoat",
@@ -2067,7 +2134,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Crafted from luxurious sage green matka silk, this Nehru Jacket is a masterpiece of craftsmanship. It showcases an intricate threadwork extends gracefully across the front.",
+    "description": "Crafted from luxurious sage green matka silk, this Nehru Jacket is a masterpiece of craftmanship. It showcases an intricate threadwork extends gracefully across the front.",
     "price": 28500,
     "mrp": 28500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2083,7 +2150,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "black-hand-embroidered-waistcoat",
@@ -2114,7 +2182,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "matka-silk-embroidered-waistcoat-2",
@@ -2144,7 +2213,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "brown-hand-embroidered-waistcoat",
@@ -2158,7 +2228,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This brown matka silk waistcoat showcases meticulous hand embroidered scenic and natural motifs along the hemline, complemented by scattered details across the body. Offering a refined matte finish and a classic bandhgala collar, it is an exceptional choice for cultural events, receptions and festive celebrations.",
+    "description": "This brown matka silk waistcoat showcases meticulous hand embroidered scenic and natural motis along the hemline, complemented by scattered details across the body. Offering a refined matte finish and a classic bandhgala collar, it is an exceptional choice for cultural events, receptions and festive celebrations.",
     "price": 31900,
     "mrp": 31900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2173,7 +2243,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "blue-hand-embroidered-waistcoat-with-radiating-sunburst-motif",
@@ -2187,7 +2258,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Designed in serene blue matka silk, this statement nehru jacket features an intricate, radiating sunburst hand embroidery on the shoulder paired with subtle motifs. Finished with custom hand embroidered buttons, it brings an air of quite luxury to daytime weddings, festive celebrations, and family gatherings.",
+    "description": "Designed in serene blue matka silk, this statement nehru jacket features an intricate, radiating sunburst hand embroidery on the shoulder paired with subtle motifs. Finished with custom hand embroidred buttons, it brings an air of quite luxury to daytime weddings, festive celebrations, and family gatherings.",
     "price": 24500,
     "mrp": 24500,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2204,7 +2275,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "sky-blue-matka-silk-embroidered-waistcoat",
@@ -2218,7 +2290,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This stunning sky blue matka silk Nehru jacket celebrates indian architectural heritage with intricate white thread embroidery depicting a \"Jharokha\" motif along the lower hem. A sophisticated and culturally inspired piece for any special occasion. This statement piece is designed for grand celebrations, festivals, and special occasions where you want to stand out.",
+    "description": "This stunning sky blue matka silk Nehru jacket celebrates indian architectural heritage with intricate white thread embroidery depicting a \"Jharokha\" motif along the lower hem. A sophisticated and culturally inspired piece for any special occasion. This statement piece is designed for grand celebrations, festivals, and special occassions where you want to stand out.",
     "price": 30900,
     "mrp": 30900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2235,7 +2307,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "yellow-hand-embroidered-waistcoat",
@@ -2265,7 +2338,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "muted-grey-bandhgala",
@@ -2279,7 +2353,7 @@
     "setIncludes": "1 Bandhgala",
     "fabric": "Dupion Silk",
     "washCare": "Dry Clean Only",
-    "description": "Understated luxury defines this muted grey bandhgala jacket. The bandhgala has sophisticated ornamental thread embroidery, creating a subtle, textured pattern across the entire surface. A timeless and refined piece for the modern gentleman.",
+    "description": "Understated luxury defines this muted greybandhgala jacket. The bandhgala has sophisticated ornamental thread embroidery, creating a subtle,textured pattern across the entire surface. A timeless and refined piece for the modern gentleman.",
     "price": 75000,
     "mrp": 75000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2296,7 +2370,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "deep-green-hand-embroidered-sherwani",
@@ -2310,7 +2385,7 @@
     "setIncludes": "1 Sherwani",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Make a majestic statement in this deep bottle green silk sherwani. The fabric is entirely covered in intricate white thread embroidery forming a geometric pattern across the body and sleeves. This regal piece is designed specifically for a groom's wedding day, reception, or high-end formal ceremonies.",
+    "description": "Make a majestic statement in this deep bottel green silk sherwani. The fabric is entirely covered in intricate white thread embroidery forming a geometric pattern across the body and sleeves. This regal piece is designed specifically for a groom's wedding day, reception, or high-end formal ceremonies.",
     "price": 65000,
     "mrp": 65000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2328,7 +2403,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "peach-raw-silk-sherwani",
@@ -2342,7 +2418,7 @@
     "setIncludes": "1 Sherwani",
     "fabric": "Raw Silk",
     "washCare": "Dry Clean Only",
-    "description": "Exuding regal charm, this blush peach raw silk sherwani is detailed with an all over abstract hand embroidered pattern that creates a soft, textured depth. Tailored to perfection with a traditional bandhgala collar and sleek button placket, it is the quintessential ensemble for a groom's wedding ceremony or an elite evening reception.",
+    "description": "Exuding regal charm, this blush peach raw silk sherwani is detailed with an all over abstract hand embroidered  pattern that creates a soft, textured depth. Tailored to perfection with a traditional bandhgala collar and sleek button placket, it is the quintessential ensemble for a groom's wedding ceremony or an elite evening reception.",
     "price": 140000,
     "mrp": 140000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2359,7 +2435,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "maroon-bandhgala",
@@ -2373,7 +2450,7 @@
     "setIncludes": "1 Bandhgala",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This deep burgundy silk sherwani offers a blend of classic style and detailed craftsmanship. The rich fabric is adorned with an all over pattern of white embroidered polka dots, each featuring a small central white floral motif. A perfect choice for a groom's evening wedding ceremony or reception.",
+    "description": "This deep burgundy silk sherwani offers a blend of classic style and detailed craftmanship. The rich fabric is adorned with an all over pattern of white embroidered polka dots, each featuring a small central white floral motif. A perfect choice for a groom's evening wedding ceremony or reception.",
     "price": 139000,
     "mrp": 139000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2390,7 +2467,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "mutlti-coloured-hand-embroidered-bandhgala",
@@ -2404,7 +2482,7 @@
     "setIncludes": "1 Bandhgala",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Made from fine matka silk, it is richly decorated with all over multicoloured floral thread embroidery in bright pinks, yellows, green, and reds. An exceptional choice for grand evening weddings and formal dinners.",
+    "description": "Made from fine matka silk,it is richly decorated with all over multicoloured floral thread embroidery in bright pinks,yellows,green,and reds. An exceptional choice for grand evening weddings and formal dinners.",
     "price": 85000,
     "mrp": 85000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2422,7 +2500,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "mint-green-hand-embroidered-sherwani",
@@ -2454,7 +2533,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "royal-blue-hand-embroidered-waistcoat",
@@ -2484,7 +2564,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "yellow-hand-embroidered-waistcoat-2",
@@ -2515,7 +2596,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "light-pink-matka-silk-kurta",
@@ -2545,7 +2627,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "indo-western-sunshine-yellow-suit-set",
@@ -2578,7 +2661,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "indo-western-blush-pink-suit-set",
@@ -2609,7 +2693,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "red-indo-western-3pc-suit-set",
@@ -2642,7 +2727,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "green-indo-western-2pc-co-ord-set",
@@ -2674,7 +2760,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "emerald-green-kurta-set-3pc-suit-set",
@@ -2706,7 +2793,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "royal-blue-indo-western-2pc-co-ord-set",
@@ -2738,7 +2826,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "blue-co-ord-set",
@@ -2770,7 +2859,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "light-purple-co-ord-set",
@@ -2803,7 +2893,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "wine-maroon-skirt-set",
@@ -2836,7 +2927,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "ethnic-tissue-sharara-set",
@@ -2850,7 +2942,7 @@
     "setIncludes": "1 Kurta 1 Sharara 1 Dupatta 1 Potli",
     "fabric": "Tissue",
     "washCare": "Dry Clean Only",
-    "description": "Fashion luminous champagne silver tissue base, this ensemble features intricate multi-coloured thread and bead embroidery along the neckline and hem. Accompanied by a coordinating sheer tissue dupatta with beautiful cutwork border, and a flared tissue sharara, it exudes timeless quiet luxury.",
+    "description": "Fashion luminous champagne silver tissue base, this ensemble features intricate  multi-coloured thread and bead embroidery along the neckline and hem. Accompanied by a coordinating sheer tissue dupatta with beautiful cutwork border, and a flared tissue sharara, it exudes timeless quiet luxury.",
     "price": 125000,
     "mrp": 125000,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2869,7 +2961,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "red-saree-blouse-potli",
@@ -2903,7 +2996,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "silver-tissue-saree-blouse-potli",
@@ -2937,7 +3031,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "beige-saree-with-bloues-potli",
@@ -2951,7 +3046,7 @@
     "setIncludes": "Saree & Blouse",
     "fabric": "Tissue",
     "washCare": "Dry Clean Only",
-    "description": "A mixture of silver and gold, with an intricately embroidered border, complemented by a sleek sleeveless blouse. An effortless blend of grace and modern sophistication. It's not just a saree - it's a presence.",
+    "description": "A mixture of silver and gold, with an intricately embroidered border, complemented by a sleek sleeveless blouse. An effortless blend of grace and modern sophistication. It's not just a saree -it's a presence.",
     "price": 66600,
     "mrp": 66600,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -2971,7 +3066,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "indo-western-blue-skirt-set",
@@ -2985,7 +3081,7 @@
     "setIncludes": "1 Top 1 Skirt",
     "fabric": "Dupion Silk",
     "washCare": "Dry Clean Only",
-    "description": "Tailored from premium dupion silk, this royal blue ensemble features a classic collared tunic accented with vibrant reddish pink thread embroidery along the neckline and sleeves. Paired with a gracefully pleated flared skirt, it offers a refined silhouette blending traditional craftsmanship with minimalist luxury.",
+    "description": "Tailored from premium dupion silk, this royal blue ensemble features a classic collared tunic accented with vibrant reddish pink thread emroidery along the neckline and sleeves. Paired with a gracefully pleated flared skirt, it offers a refined silhouette blending traditional craftmanship with minimalist luxury.",
     "price": 33900,
     "mrp": 33900,
     "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
@@ -3002,7 +3098,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "indo-western-black-co-ord-set",
@@ -3033,7 +3130,8 @@
       "M",
       "L",
       "XL"
-    ]
+    ],
+    "fit": "Regular"
   },
   {
     "id": "grey-pin-tuck-kurta",
@@ -3063,7 +3161,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/grey-pin-tuck-kurta-1.jpg"
+    "image": "/images/products/grey-pin-tuck-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "pink-concealed-placket-kurta",
@@ -3093,7 +3192,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/pink-concealed-placket-kurta-1.jpg"
+    "image": "/images/products/pink-concealed-placket-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "pink-hand-embroidered-placket-kurta",
@@ -3123,7 +3223,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/pink-hand-embroidered-placket-kurta-1.jpg"
+    "image": "/images/products/pink-hand-embroidered-placket-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "blue-hand-embroidered-kurta-2",
@@ -3153,7 +3254,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/blue-hand-embroidered-kurta-2-1.jpg"
+    "image": "/images/products/blue-hand-embroidered-kurta-2-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "pink-hand-embroidered-kurta",
@@ -3183,7 +3285,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/pink-hand-embroidered-kurta-1.jpg"
+    "image": "/images/products/pink-hand-embroidered-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "bluish-grey-embroidered-kurta",
@@ -3214,7 +3317,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/bluish-grey-embroidered-kurta-1.jpg"
+    "image": "/images/products/bluish-grey-embroidered-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "beige-machine-embroidered-kurta",
@@ -3244,7 +3348,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/beige-machine-embroidered-kurta-1.jpg"
+    "image": "/images/products/beige-machine-embroidered-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "fuchsia-pink-tucks-hand-embroidered-kurta",
@@ -3258,7 +3363,7 @@
     "setIncludes": "1 Kurta",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This elegant pink kurta is made from a high quality fabric. While the main body is solid, the sleeve hems are the highlight, featuring detailed folk art and geometric embroidery in a contrasting blue thread. It has a mandarin collar with a short pin tuck placket. A versatile piece for semi formal ethnic events, daytime functions, or evening get-togethers.",
+    "description": "This elegant pink kurta is made from a high quality fabric. While the main body is solid, the sleeve hems are the highlight, featuring detailed folk art and geometric embroidery in a contrasting blue thread. It has a mandarin collar with a short pin tuck placket. A versatile piece for semi formal ethnic events, daytime functions, or  evening get-togethers.",
     "price": 21500,
     "mrp": 21500,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -3276,7 +3381,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/fuchsia-pink-tucks-hand-embroidered-kurta-1.jpg"
+    "image": "/images/products/fuchsia-pink-tucks-hand-embroidered-kurta-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "fuchsia-pink-hand-embroidered-waistcoat",
@@ -3290,7 +3396,7 @@
     "setIncludes": "1 Waistcoat",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "This contemporary waistcoat features a premium matka silk base. It is meticulously adorned with intricate, small-scale geometric and folk inspired embroidery in a striking blue thread, covering the entire front. Ideal for festive occasions,sangeet nights, or traditional gatherings.",
+    "description": "This contemporary waistcoat features a premium matka silk base. It is meticulously adorned with intricate, small-scale geometric and folk inspired embroidery in a striking blue thread, covering the entire front. Ideal for festive occassions,sangeet nights, or traditional gatherings.",
     "price": 35900,
     "mrp": 35900,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -3305,7 +3411,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/fuchsia-pink-hand-embroidered-waistcoat-1.jpg"
+    "image": "/images/products/fuchsia-pink-hand-embroidered-waistcoat-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "fuchsia-pink-hand-embroidered-waistcoat-2",
@@ -3337,7 +3444,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/fuchsia-pink-hand-embroidered-waistcoat-2-1.jpg"
+    "image": "/images/products/fuchsia-pink-hand-embroidered-waistcoat-2-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "pastel-pink-waistcoat",
@@ -3367,7 +3475,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/pastel-pink-waistcoat-1.jpg"
+    "image": "/images/products/pastel-pink-waistcoat-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "grey-machine-embroidered-waistcoat",
@@ -3398,7 +3507,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/grey-machine-embroidered-waistcoat-1.jpg"
+    "image": "/images/products/grey-machine-embroidered-waistcoat-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "pastel-pink-flora-fauna-waistcoat",
@@ -3429,7 +3539,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/pastel-pink-flora-fauna-waistcoat-1.jpg"
+    "image": "/images/products/pastel-pink-flora-fauna-waistcoat-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "beige-heritage-inspired-waistcoat",
@@ -3459,7 +3570,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/beige-heritage-inspired-waistcoat-1.jpg"
+    "image": "/images/products/beige-heritage-inspired-waistcoat-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "slate-grey-asymmetric-waistcoat",
@@ -3489,7 +3601,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/slate-grey-asymmetric-waistcoat-1.jpg"
+    "image": "/images/products/slate-grey-asymmetric-waistcoat-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "soft-grey-botanical-embroidered-bandhgala",
@@ -3520,7 +3633,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/soft-grey-botanical-embroidered-bandhgala-1.jpg"
+    "image": "/images/products/soft-grey-botanical-embroidered-bandhgala-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "muted-pink-beaded-sherwani",
@@ -3534,7 +3648,7 @@
     "setIncludes": "1 Sherwani",
     "fabric": "Raw Silk",
     "washCare": "Dry Clean Only",
-    "description": "This sherwani is crafted from fine raw silk and features intricately placed beads. It is designed with a traditional mandarin collar and a concealed placket for a clean,sophisticated look. The exquisite detailing makes it a perfect choice for a groom's wedding day or high-end formal occasions.",
+    "description": "This sherwani is crafted from fine raw silk and features intricately placed beads. It is designed with a traditional  mandarin collar and a concealed placket for a clean,sophisticated look. The exquisite detailing makes it a perfect choice for a groom's wedding day or high-end formal occasions.",
     "price": 95000,
     "mrp": 95000,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -3552,7 +3666,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/muted-pink-beaded-sherwani-1.jpg"
+    "image": "/images/products/muted-pink-beaded-sherwani-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "off-white-tonal-geometric-jaal-hand-embroidery",
@@ -3566,7 +3681,7 @@
     "setIncludes": "1 Sherwani",
     "fabric": "Raw Silk",
     "washCare": "Dry Clean Only",
-    "description": "Exuding understated luxury, this sherwani showcases a dense, tonal geometric jaal embroidery pattern across the entire fabric. The fine craftsmanship gives it a subtle texture and depth. It features a bandhgala collar and a simple, straight cut. Ideal for the modern groom seeking a blend of a traditional elegance and contemporary design for the wedding.",
+    "description": "Exuding understated luxury, this sherwani showcases a dense,tonal geometric jaal embroidery pattern across the entire fabric. The fine craftsmanship gives it a subtle texture and depth. It features a bandhgala collar and a simple, straight cut. Ideal for the modern groom seeking a blend of a traditional elegance and contemporary design for the wedding.",
     "price": 95000,
     "mrp": 95000,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -3584,7 +3699,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/off-white-tonal-geometric-jaal-hand-embroidery-1.jpg"
+    "image": "/images/products/off-white-tonal-geometric-jaal-hand-embroidery-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "navy-blue-bandhgala-with-geometric-hand-embroidery",
@@ -3615,7 +3731,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/navy-blue-bandhgala-with-geometric-hand-embroidery-1.jpg"
+    "image": "/images/products/navy-blue-bandhgala-with-geometric-hand-embroidery-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "blush-pink-heritage-inspired-bandhgala",
@@ -3629,7 +3746,7 @@
     "setIncludes": "1 Bandhgala",
     "fabric": "Matka Silk",
     "washCare": "Dry Clean Only",
-    "description": "Majestic blush pink bandhgala jacket. Intricately embroidered with a scenic forest and wildlife tableau across the lower part and chest, exuding regal craftsmanship.",
+    "description": "Majestic blush pink bandhgala jacket. Intricately embroidered with a scenic forest and wildlife tableau across the lower part and chest,exuding regal craftsmanship.",
     "price": 45900,
     "mrp": 45900,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -3647,7 +3764,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/blush-pink-heritage-inspired-bandhgala-1.jpg"
+    "image": "/images/products/blush-pink-heritage-inspired-bandhgala-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "navy-blue-shirt",
@@ -3677,7 +3795,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/navy-blue-shirt-1.jpg"
+    "image": "/images/products/navy-blue-shirt-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "royal-blue-bandhgala-with-starburst-hand-embroidery",
@@ -3709,7 +3828,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/royal-blue-bandhgala-with-starburst-hand-embroidery-1.jpg"
+    "image": "/images/products/royal-blue-bandhgala-with-starburst-hand-embroidery-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "bluish-grey-skort-with-top",
@@ -3741,7 +3861,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/bluish-grey-skort-with-top-1.jpg"
+    "image": "/images/products/bluish-grey-skort-with-top-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "rose-pink-draped-skirt-with-embroidered-crop-jacket",
@@ -3774,7 +3895,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/rose-pink-draped-skirt-with-embroidered-crop-jacket-1.jpg"
+    "image": "/images/products/rose-pink-draped-skirt-with-embroidered-crop-jacket-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "fuchsia-pink-skirt-and-plunging-neckline-top",
@@ -3806,7 +3928,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/fuchsia-pink-skirt-and-plunging-neckline-top-1.jpg"
+    "image": "/images/products/fuchsia-pink-skirt-and-plunging-neckline-top-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "fuchsia-pink-thigh-length-machine-embroidered-top-with-bottom",
@@ -3838,7 +3961,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/fuchsia-pink-thigh-length-machine-embroidered-top-with-bottom-1.jpg"
+    "image": "/images/products/fuchsia-pink-thigh-length-machine-embroidered-top-with-bottom-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "steel-grey-skirt-with-bustier-and-jacket",
@@ -3852,7 +3976,7 @@
     "setIncludes": "1 Skirt 1 Bustier 1 Jacket",
     "fabric": "Chanderi",
     "washCare": "Dry Clean Only",
-    "description": "A playful yet sophisticated fusion set in cool steel grey. It pairs a structured open front jacket featuring dramatic bell sleeves and intricate botanical embroidery with a matching crop top and tailored mini skirt. An ideal choice for chic cocktail events and modern celebrations.",
+    "description": "A palyful yet sophisticated fusion set in cool steel grey. It pairs a stuctured open front jacket featuring dramatic bell sleeves and intricate botanical embroidery with a matching crop top and tailored mini skirt. An ideal choice for chic cocktail events and modern celebrations.",
     "price": 26900,
     "mrp": 26900,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -3871,7 +3995,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/steel-grey-skirt-with-bustier-and-jacket-1.jpg"
+    "image": "/images/products/steel-grey-skirt-with-bustier-and-jacket-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "sheer-blue-organza-shirt-paired-with-pink-skirt-set",
@@ -3903,7 +4028,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/sheer-blue-organza-shirt-paired-with-pink-skirt-set-1.jpg"
+    "image": "/images/products/sheer-blue-organza-shirt-paired-with-pink-skirt-set-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "fuchsia-pink-hand-embroidered-jacket-bootcut-inspired-set",
@@ -3935,7 +4061,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/fuchsia-pink-hand-embroidered-jacket-bootcut-inspired-set-1.jpg"
+    "image": "/images/products/fuchsia-pink-hand-embroidered-jacket-bootcut-inspired-set-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "purple-boatneck-dress-with-floral-embroidery",
@@ -3967,7 +4094,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/purple-boatneck-dress-with-floral-embroidery-1.jpg"
+    "image": "/images/products/purple-boatneck-dress-with-floral-embroidery-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "rose-pink-floral-embroidered-crop-top-mini-skirt-set",
@@ -3999,7 +4127,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/rose-pink-floral-embroidered-crop-top-mini-skirt-set-1.jpg"
+    "image": "/images/products/rose-pink-floral-embroidered-crop-top-mini-skirt-set-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "blush-pink-a-line-dress-with-contrast-threadwork",
@@ -4031,7 +4160,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/blush-pink-a-line-dress-with-contrast-threadwork-1.jpg"
+    "image": "/images/products/blush-pink-a-line-dress-with-contrast-threadwork-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "slate-grey-pencil-skirt-with-embroidered-crop-jacket",
@@ -4045,7 +4175,7 @@
     "setIncludes": "1 Skirt, 1 Bustier, 1 Crop Jacket",
     "fabric": "Chanderi",
     "washCare": "Dry Clean Only",
-    "description": "Modern tailoring meets heritage craftsmanship in this slate grey silhouette. The look features a structured sleeveless jacket with delicate botanical machine embroidery, paired with a matching bustier and a sleek mid length skirt with a slit. Perfect for sophisticated evening soirees and contemporary celebrations.",
+    "description": "Modern tailoring meets heritage craftmanship in this slate grey silhouette. The look features a stuctured sleeveless jacket with delicate botanical machine embroidery, paired with a matching bustier and a sleek mid length skirt with a slit. Perfect for sophisticated evening soirees and contemporary celebartions.",
     "price": 33500,
     "mrp": 33500,
     "disclaimer": "Slight variations in colour, texture, measurements, embroidery and finish may occur due to the handcrafted nature of the product. Product colours may vary slightly due to the lighting and screen settings.",
@@ -4063,7 +4193,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/slate-grey-pencil-skirt-with-embroidered-crop-jacket-1.jpg"
+    "image": "/images/products/slate-grey-pencil-skirt-with-embroidered-crop-jacket-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "light-grey-machine-embroidered-crop-jacket-with-flared-skirt",
@@ -4095,7 +4226,8 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/light-grey-machine-embroidered-crop-jacket-with-flared-skirt-1.jpg"
+    "image": "/images/products/light-grey-machine-embroidered-crop-jacket-with-flared-skirt-1.jpg",
+    "fit": "Regular"
   },
   {
     "id": "lilac-halterneck-dress-with-floral-embroidery",
@@ -4126,6 +4258,7 @@
       "L",
       "XL"
     ],
-    "image": "/images/products/lilac-halterneck-dress-with-floral-embroidery-1.jpg"
+    "image": "/images/products/lilac-halterneck-dress-with-floral-embroidery-1.jpg",
+    "fit": "Regular"
   }
 ]
