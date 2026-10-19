@@ -1,6 +1,7 @@
 /* =============================================
    HEER RANJHA , Admin Dashboard & Login
    Luxury Indian Couture Palette & Responsive Layout
+   Compact, Refined Typography
    ============================================= */
 
 /* ---- Global Brand Tokens & Base ---- */
@@ -11,21 +12,21 @@
     radial-gradient(circle at 10% 10%, rgba(201, 169, 110, 0.08), transparent 35%),
     radial-gradient(circle at 90% 90%, rgba(222, 194, 138, 0.06), transparent 35%);
   color: var(--near-black, #0F0C09);
-  padding: clamp(0.75rem, 1.5vw, 1.25rem);
+  padding: clamp(0.5rem, 1.2vw, 1rem);
   font-family: var(--font-body, "Jost", sans-serif);
 }
 
 .dashboardShell {
-  width: min(1560px, 100%);
+  width: min(1600px, 100%);
   margin: 0 auto;
-  min-height: calc(100vh - 2.5rem);
+  min-height: calc(100vh - 2rem);
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   background: #FFFFFF;
   border: 1px solid rgba(201, 169, 110, 0.28);
-  border-radius: 24px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 12px 48px rgba(15, 12, 9, 0.06);
+  box-shadow: 0 10px 40px rgba(15, 12, 9, 0.05);
 }
 
 /* ---- Sidebar (Side Menu) ---- */
@@ -33,7 +34,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1.75rem 1.25rem;
+  padding: 1.25rem 1rem;
   background: #120E0B;
   color: #F5F0E6;
   border-right: 1px solid rgba(201, 169, 110, 0.22);
@@ -42,29 +43,29 @@
 .sidebarTop {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .sidebarTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.85rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: #FAF7F2;
   letter-spacing: 0.02em;
-  margin: 0.25rem 0 0.25rem;
+  margin: 0.15rem 0 0.15rem;
 }
 
 .sidebarCopy {
   color: rgba(245, 240, 230, 0.6);
-  font-size: 0.78rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  margin-bottom: 1.25rem;
 }
 
 .sidebarNav {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
   flex-grow: 1;
 }
 
@@ -72,13 +73,13 @@
   display: flex;
   flex-direction: column;
   text-align: left;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
   color: rgba(245, 240, 230, 0.75);
   cursor: pointer;
-  transition: all 0.22s ease-out;
+  transition: all 0.2s ease-out;
   position: relative;
 }
 
@@ -86,7 +87,7 @@
   background: rgba(201, 169, 110, 0.1);
   color: #FAF7F2;
   border-color: rgba(201, 169, 110, 0.2);
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 .sidebarItemActive {
@@ -94,60 +95,60 @@
   border-color: rgba(201, 169, 110, 0.45);
   color: #DEC28A;
   box-shadow: inset 3px 0 0 #C9A96E;
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 .sidebarItemLabel {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.25rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: inherit;
 }
 
 .sidebarItemMeta {
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(201, 169, 110, 0.85);
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.1rem;
 }
 
 .sidebarFooter {
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
   border-top: 1px solid rgba(201, 169, 110, 0.15);
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .userName {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.15rem;
+  font-size: 0.95rem;
   color: #FAF7F2;
 }
 
 .userEmail {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   color: rgba(245, 240, 230, 0.55);
   word-break: break-all;
 }
 
 .sidebarLogout {
   width: 100%;
-  padding: 0.65rem 1rem;
+  padding: 0.5rem 0.85rem;
   background: rgba(245, 240, 230, 0.06);
   border: 1px solid rgba(201, 169, 110, 0.25);
   color: #DEC28A;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   transition: all 0.2s ease;
 }
 
@@ -159,10 +160,10 @@
 
 /* ---- Main Content Area ---- */
 .mainPanel {
-  padding: clamp(1rem, 2.5vw, 2rem);
+  padding: clamp(0.85rem, 2vw, 1.5rem);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.15rem;
   background: #FAF7F2;
   overflow-y: auto;
 }
@@ -171,41 +172,41 @@
 .heroCard {
   background: #FFFFFF;
   border: 1px solid rgba(201, 169, 110, 0.25);
-  border-radius: 18px;
-  padding: 1.5rem;
+  border-radius: 14px;
+  padding: 1.15rem 1.35rem;
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr);
+  gap: 1.25rem;
   align-items: center;
-  box-shadow: 0 4px 20px rgba(15, 12, 9, 0.03);
+  box-shadow: 0 4px 16px rgba(15, 12, 9, 0.03);
 }
 
 .heroTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
   font-weight: 500;
   color: #0F0C09;
-  margin: 0.25rem 0 0.5rem;
-  line-height: 1.1;
+  margin: 0.15rem 0 0.35rem;
+  line-height: 1.15;
 }
 
 .heroCopy {
   color: #73675B;
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.78rem;
+  line-height: 1.45;
 }
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.65rem;
 }
 
 .statCard {
   background: #FAF7F2;
   border: 1px solid rgba(201, 169, 110, 0.22);
-  border-radius: 14px;
-  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
   text-align: center;
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
@@ -218,7 +219,7 @@
 .statValue {
   display: block;
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-size: 1.3rem;
   font-weight: 600;
   color: #120E0B;
   line-height: 1.1;
@@ -226,19 +227,69 @@
 
 .statLabel {
   display: block;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #A07840;
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   font-weight: 500;
 }
 
-/* ---- Content Grid: Form to the Left, Data to the Right ---- */
+/* ---- Excel Bulk Operations Card ---- */
+.excelBox {
+  background: #FFFFFF;
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 14px;
+  padding: 1.15rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 3px 12px rgba(201, 169, 110, 0.06);
+}
+
+.excelTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.excelTitle {
+  font-family: var(--font-display, "Cormorant Garamond", serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #0F0C09;
+}
+
+.excelDesc {
+  font-size: 0.75rem;
+  color: #73675B;
+  line-height: 1.4;
+}
+
+.excelActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.excelFileInput {
+  font-size: 0.75rem;
+  color: #4A3E33;
+  padding: 0.4rem 0.65rem;
+  background: #FAF7F2;
+  border: 1px dashed rgba(201, 169, 110, 0.45);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ---- Content Grid: Form to the Left (Order 1), Data to the Right (Order 2) ---- */
 .contentGrid {
   display: grid;
-  grid-template-columns: 430px minmax(0, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: 460px minmax(0, 1fr);
+  gap: 1.25rem;
   align-items: start;
 }
 
@@ -247,9 +298,9 @@
   order: 1;
   background: #FFFFFF;
   border: 1px solid rgba(201, 169, 110, 0.25);
-  border-radius: 18px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(15, 12, 9, 0.03);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(15, 12, 9, 0.03);
 }
 
 /* Force Banner/Product/Data Panel to appear SECOND (Right) */
@@ -257,9 +308,9 @@
   order: 2;
   background: #FFFFFF;
   border: 1px solid rgba(201, 169, 110, 0.25);
-  border-radius: 18px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(15, 12, 9, 0.03);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(15, 12, 9, 0.03);
 }
 
 .sectionHead,
@@ -268,69 +319,106 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.85rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.65rem;
   border-bottom: 1px solid rgba(201, 169, 110, 0.18);
 }
 
 .sectionTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.6rem;
+  font-size: 1.15rem;
   font-weight: 500;
   color: #0F0C09;
 }
 
-/* ---- Forms & Inputs ---- */
+/* ---- Forms & Inputs (Compact & Clean) ---- */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
+}
+
+.formSectionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  background: rgba(250, 247, 242, 0.7);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  border-radius: 10px;
+}
+
+.formSubheading {
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #A07840;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
+}
+
+.formSubheading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(201, 169, 110, 0.25);
 }
 
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .fieldLabel {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #4A3E33;
   font-weight: 600;
 }
 
 .fieldInput,
-.fieldTextarea {
+.fieldTextarea,
+.fieldSelect {
   width: 100%;
-  padding: 0.75rem 0.95rem;
-  background: #FAF7F2;
+  padding: 0.52rem 0.72rem;
+  background: #FFFFFF;
   border: 1px solid #DCD3C0;
-  border-radius: 10px;
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   color: #0F0C09;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .fieldInput:focus,
-.fieldTextarea:focus {
+.fieldTextarea:focus,
+.fieldSelect:focus {
   outline: none;
   background: #FFFFFF;
   border-color: #C9A96E;
-  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.2);
+  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2);
 }
 
 .fieldTextarea {
   resize: vertical;
-  min-height: 84px;
+  min-height: 60px;
 }
 
 .inlineFields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.85rem;
+  gap: 0.65rem;
+}
+
+.inlineFields3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
 }
 
 .checkboxGroup {
@@ -338,47 +426,47 @@
 }
 
 .toggleWrap {
-  min-height: 44px;
+  min-height: 36px;
   border: 1px solid #DCD3C0;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0 0.85rem;
-  background: #FAF7F2;
-  font-size: 0.84rem;
+  gap: 0.6rem;
+  padding: 0 0.7rem;
+  background: #FFFFFF;
+  font-size: 0.76rem;
   color: #120E0B;
   cursor: pointer;
 }
 
 .toggleWrap input[type="checkbox"] {
   accent-color: #C9A96E;
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
 }
 
 .uploadField {
-  padding: 1.15rem;
-  border-radius: 12px;
-  border: 1px dashed rgba(201, 169, 110, 0.5);
-  background: rgba(245, 240, 230, 0.4);
+  padding: 0.85rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(201, 169, 110, 0.45);
+  background: rgba(245, 240, 230, 0.35);
   text-align: center;
 }
 
 .fileInput {
   display: block;
   width: 100%;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   color: #4A3E33;
   cursor: pointer;
 }
 
 .uploadHint {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: #8C7D6D;
-  margin-top: 0.4rem;
+  margin-top: 0.35rem;
 }
 
 /* ---- Buttons ---- */
@@ -387,25 +475,25 @@
   color: #FAF7F2;
   border: 1px solid #C9A96E;
   border-radius: 999px;
-  padding: 0.85rem 1.5rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.09em;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   font-weight: 500;
-  transition: all 0.25s ease;
-  margin-top: 0.5rem;
+  transition: all 0.22s ease;
+  margin-top: 0.35rem;
 }
 
 .submitBtn:hover {
   background: #C9A96E;
   color: #0F0C09;
   border-color: #C9A96E;
-  box-shadow: 0 4px 14px rgba(201, 169, 110, 0.3);
+  box-shadow: 0 3px 12px rgba(201, 169, 110, 0.25);
 }
 
 .refreshBtn {
@@ -413,14 +501,14 @@
   color: #0F0C09;
   border: 1px solid rgba(201, 169, 110, 0.4);
   border-radius: 999px;
-  padding: 0.5rem 1rem;
-  font-size: 0.72rem;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   transition: all 0.2s ease;
 }
 
@@ -433,9 +521,9 @@
 .ghostBtn,
 .dangerBtn {
   border-radius: 8px;
-  padding: 0.55rem 0.85rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.07em;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   font-weight: 500;
@@ -472,19 +560,19 @@
 }
 
 .successText {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #2F855A;
   background: #F0FFF4;
-  padding: 0.65rem 0.85rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 8px;
   border: 1px solid #C6F6D5;
 }
 
 .errorText {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #C53030;
   background: #FFF5F5;
-  padding: 0.65rem 0.85rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 8px;
   border: 1px solid #FED7D7;
 }
@@ -493,33 +581,33 @@
 .bannerGrid,
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.15rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.95rem;
 }
 
 .bannerCard,
 .productCard {
   background: #FFFFFF;
   border: 1px solid rgba(201, 169, 110, 0.22);
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(15, 12, 9, 0.03);
-  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 3px 12px rgba(15, 12, 9, 0.03);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
 }
 
 .bannerCard:hover,
 .productCard:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: #C9A96E;
-  box-shadow: 0 8px 24px rgba(201, 169, 110, 0.12);
+  box-shadow: 0 6px 18px rgba(201, 169, 110, 0.12);
 }
 
 .bannerMediaWrap,
 .productMediaWrap {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 11;
   background: #EDE6D6;
   overflow: hidden;
 }
@@ -536,25 +624,25 @@
   place-items: center;
   height: 100%;
   color: #A07840;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 500;
   background: #F5F0E6;
 }
 
 .bannerBadges {
   position: absolute;
-  top: 0.65rem;
-  left: 0.65rem;
+  top: 0.5rem;
+  left: 0.5rem;
   display: flex;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .badge {
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.45rem;
   border-radius: 999px;
   background: rgba(15, 12, 9, 0.75);
   color: #DEC28A;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 600;
@@ -562,30 +650,30 @@
 
 .bannerBody,
 .productBody {
-  padding: 1rem;
+  padding: 0.85rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.55rem;
   flex-grow: 1;
 }
 
 .bannerTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.35rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #0F0C09;
   line-height: 1.2;
 }
 
 .bannerSubtitle {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: #73675B;
-  margin-top: 0.2rem;
+  margin-top: 0.15rem;
 }
 
 .bannerMeta {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #A07840;
@@ -595,9 +683,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #73675B;
-  padding-top: 0.65rem;
+  padding-top: 0.5rem;
   border-top: 1px solid rgba(201, 169, 110, 0.15);
 }
 
@@ -610,39 +698,93 @@
 .productActions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
 }
 
 .placeholderState {
-  min-height: 260px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2.5rem;
+  padding: 2rem;
   background: #FAF7F2;
   border: 1px dashed rgba(201, 169, 110, 0.4);
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 .placeholderTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #0F0C09;
-  margin: 0.4rem 0 0.25rem;
+  margin: 0.35rem 0 0.2rem;
 }
 
 .placeholderCopy {
   color: #73675B;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
+}
+
+/* ---- Tables (Orders, Payments, Users) ---- */
+.tableContainer {
+  overflow-x: auto;
+  border: 1px solid rgba(201, 169, 110, 0.22);
+  border-radius: 10px;
+  background: #FFFFFF;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.dataTable th {
+  background: #120E0B;
+  color: #FAF7F2;
+  font-family: var(--font-display, "Cormorant Garamond", serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 0.85rem;
+  font-weight: 500;
+}
+
+.dataTable td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+  color: #2A241F;
+}
+
+.dataTable tr:hover td {
+  background: rgba(201, 169, 110, 0.05);
+}
+
+/* ---- Filter Row ---- */
+.filterRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  padding: 0.48rem 0.75rem;
+  background: #FFFFFF;
+  border: 1px solid #DCD3C0;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #0F0C09;
+  min-width: 180px;
 }
 
 /* ---- Login Screen (Pre-Auth) ---- */
 .loginShell {
   min-height: 100vh;
-  padding: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(0.75rem, 2.5vw, 2rem);
   background: 
     radial-gradient(circle at 10% 15%, rgba(201, 169, 110, 0.12), transparent 45%),
     linear-gradient(180deg, #FAF7F2 0%, #EDE6D6 100%);
@@ -651,20 +793,20 @@
 }
 
 .loginPanel {
-  width: min(980px, 100%);
+  width: min(900px, 100%);
   display: grid;
   grid-template-columns: 1fr 1fr;
   background: #FFFFFF;
   border: 1px solid rgba(201, 169, 110, 0.35);
-  border-radius: 24px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(15, 12, 9, 0.08);
+  box-shadow: 0 16px 48px rgba(15, 12, 9, 0.07);
 }
 
 .loginIntro {
   background: #120E0B;
   color: #FAF7F2;
-  padding: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.75rem, 3.5vw, 2.5rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -672,69 +814,69 @@
 
 .loginTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 500;
-  line-height: 1.05;
+  line-height: 1.1;
   color: #FAF7F2;
-  margin: 0.5rem 0 1rem;
+  margin: 0.35rem 0 0.75rem;
 }
 
 .loginCopy {
   color: rgba(245, 240, 230, 0.7);
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-size: 0.8rem;
+  line-height: 1.5;
 }
 
 .loginHighlights {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-  margin-top: 2rem;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
 }
 
 .highlightCard {
   background: rgba(245, 240, 230, 0.06);
   border: 1px solid rgba(201, 169, 110, 0.2);
-  border-radius: 12px;
-  padding: 0.75rem;
+  border-radius: 10px;
+  padding: 0.65rem;
   text-align: center;
 }
 
 .highlightValue {
   display: block;
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #DEC28A;
   font-weight: 600;
 }
 
 .highlightLabel {
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(245, 240, 230, 0.7);
 }
 
 .loginForm {
-  padding: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.75rem, 3.5vw, 2.5rem);
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.15rem;
+  gap: 0.95rem;
 }
 
 .loginFormTitle {
   font-family: var(--font-display, "Cormorant Garamond", serif);
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   color: #0F0C09;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .loginFormCopy {
   color: #73675B;
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
+  font-size: 0.78rem;
+  margin-bottom: 0.75rem;
 }
 
 /* =============================================
@@ -744,7 +886,7 @@
 /* Tablet & Smaller Desktops */
 @media (max-width: 1140px) {
   .dashboardShell {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 210px minmax(0, 1fr);
   }
 
   .contentGrid {
@@ -761,23 +903,23 @@
 
   .heroCard {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 }
 
 /* Mobile Devices */
 @media (max-width: 860px) {
   .dashboardPage {
-    padding: 0.5rem;
+    padding: 0.4rem;
   }
 
   .dashboardShell {
     grid-template-columns: 1fr;
-    border-radius: 16px;
+    border-radius: 14px;
   }
 
   .sidebar {
-    padding: 1.25rem 1rem;
+    padding: 1rem 0.85rem;
     border-right: none;
     border-bottom: 1px solid rgba(201, 169, 110, 0.2);
   }
@@ -785,15 +927,15 @@
   .sidebarNav {
     flex-direction: row;
     overflow-x: auto;
-    padding-bottom: 0.5rem;
-    gap: 0.5rem;
+    padding-bottom: 0.4rem;
+    gap: 0.35rem;
     -webkit-overflow-scrolling: touch;
   }
 
   .sidebarItem {
     white-space: nowrap;
-    min-width: 110px;
-    padding: 0.6rem 0.85rem;
+    min-width: 100px;
+    padding: 0.5rem 0.75rem;
   }
 
   .sidebarItem:hover,
@@ -805,18 +947,18 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-top: 1rem;
-    padding-top: 0.85rem;
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
   }
 
   .sidebarLogout {
     width: auto;
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 0.85rem;
   }
 
   .mainPanel {
-    padding: 1rem;
-    gap: 1.15rem;
+    padding: 0.85rem;
+    gap: 0.95rem;
   }
 
   .loginPanel {
@@ -827,7 +969,8 @@
     display: none;
   }
 
-  .inlineFields {
+  .inlineFields,
+  .inlineFields3 {
     grid-template-columns: 1fr;
   }
 

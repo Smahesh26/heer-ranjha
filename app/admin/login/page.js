@@ -15,19 +15,25 @@ const EMPTY_FORM = {
 
 const EMPTY_PRODUCT_FORM = {
   name: "",
+  sku: "",
   slug: "",
-  description: "",
-  category: "Men",
-  subCategory: "Kurta Sets",
-  collection: "Nayi Leher",
+  collection: "ASAYA",
+  category: "Men's Wear",
+  subCategory: "Kurta",
+  setIncludes: "1 Kurta",
   fabric: "Matka Silk",
-  sizes: "XS,S,M,L,XL,XXL",
-  sizeCharges: "{}",
-  clothCare: "",
-  termsAndConditions: "",
+  washCare: "Dry Clean Only",
+  color: "",
+  fit: "Regular",
   price: "",
   mrp: "",
-  stock: "1",
+  stock: "MTO",
+  sizes: "XS,S,M,L,XL,XXL",
+  description: "",
+  shippingDetails: "Free shipping across India on all orders. Made-To-Order Timeline: 2-3 Weeks.",
+  disclaimer: "Slight variations in colour, texture, embroidery and finish may occur due to the handcrafted nature of the ensembles. Products colours may vary slightly due to lighting and screen settings.",
+  termsAndConditions: "",
+  imageUrls: "",
   featured: false,
   active: true,
   images: [],
@@ -131,6 +137,11 @@ export default function AdminLoginPage() {
   const [deletingBannerId, setDeletingBannerId] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null);
   const [deletingProductId, setDeletingProductId] = useState(null);
+  const [excelFile, setExcelFile] = useState(null);
+  const [importingExcel, setImportingExcel] = useState(false);
+  const [excelStatus, setExcelStatus] = useState("");
+  const [excelFileInputKey, setExcelFileInputKey] = useState(0);
+  const [productSearch, setProductSearch] = useState("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -163,6 +174,19 @@ export default function AdminLoginPage() {
     const withImages = productList.filter((product) => Array.isArray(product.images) && product.images.length > 0).length;
     return { total: productList.length, active, featured, withImages };
   }, [productList]);
+
+  const filteredProducts = useMemo(() => {
+    if (!productSearch) return productList;
+    const q = productSearch.toLowerCase();
+    return productList.filter(
+      (p) =>
+        (p.name || "").toLowerCase().includes(q) ||
+        (p.sku || "").toLowerCase().includes(q) ||
+        (p.collection || "").toLowerCase().includes(q) ||
+        (p.subCategory || "").toLowerCase().includes(q) ||
+        (p.category || "").toLowerCase().includes(q)
+    );
+  }, [productList, productSearch]);
 
   const paymentRows = useMemo(() => getPaymentRows(orderList), [orderList]);
 
@@ -240,7 +264,7 @@ export default function AdminLoginPage() {
   async function loadProducts() {
     setRefreshingProducts(true);
     try {
-      const response = await fetch("/api/products?active=true", { cache: "no-store" });
+      const response = await fetch("/api/products", { cache: "no-store" });
       const data = await response.json();
       setProductList(data.products || []);
     } catch {
@@ -462,25 +486,69 @@ export default function AdminLoginPage() {
     }
   }
 
+  async function handleImportExcel(event) {
+    if (event) event.preventDefault();
+    if (!excelFile) {
+      setExcelStatus("Please select an .xlsx or .xls file first.");
+      return;
+    }
+    setImportingExcel(true);
+    setExcelStatus("Processing Excel file and importing products...");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", excelFile);
+
+      const response = await fetch("/api/products/import-excel", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || data?.message || "Excel import failed");
+      }
+
+      setExcelStatus(data.message || "Excel sheet imported successfully!");
+      setExcelFile(null);
+      setExcelFileInputKey((k) => k + 1);
+      await loadProducts();
+    } catch (err) {
+      setExcelStatus(err.message || "Failed to import Excel.");
+    } finally {
+      setImportingExcel(false);
+    }
+  }
+
+  function handleExportExcel() {
+    window.open("/api/products/import-excel", "_blank");
+  }
+
   async function handleProductUpload(event) {
     event.preventDefault();
     setProductStatus("");
 
     const formData = new FormData();
     formData.append("name", productForm.name);
+    formData.append("sku", productForm.sku);
     formData.append("slug", productForm.slug);
-    formData.append("description", productForm.description);
+    formData.append("collection", productForm.collection);
     formData.append("category", productForm.category);
     formData.append("subCategory", productForm.subCategory);
-    formData.append("collection", productForm.collection);
+    formData.append("setIncludes", productForm.setIncludes);
     formData.append("fabric", productForm.fabric);
-    formData.append("sizes", productForm.sizes);
-    formData.append("sizeCharges", productForm.sizeCharges);
-    formData.append("clothCare", productForm.clothCare);
-    formData.append("termsAndConditions", productForm.termsAndConditions);
+    formData.append("washCare", productForm.washCare);
+    formData.append("color", productForm.color);
+    formData.append("fit", productForm.fit);
     formData.append("price", productForm.price);
     formData.append("mrp", productForm.mrp);
     formData.append("stock", productForm.stock);
+    formData.append("sizes", productForm.sizes);
+    formData.append("description", productForm.description);
+    formData.append("shippingDetails", productForm.shippingDetails);
+    formData.append("disclaimer", productForm.disclaimer);
+    formData.append("termsAndConditions", productForm.termsAndConditions);
+    formData.append("imageUrls", productForm.imageUrls);
     formData.append("featured", productForm.featured ? "true" : "false");
     formData.append("active", productForm.active ? "true" : "false");
 
@@ -512,25 +580,31 @@ export default function AdminLoginPage() {
 
   function handleEditProduct(product) {
     setActiveSection("products");
-    setEditingProductId(product.id);
+    setEditingProductId(product.id || product.slug);
     setProductStatus("Edit mode enabled. Update fields and click Save Changes.");
     setProductForm({
       name: product.name || "",
-      slug: product.slug || "",
-      description: product.description || "",
-      category: product.category || "Men",
-      subCategory: product.subCategory || "Kurta Sets",
-      collection: product.collection || "Nayi Leher",
+      sku: product.sku || product.styleCode || "",
+      slug: product.slug || product.id || "",
+      collection: product.collection || "ASAYA",
+      category: product.category || "Men's Wear",
+      subCategory: product.subCategory || "Kurta",
+      setIncludes: product.setIncludes || "1 Kurta",
       fabric: product.fabric || "Matka Silk",
-      sizes: Array.isArray(product.sizes) && product.sizes.length ? product.sizes.join(",") : "XS,S,M,L,XL,XXL",
-      sizeCharges: JSON.stringify(product.sizeCharges || {}),
-      clothCare: product.clothCare || "",
-      termsAndConditions: product.termsAndConditions || "",
+      washCare: product.washCare || product.clothCare || "Dry Clean Only",
+      color: product.color || "",
+      fit: product.fit || "Regular",
       price: String(product.price ?? ""),
-      mrp: product.mrp != null ? String(product.mrp) : "",
-      stock: String(product.stock ?? "0"),
+      mrp: product.mrp != null ? String(product.mrp) : String(product.price ?? ""),
+      stock: String(product.stock ?? "MTO"),
+      sizes: Array.isArray(product.sizes) && product.sizes.length ? product.sizes.join(",") : (product.sizes || "XS,S,M,L,XL,XXL"),
+      description: product.description || "",
+      shippingDetails: product.shippingDetails || "",
+      disclaimer: product.disclaimer || "",
+      termsAndConditions: product.termsAndConditions || "",
+      imageUrls: Array.isArray(product.images) ? product.images.join("\n") : (product.images || ""),
       featured: Boolean(product.featured),
-      active: Boolean(product.active),
+      active: product.active !== undefined ? Boolean(product.active) : true,
       images: [],
     });
     setProductFileInputKey((key) => key + 1);
@@ -918,189 +992,452 @@ export default function AdminLoginPage() {
             </aside>
           </div> : null}
 
-          {activeSection === "products" ? <div className={styles.contentGrid}>
-            <section className={styles.bannerPanel}>
-              <div className={styles.sectionHead}>
-                <div>
-                  <p className="eyebrow">Products</p>
-                  <h3 className={`display ${styles.sectionTitle}`}>Uploaded Products</h3>
+          {activeSection === "products" ? (
+            <div className={styles.mainProductsSection}>
+              {/* Excel Bulk Upload & Export Box */}
+              <div className={styles.excelBox}>
+                <div className={styles.excelTop}>
+                  <div>
+                    <h4 className={styles.excelTitle}>Bulk Excel Operations (.xlsx)</h4>
+                    <p className={styles.excelDesc}>
+                      Upload collection sheets (ASAYA, NAYI LEHER, ROOMANI, etc.) to import or update products. Form fields and Excel columns match 100%.
+                    </p>
+                  </div>
+                  <div className={styles.excelActions}>
+                    <input
+                      key={excelFileInputKey}
+                      type="file"
+                      accept=".xlsx,.xls,.csv"
+                      className={styles.excelFileInput}
+                      onChange={(e) => setExcelFile(e.target.files?.[0] || null)}
+                    />
+                    <button
+                      type="button"
+                      className={`btn ${styles.submitBtn}`}
+                      style={{ marginTop: 0 }}
+                      onClick={handleImportExcel}
+                      disabled={importingExcel || !excelFile}
+                    >
+                      <span>{importingExcel ? "Importing..." : "Upload & Import Excel"}</span>
+                      <span className="btn-arrow">↑</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.ghostBtn}
+                      onClick={handleExportExcel}
+                    >
+                      Export Catalog (.xlsx)
+                    </button>
+                  </div>
                 </div>
-                <button type="button" className={`btn ${styles.refreshBtn}`} onClick={loadProducts}>
-                  <span>{refreshingProducts ? "Refreshing..." : "Refresh"}</span>
-                  <span className="btn-arrow">→</span>
-                </button>
-              </div>
-
-              {productList.length ? (
-                <div className={styles.productGrid}>
-                  {productList.map((product) => (
-                    <article key={product.id} className={styles.productCard}>
-                      <div className={styles.productMediaWrap}>
-                        {product.images?.[0] ? (
-                          <img className={styles.productMedia} src={product.images[0]} alt={product.name} />
-                        ) : (
-                          <div className={styles.bannerFallback}>No image</div>
-                        )}
-                      </div>
-
-                      <div className={styles.productBody}>
-                        <div>
-                          <h4 className={`display ${styles.bannerTitle}`}>{product.name}</h4>
-                          <p className={styles.bannerMeta}>/{product.slug}</p>
-                          <p className={styles.bannerSubtitle}>{product.collection} • {product.subCategory}</p>
-                        </div>
-                        <div className={styles.bannerFoot}>
-                          <span>INR {Number(product.price || 0).toLocaleString("en-IN")}</span>
-                          <span>{product.active ? "Active" : "Draft"}</span>
-                        </div>
-                        <div className={styles.productActions}>
-                          <button type="button" className={styles.ghostBtn} onClick={() => handleEditProduct(product)}>
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className={styles.dangerBtn}
-                            onClick={() => handleDeleteProduct(product)}
-                            disabled={deletingProductId === product.id}
-                          >
-                            {deletingProductId === product.id ? "Deleting..." : "Delete"}
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.placeholderState}>
-                  <p className="eyebrow">Empty</p>
-                  <h4 className={`display ${styles.placeholderTitle}`}>No products uploaded yet.</h4>
-                  <p className={styles.placeholderCopy}>Use the form to upload your first product.</p>
-                </div>
-              )}
-            </section>
-
-            <aside className={styles.formPanel}>
-              <div className={styles.sectionHeadCompact}>
-                <p className="eyebrow">Form</p>
-                <h3 className={`display ${styles.sectionTitle}`}>{editingProductId ? "Edit Product" : "Upload Product"}</h3>
-              </div>
-
-              <form className={styles.form} onSubmit={handleProductUpload}>
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Product Name</span>
-                  <input className={styles.fieldInput} value={productForm.name} onChange={(event) => setProductForm((current) => ({ ...current, name: event.target.value }))} required />
-                </label>
-
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Slug</span>
-                  <input className={styles.fieldInput} placeholder="pink-matka-kurta-set" value={productForm.slug} onChange={(event) => setProductForm((current) => ({ ...current, slug: event.target.value }))} required />
-                </label>
-
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Description</span>
-                  <textarea className={styles.fieldTextarea} rows={4} value={productForm.description} onChange={(event) => setProductForm((current) => ({ ...current, description: event.target.value }))} required />
-                </label>
-
-                <div className={styles.inlineFields}>
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Category</span>
-                    <input className={styles.fieldInput} value={productForm.category} onChange={(event) => setProductForm((current) => ({ ...current, category: event.target.value }))} required />
-                  </label>
-
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Sub Category</span>
-                    <input className={styles.fieldInput} value={productForm.subCategory} onChange={(event) => setProductForm((current) => ({ ...current, subCategory: event.target.value }))} required />
-                  </label>
-                </div>
-
-                <div className={styles.inlineFields}>
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Collection</span>
-                    <input className={styles.fieldInput} value={productForm.collection} onChange={(event) => setProductForm((current) => ({ ...current, collection: event.target.value }))} required />
-                  </label>
-
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Fabric</span>
-                    <input className={styles.fieldInput} value={productForm.fabric} onChange={(event) => setProductForm((current) => ({ ...current, fabric: event.target.value }))} required />
-                  </label>
-                </div>
-
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Sizes (comma separated)</span>
-                  <input className={styles.fieldInput} placeholder="XS,S,M,L,XL,XXL" value={productForm.sizes} onChange={(event) => setProductForm((current) => ({ ...current, sizes: event.target.value }))} />
-                </label>
-
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Size Charges (JSON)</span>
-                  <input className={styles.fieldInput} placeholder='{"XL": 200, "XXL": 400}' value={productForm.sizeCharges} onChange={(event) => setProductForm((current) => ({ ...current, sizeCharges: event.target.value }))} />
-                </label>
-
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Cloth Care Instructions</span>
-                  <textarea className={styles.fieldTextarea} rows={3} value={productForm.clothCare} onChange={(event) => setProductForm((current) => ({ ...current, clothCare: event.target.value }))} />
-                </label>
-
-                <label className={styles.fieldGroup}>
-                  <span className={styles.fieldLabel}>Terms and Conditions</span>
-                  <textarea className={styles.fieldTextarea} rows={4} value={productForm.termsAndConditions} onChange={(event) => setProductForm((current) => ({ ...current, termsAndConditions: event.target.value }))} />
-                </label>
-
-                <div className={styles.inlineFields}>
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Price</span>
-                    <input className={styles.fieldInput} type="number" min="0" value={productForm.price} onChange={(event) => setProductForm((current) => ({ ...current, price: event.target.value }))} required />
-                  </label>
-
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>MRP</span>
-                    <input className={styles.fieldInput} type="number" min="0" value={productForm.mrp} onChange={(event) => setProductForm((current) => ({ ...current, mrp: event.target.value }))} />
-                  </label>
-                </div>
-
-                <div className={styles.inlineFields}>
-                  <label className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Stock</span>
-                    <input className={styles.fieldInput} type="number" min="0" value={productForm.stock} onChange={(event) => setProductForm((current) => ({ ...current, stock: event.target.value }))} required />
-                  </label>
-
-                  <label className={`${styles.fieldGroup} ${styles.checkboxGroup}`}>
-                    <span className={styles.fieldLabel}>Featured</span>
-                    <span className={styles.toggleWrap}>
-                      <input type="checkbox" checked={productForm.featured} onChange={(event) => setProductForm((current) => ({ ...current, featured: event.target.checked }))} />
-                      <span>{productForm.featured ? "Yes" : "No"}</span>
-                    </span>
-                  </label>
-                </div>
-
-                <label className={`${styles.fieldGroup} ${styles.checkboxGroup}`}>
-                  <span className={styles.fieldLabel}>Visibility</span>
-                  <span className={styles.toggleWrap}>
-                    <input type="checkbox" checked={productForm.active} onChange={(event) => setProductForm((current) => ({ ...current, active: event.target.checked }))} />
-                    <span>{productForm.active ? "Active" : "Draft"}</span>
-                  </span>
-                </label>
-
-                <label className={`${styles.fieldGroup} ${styles.uploadField}`}>
-                  <span className={styles.fieldLabel}>{editingProductId ? "Replace Product Images" : "Product Images"}</span>
-                  <input key={productFileInputKey} className={styles.fileInput} type="file" accept="image/*" multiple onChange={(event) => setProductForm((current) => ({ ...current, images: Array.from(event.target.files || []).slice(0, 5) }))} />
-                  <span className={styles.uploadHint}>{productForm.images.length ? `${productForm.images.length}/5 image(s) selected` : editingProductId ? "Optional: choose up to 5 images. Leave empty to keep existing images." : "Optional: upload up to 5 product images."}</span>
-                </label>
-
-                <button className={`btn ${styles.submitBtn}`} type="submit">
-                  <span>{editingProductId ? "Save Changes" : "Upload Product"}</span>
-                  <span className="btn-arrow">→</span>
-                </button>
-
-                {editingProductId ? (
-                  <button type="button" className={styles.ghostBtn} onClick={clearProductForm}>
-                    Cancel Edit
-                  </button>
+                {excelStatus ? (
+                  <p className={excelStatus.includes("failed") || excelStatus.includes("Error") ? styles.errorText : styles.successText}>
+                    {excelStatus}
+                  </p>
                 ) : null}
+              </div>
 
-                {productStatus ? <p className={styles.successText}>{productStatus}</p> : null}
-              </form>
-            </aside>
-          </div> : null}
+              <div className={styles.contentGrid}>
+                {/* Product List Panel (Right side, order: 2) */}
+                <section className={styles.bannerPanel}>
+                  <div className={styles.sectionHead}>
+                    <div>
+                      <p className="eyebrow">Catalogue</p>
+                      <h3 className={`display ${styles.sectionTitle}`}>
+                        Products ({filteredProducts.length}{productList.length !== filteredProducts.length ? ` of ${productList.length}` : ""})
+                      </h3>
+                    </div>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                      <button type="button" className={`btn ${styles.refreshBtn}`} onClick={loadProducts}>
+                        <span>{refreshingProducts ? "Refreshing..." : "Refresh"}</span>
+                        <span className="btn-arrow">→</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Search Bar */}
+                  <div className={styles.filterRow}>
+                    <input
+                      type="text"
+                      className={styles.searchInput}
+                      placeholder="Search by name, SKU, collection..."
+                      value={productSearch}
+                      onChange={(e) => setProductSearch(e.target.value)}
+                    />
+                    {productSearch ? (
+                      <button type="button" className={styles.ghostBtn} onClick={() => setProductSearch("")}>
+                        Clear
+                      </button>
+                    ) : null}
+                  </div>
+
+                  {filteredProducts.length ? (
+                    <div className={styles.productGrid}>
+                      {filteredProducts.map((product) => (
+                        <article key={product.id || product.slug} className={styles.productCard}>
+                          <div className={styles.productMediaWrap}>
+                            {product.images?.[0] ? (
+                              <img className={styles.productMedia} src={product.images[0]} alt={product.name} />
+                            ) : (
+                              <div className={styles.bannerFallback}>No image</div>
+                            )}
+                            <div className={styles.bannerBadges}>
+                              <span className={styles.badge}>{product.collection || "Collection"}</span>
+                              <span className={styles.badge}>{product.active ? "Active" : "Draft"}</span>
+                            </div>
+                          </div>
+
+                          <div className={styles.productBody}>
+                            <div>
+                              <p className={styles.bannerMeta}>{product.sku || product.styleCode || "NO SKU"}</p>
+                              <h4 className={`display ${styles.bannerTitle}`}>{product.name}</h4>
+                              <p className={styles.bannerSubtitle}>
+                                {product.fabric ? `${product.fabric} • ` : ""}{product.subCategory || product.category}
+                              </p>
+                            </div>
+                            <div className={styles.bannerFoot}>
+                              <span>INR {Number(product.price || 0).toLocaleString("en-IN")}</span>
+                              <span>Stock: {product.stock || "MTO"}</span>
+                            </div>
+                            <div className={styles.productActions}>
+                              <button type="button" className={styles.ghostBtn} onClick={() => handleEditProduct(product)}>
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.dangerBtn}
+                                onClick={() => handleDeleteProduct(product)}
+                                disabled={deletingProductId === (product.id || product.slug)}
+                              >
+                                {deletingProductId === (product.id || product.slug) ? "Deleting..." : "Delete"}
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.placeholderState}>
+                      <p className="eyebrow">Catalogue</p>
+                      <h4 className={`display ${styles.placeholderTitle}`}>No products found.</h4>
+                      <p className={styles.placeholderCopy}>
+                        {productSearch ? "Try adjusting your search query." : "Use the form on the left or upload an Excel sheet to add products."}
+                      </p>
+                    </div>
+                  )}
+                </section>
+
+                {/* Product Form Panel (Left side, order: 1) */}
+                <aside className={styles.formPanel}>
+                  <div className={styles.sectionHeadCompact}>
+                    <div>
+                      <p className="eyebrow">Product Management</p>
+                      <h3 className={`display ${styles.sectionTitle}`}>
+                        {editingProductId ? "Edit Product" : "Upload Product"}
+                      </h3>
+                    </div>
+                    {editingProductId ? (
+                      <button type="button" className={styles.ghostBtn} onClick={clearProductForm}>
+                        Cancel
+                      </button>
+                    ) : null}
+                  </div>
+
+                  <form className={styles.form} onSubmit={handleProductUpload}>
+                    {/* Section 1: Basic Details */}
+                    <div className={styles.formSectionGroup}>
+                      <p className={styles.formSubheading}>Basic Information</p>
+                      <label className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Product Name *</span>
+                        <input
+                          className={styles.fieldInput}
+                          placeholder="e.g. Black Hand Embroidered Kurta"
+                          value={productForm.name}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, name: e.target.value }))}
+                          required
+                        />
+                      </label>
+
+                      <div className={styles.inlineFields}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>SKU / Style Code</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. HKP-234-BLACK"
+                            value={productForm.sku}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, sku: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Slug</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. black-hand-embroidered-kurta"
+                            value={productForm.slug}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, slug: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+
+                      <div className={styles.inlineFields3}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Collection</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. ASAYA"
+                            value={productForm.collection}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, collection: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Category</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="Men's Wear / Women's Wear"
+                            value={productForm.category}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, category: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Sub Category</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="Kurta / Co-ord Set"
+                            value={productForm.subCategory}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, subCategory: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+
+                      <label className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Color</span>
+                        <input
+                          className={styles.fieldInput}
+                          placeholder="e.g. Black, Olive Green, Natural Ivory"
+                          value={productForm.color}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, color: e.target.value }))}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Section 2: Craft & Composition */}
+                    <div className={styles.formSectionGroup}>
+                      <p className={styles.formSubheading}>Craft & Specifications</p>
+                      <div className={styles.inlineFields}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Set Includes</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. 1 Kurta"
+                            value={productForm.setIncludes}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, setIncludes: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Fabric</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. Matka Silk, Raw Silk, Chanderi"
+                            value={productForm.fabric}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, fabric: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+
+                      <div className={styles.inlineFields}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Fit</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. Regular, Slim, Relaxed"
+                            value={productForm.fit}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, fit: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Wash Care</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. Dry Clean Only"
+                            value={productForm.washCare}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, washCare: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Section 3: Pricing & Inventory */}
+                    <div className={styles.formSectionGroup}>
+                      <p className={styles.formSubheading}>Pricing & Inventory</p>
+                      <div className={styles.inlineFields}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Price (INR) *</span>
+                          <input
+                            className={styles.fieldInput}
+                            type="number"
+                            min="0"
+                            placeholder="26900"
+                            value={productForm.price}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, price: e.target.value }))}
+                            required
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>MRP (INR)</span>
+                          <input
+                            className={styles.fieldInput}
+                            type="number"
+                            min="0"
+                            placeholder="26900"
+                            value={productForm.mrp}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, mrp: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+
+                      <div className={styles.inlineFields}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Stock</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="MTO or number"
+                            value={productForm.stock}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, stock: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Sizes</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="XS,S,M,L,XL,XXL"
+                            value={productForm.sizes}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, sizes: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Section 4: Highlights & Policies */}
+                    <div className={styles.formSectionGroup}>
+                      <p className={styles.formSubheading}>Highlights & Policies</p>
+                      <label className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Product Highlights (Description)</span>
+                        <textarea
+                          className={styles.fieldTextarea}
+                          rows={3}
+                          placeholder="Artisanal description and styling notes..."
+                          value={productForm.description}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, description: e.target.value }))}
+                        />
+                      </label>
+
+                      <label className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Shipping Details</span>
+                        <textarea
+                          className={styles.fieldTextarea}
+                          rows={2}
+                          placeholder="Free shipping across India on all orders. Made-To-Order Timeline: 2-3 Weeks."
+                          value={productForm.shippingDetails}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, shippingDetails: e.target.value }))}
+                        />
+                      </label>
+
+                      <label className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Disclaimer</span>
+                        <textarea
+                          className={styles.fieldTextarea}
+                          rows={2}
+                          placeholder="Slight variations in colour, texture, embroidery..."
+                          value={productForm.disclaimer}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, disclaimer: e.target.value }))}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Section 5: Media & Visibility */}
+                    <div className={styles.formSectionGroup}>
+                      <p className={styles.formSubheading}>Media & Visibility</p>
+                      <label className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Image URLs (one per line or comma-separated)</span>
+                        <textarea
+                          className={styles.fieldTextarea}
+                          rows={3}
+                          placeholder="https://... or /images/..."
+                          value={productForm.imageUrls}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, imageUrls: e.target.value }))}
+                        />
+                      </label>
+
+                      <label className={`${styles.fieldGroup} ${styles.uploadField}`}>
+                        <span className={styles.fieldLabel}>{editingProductId ? "Replace Image Files (optional)" : "Upload Image Files"}</span>
+                        <input
+                          key={productFileInputKey}
+                          className={styles.fileInput}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, images: Array.from(e.target.files || []).slice(0, 5) }))}
+                        />
+                        <span className={styles.uploadHint}>
+                          {productForm.images.length
+                            ? `${productForm.images.length}/5 image(s) selected`
+                            : editingProductId
+                            ? "Leave empty to retain current images."
+                            : "Upload up to 5 image files."}
+                        </span>
+                      </label>
+
+                      <div className={styles.inlineFields}>
+                        <label className={`${styles.fieldGroup} ${styles.checkboxGroup}`}>
+                          <span className={styles.fieldLabel}>Visibility</span>
+                          <span className={styles.toggleWrap}>
+                            <input
+                              type="checkbox"
+                              checked={productForm.active}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, active: e.target.checked }))}
+                            />
+                            <span>{productForm.active ? "Active" : "Draft"}</span>
+                          </span>
+                        </label>
+
+                        <label className={`${styles.fieldGroup} ${styles.checkboxGroup}`}>
+                          <span className={styles.fieldLabel}>Featured</span>
+                          <span className={styles.toggleWrap}>
+                            <input
+                              type="checkbox"
+                              checked={productForm.featured}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, featured: e.target.checked }))}
+                            />
+                            <span>{productForm.featured ? "Yes" : "No"}</span>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <button className={`btn ${styles.submitBtn}`} type="submit">
+                      <span>{editingProductId ? "Save Changes" : "Upload Product"}</span>
+                      <span className="btn-arrow">→</span>
+                    </button>
+
+                    {editingProductId ? (
+                      <button type="button" className={styles.ghostBtn} onClick={clearProductForm}>
+                        Cancel Edit
+                      </button>
+                    ) : null}
+
+                    {productStatus ? <p className={styles.successText}>{productStatus}</p> : null}
+                  </form>
+                </aside>
+              </div>
+            </div>
+          ) : null}
 
           {activeSection === "orders" ? <div className={styles.contentGrid}>
             <section className={styles.bannerPanel}>
