@@ -1,0 +1,46 @@
+name: Deploy to Hostinger VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Hostinger via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USERNAME || 'root' }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          port: ${{ secrets.HOSTINGER_PORT || 22 }}
+          script_stop: true
+          script: |
+            echo "=== Starting Heer Ranjha Deployment ==="
+            cd ${{ secrets.HOSTINGER_APP_DIR || '/var/www/heer-ranjha' }}
+            
+            echo "1. Pulling latest commits from GitHub..."
+            git pull origin main
+
+            echo "2. Installing dependencies..."
+            npm install --production=false
+
+            echo "3. Updating database schema with Prisma..."
+            npx prisma generate
+            npx prisma db push --accept-data-loss
+
+            echo "4. Building Next.js production bundle..."
+            npm run build
+
+            echo "5. Restarting Node.js PM2 process..."
+            pm2 reload all || pm2 restart all
+
+            echo "=== Deployment to Hostinger Finished Successfully! ==="

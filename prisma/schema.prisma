@@ -43,30 +43,39 @@ model LoginOtp {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  description String
-  category    String
-  subCategory String
-  collection  String
-  fabric      String
-  price       Int
-  mrp         Int?
-  stock       Int      @default(0)
-  lowStockThreshold Int @default(5)
-  images      String
-  sizeOptions String?
-  sizeCharges String?
-  clothCare   String?
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  sku                String?
+  styleCode          String?
+  name               String
+  description        String
+  category           String
+  subCategory        String
+  collection         String
+  fabric             String
+  color              String?
+  fit                String?
+  setIncludes        String?
+  washCare           String?
+  disclaimer         String?
+  shippingDetails    String?
+  price              Int
+  mrp                Int?
+  stock              Int      @default(0)
+  stockStatus        String?  @default("MTO")
+  lowStockThreshold  Int      @default(5)
+  images             String   @default("[]")
+  sizeOptions        String?
+  sizeCharges        String?
+  clothCare          String?
   termsAndConditions String?
-  featured    Boolean  @default(false)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  items       OrderItem[]
-  cartItems   CartItem[]
-  wishlistItems WishlistItem[]
+  featured           Boolean  @default(false)
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  items              OrderItem[]
+  cartItems          CartItem[]
+  wishlistItems      WishlistItem[]
 }
 
 model CartItem {
