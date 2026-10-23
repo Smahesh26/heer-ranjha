@@ -3,16 +3,24 @@ import Footer from "@/components/Footer";
 import ProductContent from "@/components/product/ProductContent";
 import { notFound } from "next/navigation";
 import { PRODUCTS } from "@/components/shop/shopData";
+import { getAllProducts } from "@/lib/products";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({
+  const all = getAllProducts();
+  const pool = Array.isArray(all) && all.length > 0 ? all : PRODUCTS;
+  return pool.map((p) => ({
     slug: p.slug || p.id,
   }));
 }
 
 function findProductBySlug(slug) {
   const s = String(slug || "").toLowerCase().replace(/^\/+/, "");
-  return PRODUCTS.find((p) => {
+  const all = getAllProducts();
+  const pool = Array.isArray(all) && all.length > 0 ? all : PRODUCTS;
+
+  return pool.find((p) => {
     const pSlug = (p.slug || p.id || "").toLowerCase();
     const pSku = (p.sku || p.styleCode || "").toLowerCase();
     if (pSlug === s || pSku === s) return true;
@@ -55,7 +63,9 @@ export default function ProductPage({ params }) {
     notFound();
   }
 
-  const relatedRecords = PRODUCTS.filter(
+  const all = getAllProducts();
+  const pool = Array.isArray(all) && all.length > 0 ? all : PRODUCTS;
+  const relatedRecords = pool.filter(
     (p) => p.collection === productRecord.collection && p.id !== productRecord.id
   ).slice(0, 4);
 

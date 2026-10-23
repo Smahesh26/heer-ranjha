@@ -19,13 +19,24 @@ const POPULAR_SEARCHES = [
 export default function SearchModal({ isOpen, onClose }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [productList, setProductList] = useState(PRODUCTS);
   const inputRef = useRef(null);
 
-  // Auto-focus input when opened & handle body scroll lock
+  // Auto-focus input when opened & handle body scroll lock & fetch live products
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
       const timer = setTimeout(() => inputRef.current?.focus(), 80);
+
+      fetch("/api/products?active=true")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (Array.isArray(data?.products) && data.products.length > 0) {
+            setProductList(data.products);
+          }
+        })
+        .catch(() => {});
+
       return () => clearTimeout(timer);
     } else {
       document.body.style.overflow = "";
@@ -49,7 +60,7 @@ export default function SearchModal({ isOpen, onClose }) {
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    return PRODUCTS.filter((p) => {
+    return productList.filter((p) => {
       const nameMatch = p.name?.toLowerCase().includes(q);
       const categoryMatch = p.category?.toLowerCase().includes(q);
       const subCatMatch = p.subCategory?.toLowerCase().includes(q);
@@ -67,12 +78,12 @@ export default function SearchModal({ isOpen, onClose }) {
         descMatch
       );
     }).slice(0, 6);
-  }, [query]);
+  }, [query, productList]);
 
   const totalMatchesCount = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return 0;
-    return PRODUCTS.filter((p) => {
+    return productList.filter((p) => {
       return (
         p.name?.toLowerCase().includes(q) ||
         p.category?.toLowerCase().includes(q) ||
@@ -82,7 +93,7 @@ export default function SearchModal({ isOpen, onClose }) {
         p.fabric?.toLowerCase().includes(q)
       );
     }).length;
-  }, [query]);
+  }, [query, productList]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

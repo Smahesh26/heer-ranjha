@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ShopContent from "@/components/shop/ShopContent";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Shop | Heer Ranjha",
   description:

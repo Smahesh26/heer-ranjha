@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./NewArrivals.module.css";
 import { PRODUCTS } from "@/components/shop/shopData";
 
@@ -103,6 +103,22 @@ function ProductCard({ product, index }) {
 
 export default function NewArrivals() {
   const headerRef = useRef(null);
+  const [items, setItems] = useState(() => PRODUCTS.slice(0, 8));
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch("/api/products?active=true")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (isMounted && Array.isArray(data?.products) && data.products.length > 0) {
+          setItems(data.products.slice(0, 8));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -120,8 +136,6 @@ export default function NewArrivals() {
     return () => observer.disconnect();
   }, []);
 
-  const newArrivals = PRODUCTS.slice(0, 8);
-
   return (
     <section id="new-arrivals" className={styles.section}>
       <div className={styles.header} ref={headerRef}>
@@ -138,8 +152,8 @@ export default function NewArrivals() {
 
       {/* Grid */}
       <div className={styles.grid}>
-        {newArrivals.map((product, i) => (
-          <ProductCard key={product.id} product={product} index={i} />
+        {items.map((product, i) => (
+          <ProductCard key={product.id || product.slug || i} product={product} index={i} />
         ))}
       </div>
 
