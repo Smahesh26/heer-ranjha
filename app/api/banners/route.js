@@ -43,9 +43,14 @@ async function normalizeBannerMedia(banners) {
 }
 
 export async function GET() {
-  const banners = await prisma.banner.findMany({ orderBy: [{ position: "asc" }, { createdAt: "desc" }] });
-  const safeBanners = await normalizeBannerMedia(banners);
-  return json({ banners: safeBanners });
+  try {
+    const banners = await prisma.banner.findMany({ orderBy: [{ position: "asc" }, { createdAt: "desc" }] });
+    const safeBanners = await normalizeBannerMedia(banners);
+    return json({ banners: safeBanners });
+  } catch (err) {
+    console.warn("DB offline for banners GET, returning empty array:", err.message);
+    return json({ banners: [] });
+  }
 }
 
 export async function POST(request) {

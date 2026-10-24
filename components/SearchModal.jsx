@@ -1,42 +1,29 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { PRODUCTS, formatPrice } from "@/components/shop/shopData";
+import { PRODUCTS, COLLECTIONS, formatPrice } from "@/components/shop/shopData";
 import styles from "./SearchModal.module.css";
 
-const POPULAR_SEARCHES = [
+const BASE_POPULAR = [
   "Kurta Sets",
   "Sherwanis",
   "Lehengas",
-  "ASAYA",
-  "NAYI LEHER",
-  "GANGA JAMUNI",
-  "ROOMANI",
   "Matka Silk",
   "Bandhgalas",
 ];
 
+const POPULAR_SEARCHES = Array.from(new Set([...COLLECTIONS, ...BASE_POPULAR]));
+
 export default function SearchModal({ isOpen, onClose }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [productList, setProductList] = useState(PRODUCTS);
   const inputRef = useRef(null);
 
-  // Auto-focus input when opened & handle body scroll lock & fetch live products
+  // Auto-focus input when opened & handle body scroll lock
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
       const timer = setTimeout(() => inputRef.current?.focus(), 80);
-
-      fetch("/api/products?active=true")
-        .then((r) => (r.ok ? r.json() : null))
-        .then((data) => {
-          if (Array.isArray(data?.products) && data.products.length > 0) {
-            setProductList(data.products);
-          }
-        })
-        .catch(() => {});
-
       return () => clearTimeout(timer);
     } else {
       document.body.style.overflow = "";
@@ -60,17 +47,15 @@ export default function SearchModal({ isOpen, onClose }) {
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    return productList.filter((p) => {
+    return PRODUCTS.filter((p) => {
       const nameMatch = p.name?.toLowerCase().includes(q);
       const categoryMatch = p.category?.toLowerCase().includes(q);
       const subCatMatch = p.subCategory?.toLowerCase().includes(q);
       const collectionMatch = p.collection?.toLowerCase().includes(q);
-      const colorMatch = p.color?.toLowerCase().includes(q);
       const fabricMatch = p.fabric?.toLowerCase().includes(q);
       const descMatch = p.description?.toLowerCase().includes(q);
       return (
         nameMatch ||
-        colorMatch ||
         categoryMatch ||
         subCatMatch ||
         collectionMatch ||
@@ -78,22 +63,21 @@ export default function SearchModal({ isOpen, onClose }) {
         descMatch
       );
     }).slice(0, 6);
-  }, [query, productList]);
+  }, [query]);
 
   const totalMatchesCount = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return 0;
-    return productList.filter((p) => {
+    return PRODUCTS.filter((p) => {
       return (
         p.name?.toLowerCase().includes(q) ||
         p.category?.toLowerCase().includes(q) ||
         p.subCategory?.toLowerCase().includes(q) ||
         p.collection?.toLowerCase().includes(q) ||
-        p.color?.toLowerCase().includes(q) ||
         p.fabric?.toLowerCase().includes(q)
       );
     }).length;
-  }, [query, productList]);
+  }, [query]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

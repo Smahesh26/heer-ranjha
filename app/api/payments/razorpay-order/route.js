@@ -6,6 +6,8 @@ import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
 import { json, badRequest, unauthorized } from "@/lib/http";
 import { razorpayOrderSchema } from "@/lib/validators";
 
+export const dynamic = "force-dynamic";
+
 function getClient() {
   return new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,

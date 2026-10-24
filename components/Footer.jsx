@@ -1,13 +1,22 @@
 import Image from "next/image";
 import styles from "./Footer.module.css";
+import { COLLECTIONS } from "@/components/shop/shopData";
+
+function getCollectionLinks() {
+  return COLLECTIONS.map((c) => ({
+    label: c
+      .toLowerCase()
+      .split(" ")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" "),
+    href: `/shop?collection=${encodeURIComponent(c)}#shop-layout`,
+  }));
+}
 
 const LINKS = {
-  Collections: [
-    { label: "Nayi Leher", href: "/shop?collection=NAYI+LEHER#shop-layout" },
-    { label: "Asaya", href: "/shop?collection=ASAYA#shop-layout" },
-    { label: "Ganga Jamuni", href: "/shop?collection=GANGA+JAMUNI#shop-layout" },
-    { label: "Roomani", href: "/shop?collection=ROOMANI#shop-layout" },
-  ],
+  get Collections() {
+    return getCollectionLinks();
+  },
   "Men's Wear": [
     { label: "Kurta Sets", href: "/shop?gender=Men&subCategory=Kurta#shop-layout" },
     { label: "Nehru Jackets", href: "/shop?gender=Men&subCategory=Waistcoat#shop-layout" },

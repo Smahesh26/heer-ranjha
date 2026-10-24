@@ -4,6 +4,8 @@ import { json, badRequest } from "@/lib/http";
 import { registerSchema } from "@/lib/validators";
 import { signAuthToken, getAuthCookieName } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request) {
   const payload = await request.json().catch(() => null);
   const parsed = registerSchema.safeParse(payload);

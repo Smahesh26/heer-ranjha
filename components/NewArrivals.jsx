@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./NewArrivals.module.css";
 import { PRODUCTS } from "@/components/shop/shopData";
 
@@ -103,22 +103,6 @@ function ProductCard({ product, index }) {
 
 export default function NewArrivals() {
   const headerRef = useRef(null);
-  const [items, setItems] = useState(() => PRODUCTS.slice(0, 8));
-
-  useEffect(() => {
-    let isMounted = true;
-    fetch("/api/products?active=true")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (isMounted && Array.isArray(data?.products) && data.products.length > 0) {
-          setItems(data.products.slice(0, 8));
-        }
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -136,6 +120,8 @@ export default function NewArrivals() {
     return () => observer.disconnect();
   }, []);
 
+  const newArrivals = PRODUCTS.slice(0, 8);
+
   return (
     <section id="new-arrivals" className={styles.section}>
       <div className={styles.header} ref={headerRef}>
@@ -146,14 +132,14 @@ export default function NewArrivals() {
           <em>our latest collections</em>
         </h2>
         <p className={`${styles.sub} reveal reveal-delay-3`}>
-          Handcrafted ensembles for men and women, drawn from the Nayi Leher, Asaya, and Ganga Jamuni collections.
+          Handcrafted ensembles for men and women, drawn from the Nayi Leher and Asaya collections.
         </p>
       </div>
 
       {/* Grid */}
       <div className={styles.grid}>
-        {items.map((product, i) => (
-          <ProductCard key={product.id || product.slug || i} product={product} index={i} />
+        {newArrivals.map((product, i) => (
+          <ProductCard key={product.id} product={product} index={i} />
         ))}
       </div>
 

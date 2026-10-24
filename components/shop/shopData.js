@@ -24,12 +24,20 @@ export const SUB_CATEGORIES = [
   "Sarees",
 ];
 
-export const COLLECTIONS = [
+const DEFAULT_COLLECTIONS = [
   "ASAYA",
   "NAYI LEHER",
   "GANGA JAMUNI",
   "ROOMANI",
 ];
+
+const derivedCollections = Array.from(
+  new Set(
+    PRODUCTS.map((p) => String(p.collection || "").trim().toUpperCase()).filter(Boolean)
+  )
+);
+
+export const COLLECTIONS = Array.from(new Set([...DEFAULT_COLLECTIONS, ...derivedCollections]));
 
 export const FABRICS = [
   "Matka Silk",

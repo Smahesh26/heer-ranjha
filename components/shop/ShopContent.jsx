@@ -33,27 +33,6 @@ export default function ShopContent() {
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Fetch live products so Excel uploads / dashboard changes reflect immediately
-  useEffect(() => {
-    let isMounted = true;
-    async function loadLiveProducts() {
-      try {
-        const res = await fetch("/api/products?active=true", { cache: "no-store" });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (isMounted && Array.isArray(data?.products) && data.products.length > 0) {
-          setProducts(data.products);
-        }
-      } catch (err) {
-        console.error("Failed to load live products in ShopContent:", err);
-      }
-    }
-    loadLiveProducts();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   const [filters, setFilters] = useState(() => {
     const initialGender = searchParams.get("gender") || searchParams.get("category");
     const initialCollection = searchParams.get("collection");
@@ -103,26 +82,17 @@ export default function ShopContent() {
   const genderFilteredProducts = useMemo(() => {
     let list = products;
     if (filters.gender !== "All") {
-      const g = filters.gender.toLowerCase();
-      list = list.filter((p) => {
-        const cat = String(p.category || "").toLowerCase();
-        if (g === "men") {
-          return cat.includes("men") && !cat.includes("women");
-        } else if (g === "women") {
-          return cat.includes("women");
-        }
-        return true;
-      });
+      const targetCategory = filters.gender === "Men" ? "Men's Wear" : "Women's Wear";
+      list = list.filter((p) => String(p.category || "").toLowerCase() === targetCategory.toLowerCase());
     }
     if (filters.search.trim()) {
       const q = filters.search.toLowerCase();
       list = list.filter(
         (p) =>
-          (p.name || "").toLowerCase().includes(q) ||
-          (p.subCategory || "").toLowerCase().includes(q) ||
-          (p.color && p.color.toLowerCase().includes(q)) ||
-          (p.fabric && p.fabric.toLowerCase().includes(q)) ||
-          (p.collection && p.collection.toLowerCase().includes(q))
+          p.name.toLowerCase().includes(q) ||
+          p.subCategory.toLowerCase().includes(q) ||
+          p.fabric.toLowerCase().includes(q) ||
+          p.collection.toLowerCase().includes(q)
       );
     }
     list = list.filter(
@@ -132,52 +102,28 @@ export default function ShopContent() {
   }, [products, filters.gender, filters.search, filters.minPrice, filters.maxPrice]);
 
   const subCategories = useMemo(() => {
-    const productSubCats = products.map((p) => p.subCategory).filter(Boolean);
-    const available = Array.from(new Set([...SUB_CATEGORIES, ...productSubCats]));
-
     let list = genderFilteredProducts;
     if (filters.collections.length > 0) list = list.filter((p) => filters.collections.includes(p.collection));
     if (filters.fabrics.length > 0) list = list.filter((p) => filters.fabrics.includes(p.fabric));
-    const dynamicValues = [...new Set(list.map((p) => p.subCategory).filter(Boolean))];
-
-    filters.subCategories.forEach((sc) => {
-      if (!dynamicValues.includes(sc)) dynamicValues.push(sc);
-    });
-
-    return dynamicValues.length ? dynamicValues : available;
-  }, [genderFilteredProducts, filters.collections, filters.fabrics, filters.subCategories, products]);
+    const values = [...new Set(list.map((p) => p.subCategory).filter(Boolean))];
+    return values.length ? values : SUB_CATEGORIES;
+  }, [genderFilteredProducts, filters.collections, filters.fabrics]);
 
   const collections = useMemo(() => {
-    const productCollections = products.map((p) => p.collection).filter(Boolean);
-    const available = Array.from(new Set([...COLLECTIONS, ...productCollections]));
-
     let list = genderFilteredProducts;
     if (filters.subCategories.length > 0) list = list.filter((p) => filters.subCategories.includes(p.subCategory));
     if (filters.fabrics.length > 0) list = list.filter((p) => filters.fabrics.includes(p.fabric));
-    const dynamicValues = [...new Set(list.map((p) => p.collection).filter(Boolean))];
-
-    filters.collections.forEach((c) => {
-      if (!dynamicValues.includes(c)) dynamicValues.push(c);
-    });
-
-    return dynamicValues.length ? dynamicValues : available;
-  }, [genderFilteredProducts, filters.subCategories, filters.fabrics, filters.collections, products]);
+    const values = [...new Set(list.map((p) => p.collection).filter(Boolean))];
+    return values.length ? values : COLLECTIONS;
+  }, [genderFilteredProducts, filters.subCategories, filters.fabrics]);
 
   const fabrics = useMemo(() => {
-    const productFabrics = products.map((p) => p.fabric).filter(Boolean);
-    const available = Array.from(new Set([...FABRICS, ...productFabrics]));
-
     let list = genderFilteredProducts;
     if (filters.subCategories.length > 0) list = list.filter((p) => filters.subCategories.includes(p.subCategory));
     if (filters.collections.length > 0) list = list.filter((p) => filters.collections.includes(p.collection));
-    const dynamicValues = [...new Set(list.map((p) => p.fabric).filter(Boolean))];
-
-    filters.fabrics.forEach((f) => {
-      if (!dynamicValues.includes(f)) dynamicValues.push(f);
-    });
-
-    return dynamicValues.length ? dynamicValues : available;
-  }, [genderFilteredProducts, filters.subCategories, filters.collections, filters.fabrics, products]);
+    const values = [...new Set(list.map((p) => p.fabric).filter(Boolean))];
+    return values.length ? values : FABRICS;
+  }, [genderFilteredProducts, filters.subCategories, filters.collections]);
 
   // Derived: filtered + sorted products
   const filteredProducts = useMemo(() => {
@@ -187,25 +133,18 @@ export default function ShopContent() {
       const q = filters.search.toLowerCase();
       list = list.filter(
         (p) =>
-          (p.name || "").toLowerCase().includes(q) ||
-          (p.subCategory || "").toLowerCase().includes(q) ||
-          (p.color && p.color.toLowerCase().includes(q)) ||
-          (p.fabric && p.fabric.toLowerCase().includes(q)) ||
-          (p.collection && p.collection.toLowerCase().includes(q))
+          p.name.toLowerCase().includes(q) ||
+          p.subCategory.toLowerCase().includes(q) ||
+          p.fabric.toLowerCase().includes(q) ||
+          p.collection.toLowerCase().includes(q)
       );
     }
 
     if (filters.gender !== "All") {
-      const g = filters.gender.toLowerCase();
-      list = list.filter((p) => {
-        const cat = String(p.category || "").toLowerCase();
-        if (g === "men") {
-          return cat.includes("men") && !cat.includes("women");
-        } else if (g === "women") {
-          return cat.includes("women");
-        }
-        return true;
-      });
+      const targetCategory = filters.gender === "Men" ? "Men's Wear" : "Women's Wear";
+      list = list.filter(
+        (p) => String(p.category || "").toLowerCase() === targetCategory.toLowerCase()
+      );
     }
 
     if (filters.subCategories.length > 0) {

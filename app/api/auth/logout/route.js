@@ -1,6 +1,8 @@
 import { json } from "@/lib/http";
 import { getAuthCookieName } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function POST() {
   const response = json({ ok: true });
   response.cookies.set(getAuthCookieName(), "", {

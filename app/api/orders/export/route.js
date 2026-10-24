@@ -11,6 +11,7 @@ async function getAuthUser() {
   try {
     const decoded = verifyAuthToken(token);
     if (!decoded?.sub) return null;
+    if (decoded?.role === "ADMIN") return { id: decoded.sub, role: "ADMIN" };
     return prisma.user.findUnique({ where: { id: decoded.sub }, select: { id: true, role: true } });
   } catch {
     return null;
@@ -48,7 +49,14 @@ export async function GET() {
   if (!user) return unauthorized();
   if (user.role !== "ADMIN") return forbidden("Admin access required");
 
-  const orders = await prisma.order.findMany({ orderBy: { createdAt: "desc" } });
+  let orders = [];
+  try {
+    orders = await prisma.order.findMany({ orderBy: { createdAt: "desc" } });
+  } catch (error) {
+    console.warn("Database offline for orders export:", error?.message || error);
+  }
+
   const csv = toCsv(orders);
   return json({ csv, count: orders.length });
 }
+

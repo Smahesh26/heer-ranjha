@@ -1,9 +1,10 @@
-import { redirect } from "next/navigation";
+import AdminLoginPage from "./login/page";
 
 export const metadata = {
   title: "Admin Dashboard | Heer Ranjha",
 };
 
 export default function AdminPage() {
-  redirect("/admin/login");
+  return <AdminLoginPage />;
 }
+

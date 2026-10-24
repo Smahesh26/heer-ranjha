@@ -5,6 +5,8 @@ import { loginSchema } from "@/lib/validators";
 import { signAuthToken, getAuthCookieName } from "@/lib/auth";
 import { sendLoginOtpEmail } from "@/lib/email";
 
+export const dynamic = "force-dynamic";
+
 const OTP_TTL_MS = 5 * 60 * 1000;
 const OTP_RATE_WINDOW_MS = 15 * 60 * 1000;
 const OTP_MAX_REQUESTS_PER_WINDOW = 5;
@@ -32,23 +34,6 @@ export async function POST(request) {
   const passwordOk = await bcrypt.compare(password, user.passwordHash);
   if (!passwordOk) {
     return unauthorized("Invalid email or password");
-  }
-
-  const hasSmtp = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
-  if (!hasSmtp) {
-    const token = signAuthToken({ sub: user.id, role: user.role, email: user.email });
-    const response = json({
-      user: { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl },
-    });
-    const isHttps = request.headers.get("x-forwarded-proto") === "https" || request.url.startsWith("https://");
-    response.cookies.set(getAuthCookieName(), token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: isHttps,
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-    return response;
   }
 
   if (!parsed.data.otp) {
@@ -131,11 +116,10 @@ export async function POST(request) {
   const response = json({
     user: { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl },
   });
-  const isHttps = request.headers.get("x-forwarded-proto") === "https" || request.url.startsWith("https://");
   response.cookies.set(getAuthCookieName(), token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: isHttps,
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });

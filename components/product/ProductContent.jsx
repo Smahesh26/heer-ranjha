@@ -216,10 +216,7 @@ function TabSection({ product }) {
               </p>
             )}
             <ul className={styles.descList}>
-              {product.color && <li>Color: {product.color}</li>}
               {product.fabric && <li>Fabric: {product.fabric}</li>}
-              {product.craft && <li>Craft: {product.craft}</li>}
-              {product.noOfComponents && <li>No. of Components: {product.noOfComponents}</li>}
               {product.setIncludes && <li>Set Includes: {product.setIncludes}</li>}
               {product.washCare && <li>Wash Care: {product.washCare}</li>}
               <li>Country of origin: India</li>
@@ -610,10 +607,7 @@ export default function ProductContent({ product, related }) {
             <div className={styles.metaRow}><dt>SKU / Style Code</dt><dd>{product.sku || product.styleCode || product.id}</dd></div>
             <div className={styles.metaRow}><dt>Category</dt><dd><a href="/shop">{product.subCategory}</a></dd></div>
             <div className={styles.metaRow}><dt>Collection</dt><dd>{product.collection}</dd></div>
-            {product.color && <div className={styles.metaRow}><dt>Color</dt><dd>{product.color}</dd></div>}
             <div className={styles.metaRow}><dt>Fabric</dt><dd>{product.fabric}</dd></div>
-            {product.craft && <div className={styles.metaRow}><dt>Craft</dt><dd>{product.craft}</dd></div>}
-            {product.noOfComponents && <div className={styles.metaRow}><dt>No. of Components</dt><dd>{product.noOfComponents}</dd></div>}
             {product.setIncludes && <div className={styles.metaRow}><dt>Set Includes</dt><dd>{product.setIncludes}</dd></div>}
           </dl>
         </div>

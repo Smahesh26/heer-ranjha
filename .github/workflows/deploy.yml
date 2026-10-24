@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Application
+    name: Deploy to Production VPS
     runs-on: ubuntu-latest
 
     steps:
@@ -24,23 +24,44 @@ jobs:
           port: ${{ secrets.HOSTINGER_PORT || 22 }}
           script_stop: true
           script: |
-            echo "=== Starting Heer Ranjha Deployment ==="
-            cd ${{ secrets.HOSTINGER_APP_DIR || '/var/www/heer-ranjha' }}
+            echo "============================================="
+            echo " Starting Heer Ranjha Automated Deployment "
+            echo "============================================="
+
+            DEPLOY_DIR="${{ secrets.HOSTINGER_APP_DIR || '/var/www/heer-ranjha' }}"
             
-            echo "1. Pulling latest commits from GitHub..."
+            # Ensure target directory exists
+            if [ ! -d "$DEPLOY_DIR/.git" ]; then
+              echo "Target directory $DEPLOY_DIR does not have git initialized. Please clone repository first."
+              exit 1
+            fi
+
+            cd "$DEPLOY_DIR"
+
+            echo "[1/5] Pulling latest code from GitHub main branch..."
+            git reset --hard HEAD
             git pull origin main
 
-            echo "2. Installing dependencies..."
+            echo "[2/5] Installing dependencies..."
             npm install --production=false
 
-            echo "3. Updating database schema with Prisma..."
-            npx prisma generate
-            npx prisma db push --accept-data-loss
+            echo "[3/5] Syncing database schema with Prisma..."
+            if [ -f "prisma/schema.prisma" ]; then
+              npx prisma generate
+              npx prisma db push --accept-data-loss || true
+            fi
 
-            echo "4. Building Next.js production bundle..."
+            echo "[4/5] Building Next.js production bundle..."
             npm run build
 
-            echo "5. Restarting Node.js PM2 process..."
-            pm2 reload all || pm2 restart all
+            echo "[5/5] Reloading PM2 process..."
+            if pm2 describe heer-ranjha > /dev/null 2>&1; then
+              pm2 reload heer-ranjha --update-env
+            else
+              pm2 start ecosystem.config.js
+            fi
+            pm2 save
 
-            echo "=== Deployment to Hostinger Finished Successfully! ==="
+            echo "============================================="
+            echo " Heer Ranjha Deployment Successfully Completed! "
+            echo "============================================="
