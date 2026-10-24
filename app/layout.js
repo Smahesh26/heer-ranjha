@@ -28,6 +28,9 @@ export const metadata = {
       "Where craft meets couture. Hand-embroidered ensembles for men and women.",
     type: "website",
   },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {

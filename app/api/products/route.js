@@ -1,22 +1,9 @@
 import { getAllProducts, createProduct } from "@/lib/product-storage";
 import { json, badRequest, unauthorized } from "@/lib/http";
-import { cookies } from "next/headers";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { getAdminSession } from "@/lib/auth";
 import { uploadProductMedia, sanitizeProductImageUrls } from "@/lib/product-media";
 
 export const dynamic = "force-dynamic";
-
-async function requireAdmin() {
-  const token = cookies().get(getAuthCookieName())?.value;
-  if (!token) return null;
-
-  try {
-    const decoded = verifyAuthToken(token);
-    return decoded.role === "ADMIN" ? decoded : null;
-  } catch {
-    return null;
-  }
-}
 
 export async function GET(request) {
   const url = new URL(request.url);
@@ -44,7 +31,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const admin = await requireAdmin();
+  const admin = getAdminSession(request);
   if (!admin) {
     return unauthorized("Admin authorization required to create products");
   }

@@ -103,6 +103,20 @@ function getMediaAcceptHint(file) {
   return `Selected file: ${file.name}`;
 }
 
+function getStoredAdminToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("heer_ranjha_admin_token");
+}
+
+function adminFetch(url, options = {}) {
+  const token = getStoredAdminToken();
+  const headers = new Headers(options.headers || {});
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  return fetch(url, { ...options, headers, credentials: "include" });
+}
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const [loginEmail, setLoginEmail] = useState("");
@@ -282,7 +296,7 @@ export default function AdminLoginPage() {
   }, [userList]);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    adminFetch("/api/auth/me")
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (data?.user?.role === "ADMIN") {
@@ -315,7 +329,7 @@ export default function AdminLoginPage() {
   async function loadBanners() {
     setRefreshingBanners(true);
     try {
-      const response = await fetch("/api/banners", { cache: "no-store" });
+      const response = await adminFetch("/api/banners", { cache: "no-store" });
       const data = await response.json();
       setBannerList(data.banners || []);
     } catch {
@@ -328,7 +342,7 @@ export default function AdminLoginPage() {
   async function loadProducts() {
     setRefreshingProducts(true);
     try {
-      const response = await fetch("/api/products", { cache: "no-store" });
+      const response = await adminFetch("/api/products", { cache: "no-store" });
       const data = await response.json();
       setProductList(data.products || []);
     } catch {
@@ -346,7 +360,7 @@ export default function AdminLoginPage() {
       if (orderFilterPayment) params.set("paymentStatus", orderFilterPayment);
       if (orderSearch.trim()) params.set("q", orderSearch.trim());
 
-      const response = await fetch(`/api/orders?${params.toString()}`, { cache: "no-store" });
+      const response = await adminFetch(`/api/orders?${params.toString()}`, { cache: "no-store" });
       const data = await response.json();
       setOrderList(data.orders || []);
     } catch {
@@ -361,7 +375,7 @@ export default function AdminLoginPage() {
     try {
       const params = new URLSearchParams();
       if (userSearch.trim()) params.set("q", userSearch.trim());
-      const response = await fetch(`/api/admin/users?${params.toString()}`, { cache: "no-store" });
+      const response = await adminFetch(`/api/admin/users?${params.toString()}`, { cache: "no-store" });
       const data = await response.json();
       setUserList(data.users || []);
     } catch {
@@ -389,6 +403,10 @@ export default function AdminLoginPage() {
         throw new Error(data?.error || "Unable to sign in");
       }
 
+      if (data?.token && typeof window !== "undefined") {
+        localStorage.setItem("heer_ranjha_admin_token", data.token);
+      }
+
       setUser(data.user);
       setLoginSuccess("Admin login successful.");
       router.refresh();
@@ -400,7 +418,10 @@ export default function AdminLoginPage() {
   }
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("heer_ranjha_admin_token");
+    }
+    await adminFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     setUser(null);
     setBannerList([]);
     setEditingBannerId(null);
@@ -429,7 +450,7 @@ export default function AdminLoginPage() {
       formData.append("preview", "true");
       if (excelDefaultCollection) formData.append("defaultCollection", excelDefaultCollection);
 
-      const res = await fetch("/api/admin/upload-sheet", {
+      const res = await adminFetch("/api/admin/upload-sheet", {
         method: "POST",
         body: formData,
       });
@@ -457,7 +478,7 @@ export default function AdminLoginPage() {
       formData.append("mode", excelMode);
       if (excelDefaultCollection) formData.append("defaultCollection", excelDefaultCollection);
 
-      const res = await fetch("/api/admin/upload-sheet", {
+      const res = await adminFetch("/api/admin/upload-sheet", {
         method: "POST",
         body: formData,
       });
@@ -573,7 +594,7 @@ export default function AdminLoginPage() {
           formData.append("images", file);
         }
 
-        res = await fetch(isEditing ? `/api/products/${editingProductId}` : "/api/products", {
+        res = await adminFetch(isEditing ? `/api/products/${editingProductId}` : "/api/products", {
           method: isEditing ? "PATCH" : "POST",
           body: formData,
         });
@@ -600,7 +621,7 @@ export default function AdminLoginPage() {
           images: allUrls,
         };
 
-        res = await fetch(isEditing ? `/api/products/${editingProductId}` : "/api/products", {
+        res = await adminFetch(isEditing ? `/api/products/${editingProductId}` : "/api/products", {
           method: isEditing ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -629,7 +650,7 @@ export default function AdminLoginPage() {
     );
 
     try {
-      const res = await fetch(`/api/products/${product.id}`, {
+      const res = await adminFetch(`/api/products/${product.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ active: newActive }),
@@ -648,7 +669,7 @@ export default function AdminLoginPage() {
     setDeletingProductId(p.id);
 
     try {
-      const res = await fetch(`/api/products/${p.id}`, { method: "DELETE" });
+      const res = await adminFetch(`/api/products/${p.id}`, { method: "DELETE" });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data?.error || "Delete failed");
@@ -670,7 +691,7 @@ export default function AdminLoginPage() {
 
     setProductStatus(`Deleting ${ids.length} products...`);
     for (const id of ids) {
-      await fetch(`/api/products/${id}`, { method: "DELETE" }).catch(() => {});
+      await adminFetch(`/api/products/${id}`, { method: "DELETE" }).catch(() => {});
     }
     setSelectedProductIds(new Set());
     await loadProducts();
@@ -681,7 +702,7 @@ export default function AdminLoginPage() {
     if (!selectedProductIds.size) return;
     const ids = Array.from(selectedProductIds);
     for (const id of ids) {
-      await fetch(`/api/products/${id}`, {
+      await adminFetch(`/api/products/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ active }),
@@ -738,7 +759,7 @@ export default function AdminLoginPage() {
 
     try {
       const isEditing = Boolean(editingBannerId);
-      const response = await fetch(isEditing ? `/api/banners/${editingBannerId}` : "/api/banners", {
+      const response = await adminFetch(isEditing ? `/api/banners/${editingBannerId}` : "/api/banners", {
         method: isEditing ? "PATCH" : "POST",
         body: formData,
       });
@@ -779,7 +800,7 @@ export default function AdminLoginPage() {
     setUploadStatus("");
 
     try {
-      const response = await fetch(`/api/banners/${banner.id}`, { method: "DELETE" });
+      const response = await adminFetch(`/api/banners/${banner.id}`, { method: "DELETE" });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         throw new Error(data?.error || "Delete failed");

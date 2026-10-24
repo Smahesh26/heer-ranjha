@@ -1,5 +1,4 @@
-import { cookies } from "next/headers";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { getAdminSession } from "@/lib/auth";
 import { json, badRequest, unauthorized } from "@/lib/http";
 import { parseExcelBuffer } from "@/lib/excel-parser";
 import {
@@ -10,20 +9,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
-async function requireAdmin() {
-  const token = cookies().get(getAuthCookieName())?.value;
-  if (!token) return null;
-
-  try {
-    const decoded = verifyAuthToken(token);
-    return decoded.role === "ADMIN" ? decoded : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function POST(request) {
-  const admin = await requireAdmin();
+  const admin = getAdminSession(request);
   if (!admin) {
     return unauthorized("Admin authorization required to upload sheets");
   }

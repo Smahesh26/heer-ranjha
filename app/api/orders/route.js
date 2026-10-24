@@ -1,6 +1,5 @@
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { extractAuthToken, verifyAuthToken } from "@/lib/auth";
 import { json, badRequest, forbidden, unauthorized } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
@@ -27,26 +26,28 @@ function buildReservationMap(items) {
   return map;
 }
 
-async function getAuthUser() {
-  const token = cookies().get(getAuthCookieName())?.value;
+async function getAuthUser(request) {
+  const token = extractAuthToken(request);
   if (!token) return null;
 
   try {
     const decoded = verifyAuthToken(token);
-    if (!decoded?.sub) return null;
+    if (!decoded) return null;
 
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub },
-        select: { id: true, role: true, name: true, email: true },
-      });
-      if (user) return user;
-    } catch {
-      // DB offline
+    if (decoded.sub) {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.sub },
+          select: { id: true, role: true, name: true, email: true },
+        });
+        if (user) return user;
+      } catch {
+        // DB offline
+      }
     }
 
-    if (decoded.role === "ADMIN") {
-      return { id: decoded.sub, role: "ADMIN", name: "Admin", email: decoded.email || "admin@heerranjha.com" };
+    if (decoded.role === "ADMIN" || decoded.email === "admin@heerranjha.com") {
+      return { id: decoded.sub || "admin-id", role: "ADMIN", name: "Admin", email: decoded.email || "admin@heerranjha.com" };
     }
 
     return null;
@@ -56,7 +57,7 @@ async function getAuthUser() {
 }
 
 export async function GET(request) {
-  const user = await getAuthUser();
+  const user = await getAuthUser(request);
   if (!user) return unauthorized();
 
   const { searchParams } = new URL(request.url);
@@ -106,7 +107,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const authUser = await getAuthUser();
+  const authUser = await getAuthUser(request);
   if (!authUser) return unauthorized();
 
   const payload = await request.json().catch(() => null);

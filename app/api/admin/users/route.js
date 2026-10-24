@@ -1,38 +1,41 @@
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { extractAuthToken, verifyAuthToken } from "@/lib/auth";
 import { forbidden, json, unauthorized } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
 
-async function getAuthUser() {
-  const token = cookies().get(getAuthCookieName())?.value;
+async function getAuthUser(request) {
+  const token = extractAuthToken(request);
   if (!token) return null;
 
   try {
     const decoded = verifyAuthToken(token);
-    if (!decoded?.sub) return null;
+    if (!decoded) return null;
 
-    if (decoded?.role === "ADMIN") {
-      return { id: decoded.sub, role: "ADMIN", email: decoded.email || "admin@heerranjha.com" };
+    if (decoded.role === "ADMIN" || decoded.email === "admin@heerranjha.com") {
+      return { id: decoded.sub || "admin-id", role: "ADMIN", email: decoded.email || "admin@heerranjha.com" };
     }
 
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub },
-        select: { id: true, role: true },
-      });
-      return user || { id: decoded.sub, role: decoded.role || "USER" };
-    } catch {
-      return { id: decoded.sub, role: decoded.role || "ADMIN" };
+    if (decoded.sub) {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.sub },
+          select: { id: true, role: true },
+        });
+        return user || { id: decoded.sub, role: decoded.role || "USER" };
+      } catch {
+        return { id: decoded.sub, role: decoded.role || "ADMIN" };
+      }
     }
+
+    return null;
   } catch {
     return null;
   }
 }
 
 export async function GET(request) {
-  const authUser = await getAuthUser();
+  const authUser = await getAuthUser(request);
   if (!authUser) return unauthorized();
   if (authUser.role !== "ADMIN") return forbidden("Admin access required");
 

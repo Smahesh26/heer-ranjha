@@ -1,21 +1,7 @@
-import { cookies } from "next/headers";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
-import { json, unauthorized, badRequest } from "@/lib/http";
+import { json } from "@/lib/http";
 import { getAllCollections, readProductsFromFile } from "@/lib/product-storage";
 
 export const dynamic = "force-dynamic";
-
-async function requireAdmin() {
-  const token = cookies().get(getAuthCookieName())?.value;
-  if (!token) return null;
-
-  try {
-    const decoded = verifyAuthToken(token);
-    return decoded.role === "ADMIN" ? decoded : null;
-  } catch {
-    return null;
-  }
-}
 
 export async function GET() {
   const collections = getAllCollections();

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { json, badRequest, unauthorized } from "@/lib/http";
 import { loginSchema } from "@/lib/validators";
-import { signAuthToken, getAuthCookieName } from "@/lib/auth";
+import { signAuthToken, getAuthCookieName, getAuthCookieOptions } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -69,14 +69,8 @@ export async function POST(request) {
     email: authenticatedUser.email,
   });
 
-  const response = json({ user: authenticatedUser });
-  response.cookies.set(getAuthCookieName(), token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
+  const response = json({ user: authenticatedUser, token });
+  response.cookies.set(getAuthCookieName(), token, getAuthCookieOptions(request));
 
   return response;
 }
