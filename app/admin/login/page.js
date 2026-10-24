@@ -861,9 +861,9 @@ export default function AdminLoginPage() {
             {loginError ? <p className={styles.errorText}>{loginError}</p> : null}
             {loginSuccess ? <p className={styles.successText}>{loginSuccess}</p> : null}
 
-            <button className="btn btn-ivory" type="submit" disabled={loading} style={{ width: "100%", justifyContent: "center" }}>
-              <span>{loading ? "Signing In..." : "Log In to Console"}</span>
-              <span className="btn-arrow">→</span>
+            <button className={`btn btn-dark ${styles.loginSubmitBtn}`} type="submit" disabled={loading} style={{ width: "100%", justifyContent: "center" }}>
+              <span style={{ color: "var(--charcoal, #1A1512)" }}>{loading ? "Signing In..." : "Log In to Console"}</span>
+              <span className="btn-arrow" style={{ color: "var(--charcoal, #1A1512)" }}>→</span>
             </button>
 
             <div className={styles.demoLoginNote}>
@@ -1143,7 +1143,7 @@ export default function AdminLoginPage() {
                         ? `Selected file: ${excelFile.name} (${(excelFile.size / 1024).toFixed(1)} KB)`
                         : "Click here or drop your .xlsx catalogue file. Supports Google Drive image links and multiple collections."}
                     </p>
-                    <button type="button" className="btn btn-ivory" style={{ pointerEvents: "none", marginTop: "0.25rem" }}>
+                    <button type="button" className="btn btn-dark" style={{ pointerEvents: "none", marginTop: "0.25rem" }}>
                       <span>Browse File</span>
                     </button>
                   </div>
@@ -1180,7 +1180,7 @@ export default function AdminLoginPage() {
                     <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem" }}>
                       <button
                         type="button"
-                        className="btn btn-ivory"
+                        className="btn btn-dark"
                         disabled={!excelFile || excelLoading}
                         onClick={handleExcelPreview}
                         style={{ flex: 1, justifyContent: "center" }}
@@ -1229,7 +1229,7 @@ export default function AdminLoginPage() {
                       </div>
                       <button
                         type="button"
-                        className="btn btn-ivory"
+                        className="btn btn-dark"
                         disabled={excelLoading}
                         onClick={handleExcelImport}
                       >
@@ -1355,7 +1355,7 @@ export default function AdminLoginPage() {
                   <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
                     <button
                       type="button"
-                      className="btn btn-ivory"
+                      className="btn btn-dark"
                       onClick={openCreateProductModal}
                       style={{ padding: "0.65rem 1.35rem" }}
                     >
@@ -1721,7 +1721,7 @@ export default function AdminLoginPage() {
                     <p className={styles.placeholderCopy}>Try resetting your search or collection filter, or add a new piece.</p>
                     <button
                       type="button"
-                      className="btn btn-ivory"
+                      className="btn btn-dark"
                       style={{ marginTop: "1rem" }}
                       onClick={openCreateProductModal}
                     >
@@ -2329,7 +2329,7 @@ export default function AdminLoginPage() {
                 <button type="button" className={styles.ghostBtn} onClick={closeProductModal}>
                   Cancel
                 </button>
-                <button className="btn btn-ivory" type="submit" disabled={savingProduct}>
+                <button className="btn btn-dark" type="submit" disabled={savingProduct}>
                   <span>{savingProduct ? "Saving..." : editingProductId ? "Save Changes" : "Create Piece"}</span>
                   <span className="btn-arrow">→</span>
                 </button>

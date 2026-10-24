@@ -77,6 +77,42 @@
   margin-bottom: 1.5rem;
 }
 
+.loginSubmitBtn {
+  width: 100%;
+  justify-content: center;
+  border: 1.5px solid var(--charcoal) !important;
+  color: var(--charcoal) !important;
+  background: transparent;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.loginSubmitBtn span {
+  color: var(--charcoal) !important;
+  transition: color 0.25s ease;
+}
+
+.loginSubmitBtn .btn-arrow {
+  color: var(--charcoal) !important;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.loginSubmitBtn:hover {
+  background: var(--charcoal) !important;
+  border-color: var(--charcoal) !important;
+  color: var(--warm-white) !important;
+}
+
+.loginSubmitBtn:hover span,
+.loginSubmitBtn:hover .btn-arrow {
+  color: var(--warm-white) !important;
+}
+
+
 .loginHighlights {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
