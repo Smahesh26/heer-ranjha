@@ -31,13 +31,16 @@ const DEFAULT_COLLECTIONS = [
   "ROOMANI",
 ];
 
-const derivedCollections = Array.from(
+const activeDerivedCollections = Array.from(
   new Set(
-    PRODUCTS.map((p) => String(p.collection || "").trim().toUpperCase()).filter(Boolean)
+    PRODUCTS.filter((p) => p.active !== false)
+      .map((p) => String(p.collection || "").trim().toUpperCase())
+      .filter(Boolean)
   )
 );
 
-export const COLLECTIONS = Array.from(new Set([...DEFAULT_COLLECTIONS, ...derivedCollections]));
+export const COLLECTIONS =
+  activeDerivedCollections.length > 0 ? activeDerivedCollections : DEFAULT_COLLECTIONS;
 
 export const FABRICS = [
   "Matka Silk",

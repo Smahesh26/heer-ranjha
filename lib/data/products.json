@@ -1,37 +1,5 @@
 [
   {
-    "id": "royal-gold-hand-embroidered-kurta",
-    "name": "Royal Gold Hand Embroidered Kurta",
-    "slug": "royal-gold-hand-embroidered-kurta",
-    "sku": "HKM-401-GOLD",
-    "styleCode": "HKM-401-GOLD",
-    "collection": "RETRO",
-    "category": "Men's Wear",
-    "subCategory": "Kurta",
-    "setIncludes": "1 Kurta",
-    "fabric": "Matka Silk",
-    "washCare": "Dry Clean Only",
-    "description": "Handcrafted in luminous gold textured matka silk with kantha-inspired thread embroidery across the placket and collar. Ideal for celebrations and weddings.",
-    "price": 24500,
-    "mrp": 24500,
-    "fit": "Regular",
-    "disclaimer": "Slight variations in colour, texture, embroidery and finish may occur due to handcrafted nature.",
-    "shippingDetails": "Free shipping across India on all orders. Made-To-Order timeline: 2-3 weeks.",
-    "stock": "MTO",
-    "active": true,
-    "images": [
-      "https://lh3.googleusercontent.com/d/1wiW9IHx5HEYyh2rpOix_hM3_BjWlvG_8",
-      "https://lh3.googleusercontent.com/d/1JEg_ArkdaeEJEkDY0pCa4jvM0j05jspW"
-    ],
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
-    "createdAt": "2026-10-24T06:08:17.535Z"
-  },
-  {
     "id": "black-hand-embroidered-kurta",
     "name": "Black Hand Embroidered Kurta",
     "slug": "black-hand-embroidered-kurta",

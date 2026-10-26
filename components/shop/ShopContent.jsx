@@ -33,6 +33,27 @@ export default function ShopContent() {
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    let active = true;
+    async function loadLiveCatalogue() {
+      try {
+        const res = await fetch("/api/products?active=true", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (active && Array.isArray(data?.products)) {
+            setProducts(data.products);
+          }
+        }
+      } catch {
+        // fallback to initial PRODUCTS
+      }
+    }
+    loadLiveCatalogue();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const [filters, setFilters] = useState(() => {
     const initialGender = searchParams.get("gender") || searchParams.get("category");
     const initialCollection = searchParams.get("collection");
@@ -101,6 +122,17 @@ export default function ShopContent() {
     return list;
   }, [products, filters.gender, filters.search, filters.minPrice, filters.maxPrice]);
 
+  const allAvailableCollections = useMemo(() => {
+    return Array.from(
+      new Set(
+        products
+          .filter((p) => p.active !== false)
+          .map((p) => String(p.collection || "").trim().toUpperCase())
+          .filter(Boolean)
+      )
+    );
+  }, [products]);
+
   const subCategories = useMemo(() => {
     let list = genderFilteredProducts;
     if (filters.collections.length > 0) list = list.filter((p) => filters.collections.includes(p.collection));
@@ -113,9 +145,9 @@ export default function ShopContent() {
     let list = genderFilteredProducts;
     if (filters.subCategories.length > 0) list = list.filter((p) => filters.subCategories.includes(p.subCategory));
     if (filters.fabrics.length > 0) list = list.filter((p) => filters.fabrics.includes(p.fabric));
-    const values = [...new Set(list.map((p) => p.collection).filter(Boolean))];
-    return values.length ? values : COLLECTIONS;
-  }, [genderFilteredProducts, filters.subCategories, filters.fabrics]);
+    const values = [...new Set(list.map((p) => String(p.collection || "").trim().toUpperCase()).filter(Boolean))];
+    return values.length ? values : allAvailableCollections;
+  }, [genderFilteredProducts, filters.subCategories, filters.fabrics, allAvailableCollections]);
 
   const fabrics = useMemo(() => {
     let list = genderFilteredProducts;

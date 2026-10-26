@@ -698,6 +698,35 @@ export default function AdminLoginPage() {
     setProductStatus(`✓ Deleted ${ids.length} products.`);
   }
 
+  async function handleDeleteCollection(colName, count) {
+    if (
+      !window.confirm(
+        `Permanently delete the entire "${colName}" collection and all its ${count} piece(s)? This will completely remove this collection from the website.`
+      )
+    ) {
+      return;
+    }
+
+    setProductStatus(`Deleting collection "${colName}"...`);
+    try {
+      const res = await adminFetch(`/api/admin/collections?name=${encodeURIComponent(colName)}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to delete collection");
+      }
+      if (productCollectionFilter && productCollectionFilter.trim().toUpperCase() === colName.trim().toUpperCase()) {
+        setProductCollectionFilter("");
+      }
+      setProductStatus(`✓ Collection "${colName}" and ${data.deletedCount} piece(s) permanently deleted.`);
+      await loadProducts();
+    } catch (err) {
+      setProductStatus("Error: " + err.message);
+    }
+  }
+
+
   async function handleBatchSetActive(active) {
     if (!selectedProductIds.size) return;
     const ids = Array.from(selectedProductIds);
@@ -1330,7 +1359,7 @@ export default function AdminLoginPage() {
                       <div className={styles.collectionCardBody}>
                         <h4 className={styles.collectionCardTitle}>{col.name}</h4>
                         <p className={styles.collectionCardPieces}>{col.count} piece{col.count !== 1 ? "s" : ""} in catalogue</p>
-                        <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+                        <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
                           <a
                             href={`/shop?collection=${encodeURIComponent(col.name)}#shop-layout`}
                             target="_blank"
@@ -1348,6 +1377,15 @@ export default function AdminLoginPage() {
                             }}
                           >
                             Filter Products
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.dangerBtn}
+                            style={{ fontSize: "0.78rem", padding: "0.4rem 0.75rem", background: "#b71c1c", color: "#fff", borderColor: "#b71c1c" }}
+                            onClick={() => handleDeleteCollection(col.name, col.count)}
+                            title={`Delete all ${col.count} products in ${col.name}`}
+                          >
+                            🗑️ Delete Collection
                           </button>
                         </div>
                       </div>

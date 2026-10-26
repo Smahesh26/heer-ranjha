@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import styles from "./Collections.module.css";
 
-import { PRODUCTS, COLLECTIONS as ALL_COLLECTIONS } from "@/components/shop/shopData";
+import { PRODUCTS } from "@/components/shop/shopData";
 
 const BASE_COLLECTIONS = [
   {
@@ -63,17 +63,48 @@ const BASE_COLLECTIONS = [
   },
 ];
 
-function getCombinedCollections() {
-  const list = [...BASE_COLLECTIONS];
-  const existingNames = new Set(BASE_COLLECTIONS.map((c) => c.name.toUpperCase()));
+function getCombinedCollections(currentProducts = PRODUCTS) {
+  const activeProducts = currentProducts.filter((p) => p.active !== false);
 
-  ALL_COLLECTIONS.forEach((colName, idx) => {
-    const upper = colName.toUpperCase();
-    if (!existingNames.has(upper)) {
-      const colProducts = PRODUCTS.filter((p) => String(p.collection || "").toUpperCase() === upper);
-      const firstImage = colProducts.find((p) => Array.isArray(p.images) && p.images[0])?.images?.[0] || "/images/products/azure-blue-hand-embroidered-kurta-1.webp";
-      const sampleDesc = colProducts[0]?.description || `Discover the exclusive ${colName} collection handcrafted with timeless heritage techniques and refined Indian silhouettes.`;
-      const uniqueFabrics = Array.from(new Set(colProducts.map((p) => p.fabric).filter(Boolean))).slice(0, 3).join(" · ") || "Hand Embroidery · Pure Silk";
+  // Group active products by collection name
+  const colProductsMap = new Map();
+  for (const p of activeProducts) {
+    const colName = String(p.collection || "").trim().toUpperCase();
+    if (!colName) continue;
+    if (!colProductsMap.has(colName)) {
+      colProductsMap.set(colName, []);
+    }
+    colProductsMap.get(colName).push(p);
+  }
+
+  const list = [];
+  const processedNames = new Set();
+
+  // 1. Include base collections ONLY IF they have at least 1 product
+  for (const baseCol of BASE_COLLECTIONS) {
+    const upper = baseCol.name.toUpperCase();
+    const items = colProductsMap.get(upper) || [];
+    if (items.length > 0) {
+      list.push({
+        ...baseCol,
+        reverse: list.length % 2 === 1,
+      });
+      processedNames.add(upper);
+    }
+  }
+
+  // 2. Include any dynamic / custom collections ONLY IF they have at least 1 product
+  colProductsMap.forEach((items, colName) => {
+    if (!processedNames.has(colName) && items.length > 0) {
+      const firstImage =
+        items.find((p) => Array.isArray(p.images) && p.images[0])?.images?.[0] ||
+        "/images/products/azure-blue-hand-embroidered-kurta-1.webp";
+      const sampleDesc =
+        items[0]?.description ||
+        `Discover the exclusive ${colName} collection handcrafted with timeless heritage techniques and refined Indian silhouettes.`;
+      const uniqueFabrics =
+        Array.from(new Set(items.map((p) => p.fabric).filter(Boolean))).slice(0, 3).join(" · ") ||
+        "Hand Embroidery · Pure Silk";
 
       list.push({
         id: colName.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
@@ -84,12 +115,12 @@ function getCombinedCollections() {
         highlight: uniqueFabrics,
         cta: `Explore ${colName}`,
         ctaHref: `/shop?collection=${encodeURIComponent(colName)}#shop-layout`,
-        reverse: (BASE_COLLECTIONS.length + idx) % 2 === 1,
+        reverse: list.length % 2 === 1,
         accent: "#C9A96E",
         image: firstImage,
         objectPosition: "50% 15%",
       });
-      existingNames.add(upper);
+      processedNames.add(colName);
     }
   });
 
@@ -169,7 +200,32 @@ function CollectionBlock({ col }) {
 }
 
 export default function Collections() {
-  const collectionsList = getCombinedCollections();
+  const [productsList, setProductsList] = useState(PRODUCTS);
+
+  useEffect(() => {
+    let active = true;
+    async function loadLiveProducts() {
+      try {
+        const res = await fetch("/api/products?active=true", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (active && Array.isArray(data?.products)) {
+            setProductsList(data.products);
+          }
+        }
+      } catch {
+        // fallback to initial
+      }
+    }
+    loadLiveProducts();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const collectionsList = useMemo(() => getCombinedCollections(productsList), [productsList]);
+
+  if (collectionsList.length === 0) return null;
 
   return (
     <section id="collections" className={styles.section}>
@@ -191,3 +247,4 @@ export default function Collections() {
     </section>
   );
 }
+
