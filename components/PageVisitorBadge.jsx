@@ -66,7 +66,7 @@ export default function PageVisitorBadge() {
         </svg>
       </span>
       <span className={styles.viewCount}>
-        {count.toLocaleString("en-IN")} people saw this page
+        {count === 1 ? "1 person saw this page" : `${count.toLocaleString("en-IN")} people saw this page`}
       </span>
     </div>
   );

@@ -8,12 +8,12 @@ export async function GET(request) {
   const pathParam = url.searchParams.get("path");
 
   if (!pathParam) {
-    const all = getAllPageViews();
+    const all = await getAllPageViews();
     return json(all);
   }
 
-  const views = getPageViews(pathParam);
-  const all = getAllPageViews();
+  const views = await getPageViews(pathParam);
+  const all = await getAllPageViews();
 
   return json({
     path: pathParam,
@@ -28,8 +28,8 @@ export async function POST(request) {
     const rawPath = body.path || "/";
     const shouldIncrement = body.increment !== false;
 
-    const views = shouldIncrement ? incrementPageViews(rawPath) : getPageViews(rawPath);
-    const all = getAllPageViews();
+    const views = shouldIncrement ? await incrementPageViews(rawPath) : await getPageViews(rawPath);
+    const all = await getAllPageViews();
 
     return json({
       path: rawPath,
@@ -38,6 +38,6 @@ export async function POST(request) {
     });
   } catch (err) {
     console.error("Error in views route:", err);
-    return json({ path: "/", views: 1, totalViews: 1 });
+    return json({ path: "/", views: 0, totalViews: 0 });
   }
 }
