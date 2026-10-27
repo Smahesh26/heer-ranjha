@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: Deploy to Production VPS
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Checkout Code
