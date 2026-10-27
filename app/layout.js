@@ -1,4 +1,5 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ScrollObserver from "../components/ScrollObserver";
 const cormorant = Cormorant_Garamond({
@@ -36,6 +37,23 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable}`}>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-44NJQWNPXC"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-44NJQWNPXC');
+          `}
+        </Script>
+      </head>
       <body>
         <ScrollObserver />
         {children}
@@ -43,3 +61,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
