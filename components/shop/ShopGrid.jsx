@@ -3,6 +3,24 @@ import { useState } from "react";
 import { formatPrice } from "./shopData";
 import styles from "./shop.module.css";
 
+function resolveImageUrl(url) {
+  if (!url || typeof url !== "string") return "";
+  const trimmed = url.trim();
+  const dMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (dMatch && dMatch[1]) return `https://lh3.googleusercontent.com/d/${dMatch[1]}`;
+  const idMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+  const openMatch = trimmed.match(/\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (openMatch && openMatch[1]) return `https://lh3.googleusercontent.com/d/${openMatch[1]}`;
+  return trimmed;
+}
+
+function extractDriveId(url) {
+  if (!url || typeof url !== "string") return null;
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : null;
+}
+
 // ── Product Card ──────────────────────────────────────────────────────────────
 function ProductCard({ product }) {
   const [wished, setWished] = useState(false);
@@ -12,7 +30,11 @@ function ProductCard({ product }) {
     .toLowerCase()
     .replace(/^\/+/, "");
 
-  const previewImage = Array.isArray(product.images) ? product.images[0] : null;
+  const rawImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
+  const initialImage = resolveImageUrl(rawImage);
+  const [imgSrc, setImgSrc] = useState(initialImage);
+  const [imgFailed, setImgFailed] = useState(!initialImage);
+
   const badge = product.stock <= 0 ? "Sold Out" : product.featured ? "New" : null;
   const detailText = product.detail || product.description || "";
   const productHref = `/product/${normalizedSlug}`;
@@ -27,6 +49,17 @@ function ProductCard({ product }) {
     window.open(productHref, "_blank", "noopener,noreferrer");
   };
 
+  const handleImageError = () => {
+    if (imgSrc && (imgSrc.includes("googleusercontent.com") || imgSrc.includes("drive.google.com"))) {
+      const fileId = extractDriveId(imgSrc);
+      if (fileId && !imgSrc.includes("/api/media-proxy")) {
+        setImgSrc(`/api/media-proxy?id=${fileId}`);
+        return;
+      }
+    }
+    setImgFailed(true);
+  };
+
   return (
     <article className={styles.card} onClick={handleCardClick}>
       {/* Image area */}
@@ -38,8 +71,14 @@ function ProductCard({ product }) {
           className={styles.cardImageLink}
           aria-label={`View ${product.name}`}
         >
-          {previewImage ? (
-            <img className={styles.cardImage} src={previewImage} alt={product.name} loading="lazy" />
+          {!imgFailed && imgSrc ? (
+            <img
+              className={styles.cardImage}
+              src={imgSrc}
+              alt={product.name}
+              loading="lazy"
+              onError={handleImageError}
+            />
           ) : (
             <div className={styles.cardBg} style={bgStyle} />
           )}

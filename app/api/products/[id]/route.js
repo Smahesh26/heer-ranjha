@@ -59,6 +59,10 @@ export async function PATCH(request, { params }) {
     updates = await request.json().catch(() => ({}));
   }
 
+  if (updates.images) {
+    updates.images = sanitizeProductImageUrls(updates.images);
+  }
+
   try {
     const updated = updateProduct(existing.id, updates);
     return json({ product: updated });

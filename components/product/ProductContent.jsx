@@ -62,8 +62,28 @@ function StarRating({ rating, max = 5, size = 14 }) {
   );
 }
 
+function resolveImageUrl(url) {
+  if (!url || typeof url !== "string") return "";
+  const trimmed = url.trim();
+  const dMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (dMatch && dMatch[1]) return `https://lh3.googleusercontent.com/d/${dMatch[1]}`;
+  const idMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+  const openMatch = trimmed.match(/\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (openMatch && openMatch[1]) return `https://lh3.googleusercontent.com/d/${openMatch[1]}`;
+  return trimmed;
+}
+
+function extractDriveId(url) {
+  if (!url || typeof url !== "string") return null;
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : null;
+}
+
 function GalleryView({ product, activeIdx, onSelect }) {
-  const uploadedImages = Array.isArray(product.images) ? product.images : [];
+  const uploadedImages = Array.isArray(product.images)
+    ? product.images.map(resolveImageUrl).filter(Boolean)
+    : [];
   const views = uploadedImages.length
     ? uploadedImages.map((src) => ({ image: src }))
     : [
@@ -94,6 +114,19 @@ function GalleryView({ product, activeIdx, onSelect }) {
     onSelect(activeIdx === views.length - 1 ? 0 : activeIdx + 1);
   }
 
+  function handleImageError(e, originalSrc) {
+    const current = e.currentTarget.src || "";
+    if (originalSrc && (originalSrc.includes("googleusercontent.com") || originalSrc.includes("drive.google.com"))) {
+      const fileId = extractDriveId(originalSrc);
+      if (fileId && !current.includes("/api/media-proxy")) {
+        e.currentTarget.src = `/api/media-proxy?id=${fileId}`;
+        return;
+      }
+    }
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = "/images/hero-1.webp";
+  }
+
   return (
     <div className={styles.gallery}>
       <div className={styles.galleryMain}>
@@ -105,7 +138,12 @@ function GalleryView({ product, activeIdx, onSelect }) {
             {views.map((view, index) => (
               <div key={index} className={styles.gallerySlide}>
                 {view?.image ? (
-                  <img className={styles.galleryMainImage} src={view.image} alt={`${product.name} ${index + 1}`} />
+                  <img
+                    className={styles.galleryMainImage}
+                    src={view.image}
+                    alt={`${product.name} ${index + 1}`}
+                    onError={(e) => handleImageError(e, view.image)}
+                  />
                 ) : (
                   <div
                     className={styles.galleryMainBg}
@@ -146,7 +184,12 @@ function GalleryView({ product, activeIdx, onSelect }) {
             aria-pressed={i === activeIdx}
           >
             {v.image ? (
-              <img className={styles.thumbImage} src={v.image} alt={`${product.name} view ${i + 1}`} />
+              <img
+                className={styles.thumbImage}
+                src={v.image}
+                alt={`${product.name} view ${i + 1}`}
+                onError={(e) => handleImageError(e, v.image)}
+              />
             ) : (
               <div
                 className={styles.thumbBg}

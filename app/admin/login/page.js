@@ -48,6 +48,18 @@ const SIDEBAR_ITEMS = [
 
 const VALID_SECTIONS = new Set(SIDEBAR_ITEMS.map((item) => item.key));
 
+function toDirectImageUrl(url) {
+  if (!url || typeof url !== "string") return "";
+  const trimmed = url.trim();
+  const dMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (dMatch && dMatch[1]) return `https://lh3.googleusercontent.com/d/${dMatch[1]}`;
+  const idMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+  const openMatch = trimmed.match(/\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (openMatch && openMatch[1]) return `https://lh3.googleusercontent.com/d/${openMatch[1]}`;
+  return trimmed;
+}
+
 function getOrderItemCount(order) {
   if (!Array.isArray(order?.items)) return 0;
   return order.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
@@ -609,10 +621,10 @@ export default function AdminLoginPage() {
 
       const extraUrls = modalNewImageUrls
         .split(/[\n,]+/)
-        .map((u) => u.trim())
+        .map((u) => toDirectImageUrl(u.trim()))
         .filter(Boolean);
 
-      const allUrls = [...modalExistingImages, ...extraUrls];
+      const allUrls = [...modalExistingImages.map(toDirectImageUrl), ...extraUrls];
       const isEditing = Boolean(editingProductId);
 
       let res;
@@ -1873,7 +1885,15 @@ export default function AdminLoginPage() {
                           <div className={styles.imageThumbsGrid}>
                             {modalExistingImages.map((url, idx) => (
                               <div key={url + idx} className={styles.thumbItem}>
-                                <img src={url} alt={`Piece image ${idx + 1}`} className={styles.thumbImg} />
+                                <img
+                                  src={toDirectImageUrl(url)}
+                                  alt={`Piece image ${idx + 1}`}
+                                  className={styles.thumbImg}
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = "/images/hero-1.webp";
+                                  }}
+                                />
                                 <button
                                   type="button"
                                   className={styles.thumbRemoveBtn}
