@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
@@ -116,18 +116,38 @@ function getMediaAcceptHint(file) {
   return `Selected file: ${file.name}`;
 }
 
+const ADMIN_SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes session limit
+
 function getStoredAdminToken() {
   if (typeof window === "undefined") return null;
+  const expiresAt = Number(localStorage.getItem("heer_ranjha_admin_expires_at") || 0);
+  if (expiresAt && Date.now() > expiresAt) {
+    localStorage.removeItem("heer_ranjha_admin_token");
+    localStorage.removeItem("heer_ranjha_admin_expires_at");
+    return null;
+  }
   return localStorage.getItem("heer_ranjha_admin_token");
 }
 
-function adminFetch(url, options = {}) {
+function clearAdminSession() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("heer_ranjha_admin_token");
+    localStorage.removeItem("heer_ranjha_admin_expires_at");
+  }
+}
+
+async function adminFetch(url, options = {}) {
   const token = getStoredAdminToken();
   const headers = new Headers(options.headers || {});
   if (token && !headers.has("Authorization")) {
     headers.set("Authorization", `Bearer ${token}`);
   }
-  return fetch(url, { ...options, headers, credentials: "include" });
+  const res = await fetch(url, { ...options, headers, credentials: "include" });
+  if (res.status === 401 && typeof window !== "undefined") {
+    clearAdminSession();
+    window.dispatchEvent(new CustomEvent("admin_session_expired"));
+  }
+  return res;
 }
 
 export default function AdminLoginPage() {
@@ -138,6 +158,7 @@ export default function AdminLoginPage() {
   const [loginSuccess, setLoginSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [sessionMinutesLeft, setSessionMinutesLeft] = useState(30);
   const [form, setForm] = useState(EMPTY_FORM);
   const [uploadStatus, setUploadStatus] = useState("");
   const [bannerList, setBannerList] = useState([]);
@@ -311,16 +332,63 @@ export default function AdminLoginPage() {
     return { total: userList.length, customers, admins, totalSpend };
   }, [userList]);
 
+  const handleSessionExpired = useCallback((reason = "Your admin session has reached the 30-minute limit. Please log in again.") => {
+    clearAdminSession();
+    setUser(null);
+    setLoginError(reason);
+    setLoginSuccess("");
+  }, []);
+
   useEffect(() => {
+    const token = getStoredAdminToken();
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
     adminFetch("/api/auth/me")
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (data?.user?.role === "ADMIN") {
           setUser(data.user);
+        } else {
+          handleSessionExpired("Please sign in with administrator credentials.");
         }
       })
-      .catch(() => {});
-  }, []);
+      .catch(() => {
+        handleSessionExpired();
+      });
+  }, [handleSessionExpired]);
+
+  // Active 30-minute timer and auto-logout listener
+  useEffect(() => {
+    if (!user) return;
+
+    const checkExpiration = () => {
+      const expiresAt = Number(localStorage.getItem("heer_ranjha_admin_expires_at") || 0);
+      if (!expiresAt) return;
+      const msLeft = expiresAt - Date.now();
+      if (msLeft <= 0) {
+        handleSessionExpired("Your admin session has reached the 30-minute limit. Please log in again.");
+      } else {
+        setSessionMinutesLeft(Math.max(1, Math.ceil(msLeft / 60000)));
+      }
+    };
+
+    checkExpiration();
+    const interval = setInterval(checkExpiration, 10000);
+
+    const onExpired = () => {
+      handleSessionExpired("Your admin session expired (30-minute limit). Please log in again.");
+    };
+
+    window.addEventListener("admin_session_expired", onExpired);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("admin_session_expired", onExpired);
+    };
+  }, [user, handleSessionExpired]);
 
   useEffect(() => {
     if (!user) return;
@@ -420,11 +488,14 @@ export default function AdminLoginPage() {
       }
 
       if (data?.token && typeof window !== "undefined") {
+        const ttl = Number(data.expiresIn) ? data.expiresIn * 1000 : ADMIN_SESSION_TTL_MS;
         localStorage.setItem("heer_ranjha_admin_token", data.token);
+        localStorage.setItem("heer_ranjha_admin_expires_at", String(Date.now() + ttl));
       }
 
       setUser(data.user);
-      setLoginSuccess("Admin login successful.");
+      setSessionMinutesLeft(30);
+      setLoginSuccess("Admin login successful. Session active for 30 minutes.");
       router.refresh();
     } catch (error) {
       setLoginError(error.message);
@@ -434,9 +505,7 @@ export default function AdminLoginPage() {
   }
 
   async function handleLogout() {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("heer_ranjha_admin_token");
-    }
+    clearAdminSession();
     await adminFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     setUser(null);
     setBannerList([]);
@@ -1065,6 +1134,10 @@ export default function AdminLoginPage() {
             <div>
               <p className={styles.userName}>{user.name}</p>
               <p className={styles.userEmail}>{user.email}</p>
+              <p style={{ margin: "0.35rem 0 0", fontSize: "0.74rem", color: "var(--gold-muted)", display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                <span>⏱</span>
+                <span>Session: {sessionMinutesLeft}m left (30m limit)</span>
+              </p>
             </div>
             <button type="button" className={`btn ${styles.sidebarLogout}`} onClick={handleLogout}>
               <span>Logout</span>
@@ -3109,7 +3182,7 @@ export default function AdminLoginPage() {
                   Cancel
                 </button>
                 <button className="btn btn-dark" type="submit" disabled={savingProduct}>
-                  <span>{savingProduct ? "Saving..." : editingProductId ? "Save Changes" : "Create Piece"}</span>
+                        <span>{savingProduct ? "Saving..." : editingProductId ? "Save Changes" : "Create Piece"}</span>
                   <span className="btn-arrow">→</span>
                 </button>
               </div>
@@ -3132,6 +3205,7 @@ export default function AdminLoginPage() {
               {productToDelete.images?.[0] ? (
                 <img src={productToDelete.images[0]} alt={productToDelete.name} className={styles.productThumb} />
               ) : (
+      
                 <div className={styles.productThumbFallback}>No image</div>
               )}
               <div>

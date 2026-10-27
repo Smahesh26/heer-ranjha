@@ -2,7 +2,11 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { json, badRequest, unauthorized } from "@/lib/http";
 import { loginSchema } from "@/lib/validators";
-import { signAuthToken, getAuthCookieName, getAuthCookieOptions } from "@/lib/auth";
+import {
+  signAdminAuthToken,
+  getAuthCookieName,
+  getAdminAuthCookieOptions,
+} from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -63,14 +67,18 @@ export async function POST(request) {
     return unauthorized("Invalid admin credentials");
   }
 
-  const token = signAuthToken({
+  const token = signAdminAuthToken({
     sub: authenticatedUser.id,
     role: authenticatedUser.role,
     email: authenticatedUser.email,
   });
 
-  const response = json({ user: authenticatedUser, token });
-  response.cookies.set(getAuthCookieName(), token, getAuthCookieOptions(request));
+  const response = json({
+    user: authenticatedUser,
+    token,
+    expiresIn: 1800, // 30 minutes in seconds
+  });
+  response.cookies.set(getAuthCookieName(), token, getAdminAuthCookieOptions(request));
 
   return response;
 }

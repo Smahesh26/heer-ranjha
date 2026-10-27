@@ -2,7 +2,13 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { json, badRequest, unauthorized } from "@/lib/http";
 import { loginSchema } from "@/lib/validators";
-import { signAuthToken, getAuthCookieName, getAuthCookieOptions } from "@/lib/auth";
+import {
+  signAuthToken,
+  signAdminAuthToken,
+  getAuthCookieName,
+  getAuthCookieOptions,
+  getAdminAuthCookieOptions,
+} from "@/lib/auth";
 import { sendLoginOtpEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -112,11 +118,21 @@ export async function POST(request) {
     data: { consumedAt: now },
   });
 
-  const token = signAuthToken({ sub: user.id, role: user.role, email: user.email });
+  const isAdmin = user.role === "ADMIN" || user.email === "admin@heerranjha.com";
+  const token = isAdmin
+    ? signAdminAuthToken({ sub: user.id, role: user.role, email: user.email })
+    : signAuthToken({ sub: user.id, role: user.role, email: user.email });
+
   const response = json({
     user: { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl },
     token,
+    expiresIn: isAdmin ? 1800 : 7 * 24 * 60 * 60,
   });
-  response.cookies.set(getAuthCookieName(), token, getAuthCookieOptions(request));
+
+  const cookieOptions = isAdmin
+    ? getAdminAuthCookieOptions(request)
+    : getAuthCookieOptions(request);
+
+  response.cookies.set(getAuthCookieName(), token, cookieOptions);
   return response;
 }
