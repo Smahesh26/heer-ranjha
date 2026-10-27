@@ -37,6 +37,7 @@ const EMPTY_PRODUCT_FORM = {
 
 const SIDEBAR_ITEMS = [
   { key: "products", label: "Products", meta: "Manage" },
+  { key: "add-product", label: "+ Add Single Product", meta: "Direct" },
   { key: "bulk-upload", label: "Excel Bulk Upload", meta: "Import" },
   { key: "collections", label: "Collections", meta: "Overview" },
   { key: "banners", label: "Banners", meta: "Upload" },
@@ -152,6 +153,9 @@ export default function AdminLoginPage() {
   const [modalNewImageUrls, setModalNewImageUrls] = useState("");
   const [modalFiles, setModalFiles] = useState([]);
   const [savingProduct, setSavingProduct] = useState(false);
+  const [collectionChoiceMode, setCollectionChoiceMode] = useState("existing"); // "existing" | "new"
+  const [newCollectionInput, setNewCollectionInput] = useState("");
+  const [createdProductResult, setCreatedProductResult] = useState(null);
 
   // Excel Bulk Upload State
   const [excelFile, setExcelFile] = useState(null);
@@ -499,12 +503,33 @@ export default function AdminLoginPage() {
   }
 
   // ── Product Modal, CRUD & Batch Handlers ───────────────────────────────
-  function openCreateProductModal() {
-    setEditingProductId(null);
+  function resetProductForm(keepCollection = false) {
+    const currentCol = productForm.collection;
     setProductForm({
       ...EMPTY_PRODUCT_FORM,
-      collection: productCollectionFilter || (collectionsSummary[0]?.name || "ASAYA"),
+      collection: keepCollection ? currentCol : (collectionsSummary[0]?.name || "ASAYA"),
     });
+    setEditingProductId(null);
+    setModalExistingImages([]);
+    setModalNewImageUrls("");
+    setModalFiles([]);
+    setProductFileInputKey((k) => k + 1);
+    if (!keepCollection) {
+      setCollectionChoiceMode("existing");
+      setNewCollectionInput("");
+    }
+  }
+
+  function openCreateProductModal(prefillCollection) {
+    setEditingProductId(null);
+    const defaultCol = prefillCollection || productCollectionFilter || (collectionsSummary[0]?.name || "ASAYA");
+    setProductForm({
+      ...EMPTY_PRODUCT_FORM,
+      collection: defaultCol,
+    });
+    setCollectionChoiceMode("existing");
+    setNewCollectionInput("");
+    setCreatedProductResult(null);
     setModalExistingImages([]);
     setModalNewImageUrls("");
     setModalFiles([]);
@@ -513,6 +538,13 @@ export default function AdminLoginPage() {
 
   function openEditProductModal(product) {
     setEditingProductId(product.id);
+    const hasCollection = collectionsSummary.some(
+      (c) => c.name === product.collection
+    );
+    setCollectionChoiceMode(hasCollection ? "existing" : "new");
+    if (!hasCollection) {
+      setNewCollectionInput(product.collection || "");
+    }
     setProductForm({
       name: product.name || "",
       slug: product.slug || "",
@@ -547,6 +579,8 @@ export default function AdminLoginPage() {
     setModalExistingImages([]);
     setModalNewImageUrls("");
     setModalFiles([]);
+    setCollectionChoiceMode("existing");
+    setNewCollectionInput("");
   }
 
   function removeModalImage(indexToRemove) {
@@ -559,6 +593,20 @@ export default function AdminLoginPage() {
     setProductStatus("");
 
     try {
+      const targetCollection = (
+        collectionChoiceMode === "new"
+          ? newCollectionInput
+          : productForm.collection
+      )?.trim()?.toUpperCase();
+
+      if (!targetCollection) {
+        throw new Error(
+          collectionChoiceMode === "new"
+            ? "Please enter a name for the new collection."
+            : "Please select an existing collection."
+        );
+      }
+
       const extraUrls = modalNewImageUrls
         .split(/[\n,]+/)
         .map((u) => u.trim())
@@ -577,7 +625,7 @@ export default function AdminLoginPage() {
         formData.append("description", productForm.description);
         formData.append("category", productForm.category);
         formData.append("subCategory", productForm.subCategory);
-        formData.append("collection", productForm.collection);
+        formData.append("collection", targetCollection);
         formData.append("fabric", productForm.fabric);
         formData.append("sizes", productForm.sizes);
         formData.append("price", productForm.price);
@@ -607,7 +655,7 @@ export default function AdminLoginPage() {
           description: productForm.description,
           category: productForm.category,
           subCategory: productForm.subCategory,
-          collection: productForm.collection,
+          collection: targetCollection,
           fabric: productForm.fabric,
           sizes: typeof productForm.sizes === "string"
             ? productForm.sizes.split(",").map((s) => s.trim()).filter(Boolean)
@@ -633,8 +681,25 @@ export default function AdminLoginPage() {
         throw new Error(data?.error || "Failed to save product");
       }
 
-      setProductStatus(isEditing ? `✓ Updated "${productForm.name}" successfully.` : `✓ Created "${productForm.name}" successfully.`);
-      closeProductModal();
+      const saved = data.product || {};
+      const savedSlug = saved.slug || productForm.slug || "";
+
+      setProductStatus(
+        isEditing
+          ? `✓ Updated "${productForm.name}" successfully.`
+          : `✓ Created "${productForm.name}" in collection "${targetCollection}" successfully.`
+      );
+
+      setCreatedProductResult({
+        name: productForm.name,
+        slug: savedSlug,
+        collection: targetCollection,
+      });
+
+      if (isEditing || isProductModalOpen) {
+        closeProductModal();
+      }
+
       await loadProducts();
     } catch (err) {
       setProductStatus("Error: " + err.message);
@@ -1033,7 +1098,7 @@ export default function AdminLoginPage() {
             </div>
 
             <div className={styles.statsGrid}>
-              {activeSection === "bulk-upload" || activeSection === "collections" || activeSection === "products" ? (
+              {activeSection === "bulk-upload" || activeSection === "collections" || activeSection === "products" || activeSection === "add-product" ? (
                 <>
                   <div className={styles.statCard}>
                     <span className={styles.statValue}>{productStats.total}</span>
@@ -1152,6 +1217,30 @@ export default function AdminLoginPage() {
                   >
                     <span>📥 Download Sample Excel Template</span>
                   </a>
+                </div>
+
+                {/* Quick Single Product Callout */}
+                <div className={styles.calloutBanner}>
+                  <div>
+                    <h5 style={{ margin: 0, fontSize: "0.95rem", color: "var(--charcoal)", fontWeight: 600 }}>
+                      ✨ Adding just a single product or creating a new collection without Excel?
+                    </h5>
+                    <p style={{ margin: "0.25rem 0 0", fontSize: "0.82rem", color: "rgba(26, 21, 18, 0.65)" }}>
+                      Use the Single Product Creator to publish individual pieces directly and assign them to any existing or brand new collection.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-dark"
+                    style={{ padding: "0.55rem 1.15rem", fontSize: "0.82rem" }}
+                    onClick={() => {
+                      resetProductForm(false);
+                      setActiveSection("add-product");
+                    }}
+                  >
+                    <span>+ Add Single Product Directly</span>
+                    <span className="btn-arrow">→</span>
+                  </button>
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem", marginTop: "1rem" }}>
@@ -1338,14 +1427,27 @@ export default function AdminLoginPage() {
                       All collections live on your storefront. You can upload 3 more collections using the Excel Bulk Uploader.
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => setActiveSection("bulk-upload")}
-                  >
-                    <span>+ Upload Collection via Excel</span>
-                    <span className="btn-arrow">→</span>
-                  </button>
+                  <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
+                    <button
+                      type="button"
+                      className="btn btn-dark"
+                      onClick={() => {
+                        resetProductForm(false);
+                        setActiveSection("add-product");
+                      }}
+                      style={{ padding: "0.65rem 1.25rem" }}
+                    >
+                      <span>+ Add Single Product</span>
+                      <span className="btn-arrow">→</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.templateBtn}
+                      onClick={() => setActiveSection("bulk-upload")}
+                    >
+                      <span>📊 Upload via Excel</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className={styles.collectionsGrid}>
@@ -1360,6 +1462,20 @@ export default function AdminLoginPage() {
                         <h4 className={styles.collectionCardTitle}>{col.name}</h4>
                         <p className={styles.collectionCardPieces}>{col.count} piece{col.count !== 1 ? "s" : ""} in catalogue</p>
                         <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
+                          <button
+                            type="button"
+                            className="btn btn-dark"
+                            style={{ fontSize: "0.78rem", padding: "0.4rem 0.75rem" }}
+                            onClick={() => {
+                              resetProductForm(false);
+                              setProductForm((curr) => ({ ...curr, collection: col.name }));
+                              setCollectionChoiceMode("existing");
+                              setActiveSection("add-product");
+                            }}
+                            title={`Add a new piece directly into ${col.name}`}
+                          >
+                            <span>+ Add Piece Here</span>
+                          </button>
                           <a
                             href={`/shop?collection=${encodeURIComponent(col.name)}#shop-layout`}
                             target="_blank"
@@ -1376,7 +1492,7 @@ export default function AdminLoginPage() {
                               setActiveSection("products");
                             }}
                           >
-                            Filter Products
+                            Filter
                           </button>
                           <button
                             type="button"
@@ -1385,12 +1501,561 @@ export default function AdminLoginPage() {
                             onClick={() => handleDeleteCollection(col.name, col.count)}
                             title={`Delete all ${col.count} products in ${col.name}`}
                           >
-                            🗑️ Delete Collection
+                            🗑️ Delete
                           </button>
                         </div>
                       </div>
                     </article>
                   ))}
+                </div>
+              </section>
+            </div>
+          ) : null}
+
+          {/* ── SECTION: ADD SINGLE PRODUCT ──────────────────────────────── */}
+          {activeSection === "add-product" ? (
+            <div className={styles.contentGridSingle}>
+              <section className={styles.tablePanel}>
+                <div className={styles.sectionHead}>
+                  <div>
+                    <p className="eyebrow">Inventory Direct Creation</p>
+                    <h3 className={`display ${styles.sectionTitle}`}>Add Single Product</h3>
+                    <p className={styles.sidebarCopy}>
+                      Publish an individual piece to an existing collection or create a brand new collection directly without needing an Excel sheet.
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
+                    <button
+                      type="button"
+                      className={styles.templateBtn}
+                      onClick={() => setActiveSection("bulk-upload")}
+                    >
+                      📊 Excel Bulk Upload
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.ghostBtn}
+                      onClick={() => setActiveSection("collections")}
+                    >
+                      📁 Collections ({collectionsSummary.length})
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.ghostBtn}
+                      onClick={() => setActiveSection("products")}
+                    >
+                      ☰ Products Catalogue
+                    </button>
+                  </div>
+                </div>
+
+                {createdProductResult && (
+                  <div className={styles.productSuccessBanner}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem" }}>
+                      <div>
+                        <h4 style={{ margin: 0, fontSize: "1.15rem", color: "#2e7d32", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <span>✓</span>
+                          <span>Piece Published Successfully!</span>
+                        </h4>
+                        <p style={{ margin: "0.35rem 0 0", fontSize: "0.88rem", color: "var(--charcoal)" }}>
+                          <strong>&ldquo;{createdProductResult.name}&rdquo;</strong> is now live on your store under collection <strong>&ldquo;{createdProductResult.collection}&rdquo;</strong>.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.ghostBtn}
+                        style={{ fontSize: "0.8rem", padding: "0.3rem 0.6rem" }}
+                        onClick={() => setCreatedProductResult(null)}
+                      >
+                        ✕ Dismiss
+                      </button>
+                    </div>
+
+                    <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", marginTop: "0.35rem" }}>
+                      {createdProductResult.slug && (
+                        <a
+                          href={`/product/${createdProductResult.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-dark"
+                          style={{ padding: "0.5rem 1rem", fontSize: "0.82rem" }}
+                        >
+                          <span>↗ View Piece in Store</span>
+                        </a>
+                      )}
+                      <a
+                        href={`/shop?collection=${encodeURIComponent(createdProductResult.collection)}#shop-layout`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.templateBtn}
+                        style={{ padding: "0.5rem 1rem", fontSize: "0.82rem" }}
+                      >
+                        <span>📁 View Collection in Shop</span>
+                      </a>
+                      <button
+                        type="button"
+                        className={styles.ghostBtn}
+                        style={{ padding: "0.5rem 1rem", fontSize: "0.82rem" }}
+                        onClick={() => {
+                          resetProductForm(true);
+                          setCreatedProductResult(null);
+                          setProductStatus("");
+                        }}
+                      >
+                        + Add Another Piece to {createdProductResult.collection}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.ghostBtn}
+                        style={{ padding: "0.5rem 1rem", fontSize: "0.82rem" }}
+                        onClick={() => setActiveSection("products")}
+                      >
+                        ☰ View in Products List
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {productStatus && !createdProductResult && (
+                  <div style={{ margin: "0 0 1rem" }}>
+                    <p className={productStatus.startsWith("Error") ? styles.errorText : styles.successText}>
+                      {productStatus}
+                    </p>
+                  </div>
+                )}
+
+                <div className={styles.creatorGrid}>
+                  {/* Left Column: Input Form */}
+                  <form onSubmit={handleProductSave} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    {/* Section 1: Collection Selection */}
+                    <div className={styles.formSection} style={{ background: "#FAF7F2", padding: "1.25rem", borderRadius: "16px", border: "1px solid rgba(201, 169, 110, 0.3)" }}>
+                      <div className={styles.formSectionHeader}>
+                        <span style={{ color: "var(--gold-muted)", fontWeight: 700 }}>01</span>
+                        <h4 className={styles.formSectionTitle}>Collection Assignment *</h4>
+                      </div>
+                      <p className={styles.sidebarCopy} style={{ marginBottom: "0.85rem" }}>
+                        Select whether to add into an existing collection or create a brand new collection right now.
+                      </p>
+
+                      <div className={styles.collectionModeToggle}>
+                        <button
+                          type="button"
+                          className={`${styles.modeBtn} ${collectionChoiceMode === "existing" ? styles.modeBtnActive : ""}`}
+                          onClick={() => setCollectionChoiceMode("existing")}
+                        >
+                          <span>📁 Existing Collection</span>
+                          <span style={{ fontSize: "0.72rem", opacity: 0.7 }}>({collectionsSummary.length})</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.modeBtn} ${collectionChoiceMode === "new" ? styles.modeBtnActive : ""}`}
+                          onClick={() => setCollectionChoiceMode("new")}
+                        >
+                          <span>✨ Create New Collection</span>
+                        </button>
+                      </div>
+
+                      {collectionChoiceMode === "existing" ? (
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Select Existing Collection *</span>
+                          <select
+                            className={styles.fieldInput}
+                            value={productForm.collection}
+                            onChange={(e) => {
+                              if (e.target.value === "__NEW__") {
+                                setCollectionChoiceMode("new");
+                              } else {
+                                setProductForm((curr) => ({ ...curr, collection: e.target.value }));
+                              }
+                            }}
+                            required
+                          >
+                            {collectionsSummary.map((c) => (
+                              <option key={c.name} value={c.name}>
+                                {c.name} — ({c.count} piece{c.count !== 1 ? "s" : ""})
+                              </option>
+                            ))}
+                            {collectionsSummary.length === 0 && (
+                              <option value="ASAYA">ASAYA (Default)</option>
+                            )}
+                            <option value="__NEW__">+ Create a New Collection instead...</option>
+                          </select>
+                          <span className={styles.uploadHint}>
+                            This piece will appear under the {productForm.collection} collection in your store catalogue.
+                          </span>
+                        </label>
+                      ) : (
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>New Collection Name *</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. BESPOKE EDIT, ROOMANI, FESTIVE 2026..."
+                            value={newCollectionInput}
+                            onChange={(e) => setNewCollectionInput(e.target.value.toUpperCase())}
+                            required={collectionChoiceMode === "new"}
+                            autoFocus
+                          />
+                          <span className={styles.newCollectionBadge}>
+                            ✨ Creates a new collection category named &ldquo;{newCollectionInput || "NEW"}&rdquo; on your storefront automatically.
+                          </span>
+                        </label>
+                      )}
+                    </div>
+
+                    {/* Section 2: Essential Piece Details */}
+                    <div className={styles.formSection}>
+                      <div className={styles.formSectionHeader}>
+                        <span style={{ color: "var(--gold-muted)", fontWeight: 700 }}>02</span>
+                        <h4 className={styles.formSectionTitle}>Essential Information</h4>
+                      </div>
+
+                      <div className={styles.form}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Product Name *</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="e.g. Ivory Hand-Embroidered Silk Bandhgala"
+                            value={productForm.name}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, name: e.target.value }))}
+                            required
+                          />
+                        </label>
+
+                        <div className={styles.formRow3}>
+                          <label className={styles.fieldGroup}>
+                            <span className={styles.fieldLabel}>Category *</span>
+                            <select
+                              className={styles.fieldInput}
+                              value={productForm.category}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, category: e.target.value }))}
+                            >
+                              <option value="Men's Wear">Men&apos;s Wear</option>
+                              <option value="Women's Wear">Women&apos;s Wear</option>
+                            </select>
+                          </label>
+
+                          <label className={styles.fieldGroup}>
+                            <span className={styles.fieldLabel}>Sub Category *</span>
+                            <input
+                              className={styles.fieldInput}
+                              placeholder="Kurta, Sherwani, Bandhgala, Saree..."
+                              value={productForm.subCategory}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, subCategory: e.target.value }))}
+                              required
+                            />
+                          </label>
+
+                          <label className={styles.fieldGroup}>
+                            <span className={styles.fieldLabel}>SKU / Style Code</span>
+                            <input
+                              className={styles.fieldInput}
+                              placeholder="e.g. HR-BE-01 (optional)"
+                              value={productForm.sku}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, sku: e.target.value, styleCode: e.target.value }))}
+                            />
+                          </label>
+                        </div>
+
+                        <div className={styles.inlineFields}>
+                          <label className={styles.fieldGroup}>
+                            <span className={styles.fieldLabel}>Slug (URL Key)</span>
+                            <input
+                              className={styles.fieldInput}
+                              placeholder="Auto-generated from name if left empty"
+                              value={productForm.slug}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, slug: e.target.value }))}
+                            />
+                          </label>
+
+                          <label className={styles.fieldGroup}>
+                            <span className={styles.fieldLabel}>Fabric & Craft</span>
+                            <input
+                              className={styles.fieldInput}
+                              placeholder="e.g. Pure Matka Silk, Raw Silk, Chanderi"
+                              value={productForm.fabric}
+                              onChange={(e) => setProductForm((curr) => ({ ...curr, fabric: e.target.value }))}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 3: Pricing & Inventory */}
+                    <div className={styles.formSection}>
+                      <div className={styles.formSectionHeader}>
+                        <span style={{ color: "var(--gold-muted)", fontWeight: 700 }}>03</span>
+                        <h4 className={styles.formSectionTitle}>Pricing & Availability</h4>
+                      </div>
+
+                      <div className={styles.formRow3}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Selling Price (₹) *</span>
+                          <input
+                            className={styles.fieldInput}
+                            type="number"
+                            min="0"
+                            placeholder="28500"
+                            value={productForm.price}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, price: e.target.value }))}
+                            required
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>MRP / Original (₹)</span>
+                          <input
+                            className={styles.fieldInput}
+                            type="number"
+                            min="0"
+                            placeholder="32000 (optional)"
+                            value={productForm.mrp}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, mrp: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Stock Status / Qty</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="MTO, In Stock, or quantity"
+                            value={productForm.stock}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, stock: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+
+                      <div className={styles.inlineFields} style={{ marginTop: "0.85rem" }}>
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Available Sizes (comma-separated)</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="S,M,L,XL,XXL,Custom"
+                            value={productForm.sizes}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, sizes: e.target.value }))}
+                          />
+                        </label>
+
+                        <label className={styles.fieldGroup}>
+                          <span className={styles.fieldLabel}>Wash & Cloth Care</span>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="Dry Clean Only"
+                            value={productForm.clothCare}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, clothCare: e.target.value }))}
+                          />
+                        </label>
+                      </div>
+
+                      <label className={styles.fieldGroup} style={{ marginTop: "0.85rem" }}>
+                        <span className={styles.fieldLabel}>Description / Craft Notes</span>
+                        <textarea
+                          className={`${styles.fieldInput} ${styles.textarea}`}
+                          rows={3}
+                          placeholder="Highlight the embroidery details, silhouette notes, styling recommendations..."
+                          value={productForm.description}
+                          onChange={(e) => setProductForm((curr) => ({ ...curr, description: e.target.value }))}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Section 4: Imagery */}
+                    <div className={styles.formSection}>
+                      <div className={styles.formSectionHeader}>
+                        <span style={{ color: "var(--gold-muted)", fontWeight: 700 }}>04</span>
+                        <h4 className={styles.formSectionTitle}>Product Imagery</h4>
+                      </div>
+
+                      {modalExistingImages.length > 0 && (
+                        <div>
+                          <span className={styles.fieldLabel} style={{ marginBottom: "0.4rem", display: "block" }}>
+                            Selected Images ({modalExistingImages.length}) — Click ✕ to remove
+                          </span>
+                          <div className={styles.imageThumbsGrid}>
+                            {modalExistingImages.map((url, idx) => (
+                              <div key={url + idx} className={styles.thumbItem}>
+                                <img src={url} alt={`Piece image ${idx + 1}`} className={styles.thumbImg} />
+                                <button
+                                  type="button"
+                                  className={styles.thumbRemoveBtn}
+                                  onClick={() => removeModalImage(idx)}
+                                  title="Remove image"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <label className={`${styles.fieldGroup} ${styles.uploadField}`}>
+                        <span className={styles.fieldLabel}>Upload Images from Computer</span>
+                        <input
+                          key={productFileInputKey}
+                          className={styles.fileInput}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => setModalFiles(Array.from(e.target.files || []))}
+                        />
+                        {modalFiles.length > 0 && (
+                          <span className={styles.uploadHint} style={{ color: "var(--charcoal)", fontWeight: 600 }}>
+                            ✓ Selected {modalFiles.length} file(s) to upload.
+                          </span>
+                        )}
+                      </label>
+
+                      <label className={styles.fieldGroup} style={{ marginTop: "0.75rem" }}>
+                        <span className={styles.fieldLabel}>Or Paste Direct Image URLs / Google Drive Links</span>
+                        <textarea
+                          className={`${styles.fieldInput} ${styles.textarea}`}
+                          rows={2}
+                          placeholder="Paste web URLs or Google Drive share links separated by line breaks or commas..."
+                          value={modalNewImageUrls}
+                          onChange={(e) => setModalNewImageUrls(e.target.value)}
+                        />
+                        <span className={styles.uploadHint}>
+                          Tip: Google Drive share links (e.g. drive.google.com/file/d/...) will automatically convert to high-resolution web links.
+                        </span>
+                      </label>
+                    </div>
+
+                    {/* Section 5: Visibility & Submit */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap", paddingTop: "0.5rem" }}>
+                      <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+                        <label className={styles.toggleWrap} style={{ cursor: "pointer" }}>
+                          <input
+                            type="checkbox"
+                            checked={productForm.active}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, active: e.target.checked }))}
+                          />
+                          <span>Active in Store</span>
+                        </label>
+
+                        <label className={styles.toggleWrap} style={{ cursor: "pointer" }}>
+                          <input
+                            type="checkbox"
+                            checked={productForm.featured}
+                            onChange={(e) => setProductForm((curr) => ({ ...curr, featured: e.target.checked }))}
+                          />
+                          <span>Featured on Home</span>
+                        </label>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "0.75rem" }}>
+                        <button
+                          type="button"
+                          className={styles.ghostBtn}
+                          onClick={() => resetProductForm(false)}
+                        >
+                          Reset Form
+                        </button>
+                        <button
+                          className="btn btn-dark"
+                          type="submit"
+                          disabled={savingProduct}
+                          style={{ padding: "0.85rem 1.85rem" }}
+                        >
+                          <span>{savingProduct ? "Publishing Piece..." : "Publish Piece to Store"}</span>
+                          <span className="btn-arrow">→</span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+
+                  {/* Right Column: Live Storefront Card Preview */}
+                  <aside>
+                    <div className={styles.livePreviewCard}>
+                      <div className={styles.livePreviewHeader}>
+                        <span className={styles.livePreviewBadge}>
+                          <span>✨</span>
+                          <span>Live Store Preview</span>
+                        </span>
+                        <span className={styles.tagBadge}>
+                          {collectionChoiceMode === "new"
+                            ? (newCollectionInput || "NEW COLLECTION")
+                            : (productForm.collection || "ASAYA")}
+                        </span>
+                      </div>
+
+                      <div className={styles.livePreviewMediaWrap}>
+                        {modalFiles.length > 0 ? (
+                          <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                            <img
+                              src={URL.createObjectURL(modalFiles[0])}
+                              alt="Preview"
+                              className={styles.livePreviewMedia}
+                            />
+                            <span style={{ position: "absolute", bottom: "8px", right: "8px", background: "rgba(26,21,18,0.75)", color: "#fff", fontSize: "0.7rem", padding: "2px 8px", borderRadius: "4px" }}>
+                              +{modalFiles.length} file{modalFiles.length > 1 ? "s" : ""}
+                            </span>
+                          </div>
+                        ) : modalExistingImages[0] || modalNewImageUrls.trim().split(/[\n,]+/)[0] ? (
+                          <img
+                            src={modalExistingImages[0] || modalNewImageUrls.trim().split(/[\n,]+/)[0]}
+                            alt="Preview"
+                            className={styles.livePreviewMedia}
+                            onError={(e) => { e.currentTarget.style.display = "none"; }}
+                          />
+                        ) : (
+                          <div className={styles.bannerFallback} style={{ height: "100%", minHeight: "260px" }}>
+                            Add piece image to see preview
+                          </div>
+                        )}
+                      </div>
+
+                      <div className={styles.livePreviewBody}>
+                        <div className={styles.livePreviewMeta}>
+                          <span>{productForm.category || "Men's Wear"}</span>
+                          <span>•</span>
+                          <span>{productForm.subCategory || "Kurta"}</span>
+                          {productForm.fabric && (
+                            <>
+                              <span>•</span>
+                              <span>{productForm.fabric}</span>
+                            </>
+                          )}
+                        </div>
+
+                        <h4 className={styles.livePreviewTitle}>
+                          {productForm.name || "Untitled Ensemble"}
+                        </h4>
+
+                        <div className={styles.livePreviewPrice}>
+                          <span className={styles.livePreviewCurrentPrice}>
+                            ₹{Number(productForm.price || 0).toLocaleString("en-IN")}
+                          </span>
+                          {productForm.mrp && Number(productForm.mrp) > Number(productForm.price) && (
+                            <span className={styles.livePreviewMrp}>
+                              ₹{Number(productForm.mrp).toLocaleString("en-IN")}
+                            </span>
+                          )}
+                        </div>
+
+                        <div style={{ marginTop: "0.5rem", paddingTop: "0.6rem", borderTop: "1px solid rgba(201, 169, 110, 0.2)", display: "flex", justifyContent: "space-between", fontSize: "0.76rem", color: "rgba(26,21,18,0.6)" }}>
+                          <span>Sizes: {productForm.sizes || "S, M, L, XL"}</span>
+                          <span>{productForm.stock || "MTO"}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={styles.formPanel} style={{ marginTop: "1rem", padding: "1rem" }}>
+                      <h5 style={{ margin: "0 0 0.4rem", fontSize: "0.88rem", color: "var(--charcoal)", fontWeight: 600 }}>
+                        Target Destination
+                      </h5>
+                      <p style={{ margin: 0, fontSize: "0.8rem", color: "rgba(26,21,18,0.65)", lineHeight: 1.5 }}>
+                        {collectionChoiceMode === "new" ? (
+                          <>
+                            Will create a new collection: <strong style={{ color: "var(--gold-muted)" }}>{newCollectionInput || "(Enter Name Above)"}</strong> and display it in the store catalog.
+                          </>
+                        ) : (
+                          <>
+                            Will be added to existing collection: <strong style={{ color: "var(--charcoal)" }}>{productForm.collection}</strong>.
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </aside>
                 </div>
               </section>
             </div>
@@ -2137,22 +2802,57 @@ export default function AdminLoginPage() {
                   </label>
 
                   <div className={styles.formRow3}>
-                    <label className={styles.fieldGroup}>
-                      <span className={styles.fieldLabel}>Collection *</span>
-                      <input
-                        className={styles.fieldInput}
-                        list="collection-options"
-                        placeholder="e.g. ASAYA, ROOMANI..."
-                        value={productForm.collection}
-                        onChange={(e) => setProductForm((curr) => ({ ...curr, collection: e.target.value.toUpperCase() }))}
-                        required
-                      />
-                      <datalist id="collection-options">
-                        {collectionsSummary.map((c) => (
-                          <option key={c.name} value={c.name} />
-                        ))}
-                      </datalist>
-                    </label>
+                    <div className={styles.fieldGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }}>
+                        <span className={styles.fieldLabel}>Collection *</span>
+                        <button
+                          type="button"
+                          className={styles.ghostBtn}
+                          style={{ padding: "0.15rem 0.5rem", fontSize: "0.72rem" }}
+                          onClick={() => setCollectionChoiceMode((m) => (m === "existing" ? "new" : "existing"))}
+                        >
+                          {collectionChoiceMode === "existing" ? "+ New Collection" : "← Pick Existing"}
+                        </button>
+                      </div>
+
+                      {collectionChoiceMode === "existing" ? (
+                        <select
+                          className={styles.fieldInput}
+                          value={productForm.collection}
+                          onChange={(e) => {
+                            if (e.target.value === "__NEW__") {
+                              setCollectionChoiceMode("new");
+                            } else {
+                              setProductForm((curr) => ({ ...curr, collection: e.target.value }));
+                            }
+                          }}
+                          required
+                        >
+                          {collectionsSummary.map((c) => (
+                            <option key={c.name} value={c.name}>
+                              {c.name} ({c.count} pieces)
+                            </option>
+                          ))}
+                          {collectionsSummary.length === 0 && (
+                            <option value="ASAYA">ASAYA</option>
+                          )}
+                          <option value="__NEW__">+ New Collection...</option>
+                        </select>
+                      ) : (
+                        <div>
+                          <input
+                            className={styles.fieldInput}
+                            placeholder="Enter new collection name..."
+                            value={newCollectionInput}
+                            onChange={(e) => setNewCollectionInput(e.target.value.toUpperCase())}
+                            required={collectionChoiceMode === "new"}
+                          />
+                          <span className={styles.newCollectionBadge} style={{ marginTop: "0.25rem" }}>
+                            ✨ Creates new collection
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
                     <label className={styles.fieldGroup}>
                       <span className={styles.fieldLabel}>Category *</span>
