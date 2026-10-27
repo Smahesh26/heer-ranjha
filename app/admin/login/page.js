@@ -40,6 +40,7 @@ const SIDEBAR_ITEMS = [
   { key: "add-product", label: "+ Add Single Product", meta: "Direct" },
   { key: "bulk-upload", label: "Excel Bulk Upload", meta: "Import" },
   { key: "collections", label: "Collections", meta: "Overview" },
+  { key: "analytics", label: "Page Visitors", meta: "Traffic" },
   { key: "banners", label: "Banners", meta: "Upload" },
   { key: "orders", label: "Orders", meta: "History" },
   { key: "payments", label: "Payments", meta: "History" },
@@ -164,6 +165,10 @@ export default function AdminLoginPage() {
   const [bannerList, setBannerList] = useState([]);
   const [refreshingBanners, setRefreshingBanners] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(0);
+
+  // Page view analytics state
+  const [analyticsData, setAnalyticsData] = useState({ views: {}, total: 0 });
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
   // Product state & management
   const [productForm, setProductForm] = useState(EMPTY_PRODUCT_FORM);
@@ -390,13 +395,34 @@ export default function AdminLoginPage() {
     };
   }, [user, handleSessionExpired]);
 
+  async function loadAnalytics() {
+    setLoadingAnalytics(true);
+    try {
+      const res = await fetch("/api/views", { cache: "no-store" });
+      const data = await res.json();
+      setAnalyticsData(data || { views: {}, total: 0 });
+    } catch {
+      // ignore
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  }
+
   useEffect(() => {
     if (!user) return;
     void loadBanners();
     void loadProducts();
     void loadOrders();
     void loadUsers();
+    void loadAnalytics();
   }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    if (activeSection === "analytics") {
+      void loadAnalytics();
+    }
+  }, [user, activeSection]);
 
   useEffect(() => {
     if (!user) return;
@@ -1108,6 +1134,8 @@ export default function AdminLoginPage() {
                   ? orderList.length
                   : item.key === "users"
                   ? userList.length
+                  : item.key === "analytics"
+                  ? Object.keys(analyticsData.views || {}).length
                   : null;
 
               return (
@@ -1155,30 +1183,34 @@ export default function AdminLoginPage() {
                   ? "Excel Bulk Upload"
                   : activeSection === "collections"
                     ? "Collections Overview"
-                    : activeSection === "products"
-                      ? "Product Catalogue"
-                      : activeSection === "banners"
-                        ? "Homepage Banners"
-                        : activeSection === "orders"
-                          ? "Order History"
-                          : activeSection === "payments"
-                            ? "Payment Transactions"
-                            : "User Registry"}
+                    : activeSection === "analytics"
+                      ? "Page Visitors & Traffic"
+                      : activeSection === "products"
+                        ? "Product Catalogue"
+                        : activeSection === "banners"
+                          ? "Homepage Banners"
+                          : activeSection === "orders"
+                            ? "Order History"
+                            : activeSection === "payments"
+                              ? "Payment Transactions"
+                              : "User Registry"}
               </h2>
               <p className={styles.heroCopy}>
                 {activeSection === "bulk-upload"
                   ? "Import multi-collection catalogue sheets (.xlsx, .xls, .csv) with automatic image mapping."
                   : activeSection === "collections"
                     ? "View active collections, piece counts, and link directly to the storefront."
-                    : activeSection === "products"
-                      ? "Search, filter by collection, edit piece details, or add single items."
-                      : activeSection === "banners"
-                        ? "Manage homepage hero video and image slides."
-                        : activeSection === "orders"
-                          ? "Track orders, fulfillment status, and customer shipping details."
-                          : activeSection === "payments"
-                            ? "Track transaction flows and Razorpay payments."
-                            : "View registered users and account information."}
+                    : activeSection === "analytics"
+                      ? "Live visitor counts for every page across the boutique storefront."
+                      : activeSection === "products"
+                        ? "Search, filter by collection, edit piece details, or add single items."
+                        : activeSection === "banners"
+                          ? "Manage homepage hero video and image slides."
+                          : activeSection === "orders"
+                            ? "Track orders, fulfillment status, and customer shipping details."
+                            : activeSection === "payments"
+                              ? "Track transaction flows and Razorpay payments."
+                              : "View registered users and account information."}
               </p>
             </div>
 
@@ -1200,6 +1232,25 @@ export default function AdminLoginPage() {
                   <div className={styles.statCard}>
                     <span className={styles.statValue}>{productStats.featured}</span>
                     <span className={styles.statLabel}>Featured</span>
+                  </div>
+                </>
+              ) : activeSection === "analytics" ? (
+                <>
+                  <div className={styles.statCard}>
+                    <span className={styles.statValue}>{Number(analyticsData.total || 0).toLocaleString("en-IN")}</span>
+                    <span className={styles.statLabel}>Total Page Views</span>
+                  </div>
+                  <div className={styles.statCard}>
+                    <span className={styles.statValue}>{Object.keys(analyticsData.views || {}).length}</span>
+                    <span className={styles.statLabel}>Tracked Pages</span>
+                  </div>
+                  <div className={styles.statCard}>
+                    <span className={styles.statValue}>Live</span>
+                    <span className={styles.statLabel}>Counter Badges</span>
+                  </div>
+                  <div className={styles.statCard}>
+                    <span className={styles.statValue}>100%</span>
+                    <span className={styles.statLabel}>Footer Coverage</span>
                   </div>
                 </>
               ) : activeSection === "banners" ? (
@@ -1592,6 +1643,103 @@ export default function AdminLoginPage() {
                       </div>
                     </article>
                   ))}
+                </div>
+              </section>
+            </div>
+          ) : null}
+
+          {/* ── SECTION: PAGE VISITORS ANALYTICS ──────────────────────────── */}
+          {activeSection === "analytics" ? (
+            <div className={styles.contentGrid}>
+              <section className={styles.bannerPanel} style={{ gridColumn: "1 / -1" }}>
+                <div className={styles.sectionHead}>
+                  <div>
+                    <p className="eyebrow">Traffic & Analytics</p>
+                    <h3 className={`display ${styles.sectionTitle}`}>
+                      Page Visitors Breakdown ({Object.keys(analyticsData.views || {}).length} Pages Tracked)
+                    </h3>
+                    <p className={styles.sidebarCopy}>
+                      Total views across all storefront pages:{" "}
+                      <strong style={{ color: "var(--gold-muted)" }}>
+                        {Number(analyticsData.total || 0).toLocaleString("en-IN")}
+                      </strong>
+                      . Every page also features a live visitor badge at the bottom of the page.
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.6rem" }}>
+                    <button
+                      type="button"
+                      className={styles.templateBtn}
+                      onClick={loadAnalytics}
+                      disabled={loadingAnalytics}
+                    >
+                      <span>{loadingAnalytics ? "Refreshing..." : "↻ Refresh Visitors"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className={styles.previewTableWrap}>
+                  <table className={styles.previewTable}>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Page Path</th>
+                        <th>Type</th>
+                        <th>Visitors Count</th>
+                        <th>Traffic Share</th>
+                        <th style={{ textAlign: "right" }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(analyticsData.views || {})
+                        .sort(([, a], [, b]) => Number(b) - Number(a))
+                        .map(([pagePath, count], idx) => {
+                          const num = Number(count || 0);
+                          const total = Number(analyticsData.total || 1);
+                          const pct = Math.round((num / total) * 100);
+                          const isProduct = pagePath.startsWith("/product/");
+                          const isHome = pagePath === "/";
+
+                          return (
+                            <tr key={pagePath}>
+                              <td>{idx + 1}</td>
+                              <td>
+                                <code style={{ color: "#dec28a", fontWeight: 600 }}>{pagePath}</code>
+                              </td>
+                              <td>
+                                <span className={styles.tagBadge}>
+                                  {isHome ? "Homepage" : isProduct ? "Product Piece" : "Store Page"}
+                                </span>
+                              </td>
+                              <td>
+                                <span style={{ fontWeight: 700, color: "var(--charcoal)" }}>
+                                  {num.toLocaleString("en-IN")} visitors
+                                </span>
+                              </td>
+                              <td>
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                  <div style={{ width: "60px", height: "6px", background: "rgba(26,21,18,0.1)", borderRadius: "3px", overflow: "hidden" }}>
+                                    <div style={{ width: `${Math.min(100, Math.max(4, pct))}%`, height: "100%", background: "var(--gold-muted)" }} />
+                                  </div>
+                                  <span style={{ fontSize: "0.75rem", color: "rgba(26,21,18,0.6)" }}>{pct}%</span>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                <a
+                                  href={pagePath}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={styles.iconBtn}
+                                  title="View page on storefront"
+                                >
+                                  ↗
+                                </a>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
                 </div>
               </section>
             </div>

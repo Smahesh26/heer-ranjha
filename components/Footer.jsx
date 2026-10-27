@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./Footer.module.css";
 import { COLLECTIONS } from "@/components/shop/shopData";
+import PageVisitorBadge from "./PageVisitorBadge";
 
 function getCollectionLinks() {
   return COLLECTIONS.map((c) => ({
@@ -98,6 +99,9 @@ export default function Footer() {
         <p className={styles.copy}>
           &copy; {year} Heer Ranjha. All rights reserved.
         </p>
+        <div className={styles.visitorWrapper}>
+          <PageVisitorBadge />
+        </div>
         <div className={styles.social}>
           <a href="https://www.instagram.com/worldofheerranjha/?hl=en" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="Instagram">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
